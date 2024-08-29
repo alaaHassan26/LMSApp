@@ -1,0 +1,12 @@
+{
+  "terms_of_use": "شروط الاستخدام",
+  "must_agree_terms_before_proceeding": "يجب عليك الموافقة على شروط الاستخدام قبل المتابعة",
+  "okay": "حسناً",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "please_enter_email": "الرجاء ادخال البريد الإلكتروني",
+  "please_enter_password": "الرجاء ادخال كلمة المرور",
+  "forgot_password": "هل نسيت كلمة المرور؟",
+  "agree_to_terms_of_use": "اوافق على شروط الاستخدام",
+  "sign_in": "تسجيل الدخول"
+}
