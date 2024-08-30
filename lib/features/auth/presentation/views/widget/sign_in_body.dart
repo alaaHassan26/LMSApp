@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
+import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/widget/custom_dropdown_lang.dart';
 import 'package:lms/features/auth/presentation/views/widget/custom_text_field_sign_in.dart';
@@ -34,6 +36,8 @@ class _SignInBodyState extends State<SignInBody> {
     }
 
     if (_isEmailValid && _isPasswordValid && _agreedToTerms) {
+      GoRouter.of(context).go(AppRouter.kNavigationMenu);
+
       // ابو حسين هنا تنفيذ عملية تسجيل الدخول هنا
     }
   }
