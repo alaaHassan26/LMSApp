@@ -44,6 +44,8 @@ dependencies:
   animated_text_kit: ^4.2.2
   back_button_interceptor: ^7.0.3
   iconsax: ^0.0.8
+  smooth_page_indicator: ^1.2.0+3
+  readmore: ^3.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

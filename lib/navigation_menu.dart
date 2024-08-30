@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/features/home/presentation/views/home_view.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({super.key});
@@ -17,7 +18,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   final bool _isAtTop = true;
 
   final List<Widget> _screens = [
-    const SizedBox(),
+    const HomeView(),
     const SizedBox(),
     const SizedBox(),
     const SizedBox(),
@@ -91,7 +92,6 @@ class _NavigationMenuState extends State<NavigationMenu> {
             label: 'page 4',
           ),
         ],
-        selectedItemColor: Colors.red,
         unselectedItemColor: Colors.grey,
         selectedLabelStyle: AppStyles.styleBold16(context),
         unselectedLabelStyle: AppStyles.styleMedium16(context),

@@ -9,5 +9,12 @@
   "forgot_password": "Forgot your password?",
   "agree_to_terms_of_use": "I agree to the Terms of Use",
   "sign_in": "Sign in",
-  "home1" : "Home"
+  "home1" : "Home",
+  "showmore" : "Show more",
+"showless" : "Show less",
+"news" :"News",
+"comment" : "comment",
+"design" : "Design and implementation of A Mobile robotic arm attached to a four-wheeled vehicle controlled via Bluetooth A Graduation Project is submitted to the Computer Techniques Engineering Department in Partial Fulfillment of the Requirements for the Degree of Bachelor in Computer Techniques Engineering By Alaa Hassan Damad" ,
+"mobile" :"Mobile robots have a long history, dating back to the early 20th century. The first mobile robot is generally considered to be \"Elmer and Elsie,\" a pair of robots developed at the Massachusetts Institute of Technology (MIT) in the 1950s. These robots were able to navigate around a room using sensors and were capable of simple tasks such as avoiding obstacles and following lines.In the 1960s and 1970s, mobile robots began to be used in manufacturing and other industrial settings, where they were used for tasks such as welding, painting, and material handling. These early industrial robots were often large, expensive, and required specialized training to operate.In the 1980s and 1990s, mobile robots became more common in research and military settings. For example, the Mars rovers, developed by NASA and JPL, were designed to explore the surface of Mars and gather scientific data. In the military, mobile robots were used for tasks such as bomb disposal and reconnaissance.In the 21st century, mobile robots have become increasingly widespread and are used in a variety of settings, including manufacturing, healthcare, agriculture, and retail. They come in a range of sizes and are used for tasks such as inspection, transportation, and surveillance. Many modern mobile robots are equipped with advanced sensors and artificial intelligence, enabling them to navigate and perform tasks autonomously.",
+"it_is_one" : "It is one of the tools used in making the mobile robotic arm. Arduino Uno is a microcontroller board based on the ATmega328 microcontroller. It has 14 digital input/output pins, 6 analog inputs, a 16 MHz crystal oscillator, a USB connection, a power jack, an ICSP header, and a reset button. It is programmed using the Arduino programming language and the Arduino Integrated Development Environment (IDE). The Arduino Uno is a popular choice for beginners to learn microcontroller programming and electronics. It is also widely used in DIY electronics projects and as a prototyping platform for a wide range of applications."
 }
