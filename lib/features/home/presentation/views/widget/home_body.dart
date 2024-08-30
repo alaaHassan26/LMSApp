@@ -9,17 +9,11 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          const CustomPinnedPost(),
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            child: ListViewHomePage(onLongPressPost: onLongPressPost),
-          )),
-        ],
-      ),
+    return Column(
+      children: [
+        const CustomPinnedPost(),
+        Expanded(child: ListViewHomePage(onLongPressPost: onLongPressPost)),
+      ],
     );
   }
 }
