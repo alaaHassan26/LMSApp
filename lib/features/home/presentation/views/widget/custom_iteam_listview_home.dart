@@ -8,10 +8,8 @@ import 'package:lms/features/home/data/model/home_model.dart';
 import 'package:readmore/readmore.dart';
 
 class CustomItemListViewNewsHome extends StatefulWidget {
-  final VoidCallback onLongPress;
   final HomeModel homeModel;
-  const CustomItemListViewNewsHome(
-      {super.key, required this.onLongPress, required this.homeModel});
+  const CustomItemListViewNewsHome({super.key, required this.homeModel});
 
   @override
   State<StatefulWidget> createState() => _CustomItemListViewNewsHomeState();
@@ -27,11 +25,76 @@ class _CustomItemListViewNewsHomeState
     });
   }
 
+  void _showOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          contentPadding: const EdgeInsets.all(12),
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.copy),
+                  title: Text(AppLocalizations.of(context)!.translate('copy')),
+                  onTap: () {
+                    // قم بوضع منطق النسخ هنا
+                    Navigator.of(context).pop();
+                    _toggleSelection(); // لإعادة تعيين الظلال
+                  },
+                ),
+                // ListTile(
+                //   leading: const Icon(Icons.share),
+                //   title: Text(AppLocalizations.of(context)!.translate('share')),
+                //   onTap: () {
+                //     // قم بوضع منطق المشاركة هنا
+                //     Navigator.of(context).pop();
+                //     _toggleSelection(); // لإعادة تعيين الظلال
+                //   },
+                // ),
+                ListTile(
+                  leading: const Icon(Icons.push_pin),
+                  title: Text(AppLocalizations.of(context)!.translate('pin')),
+                  onTap: () {
+                    // قم بوضع منطق التثبيت هنا
+                    Navigator.of(context).pop();
+                    _toggleSelection(); // لإعادة تعيين الظلال
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.cancel),
+                  title:
+                      Text(AppLocalizations.of(context)!.translate('cancel')),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _toggleSelection();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((_) {
+      if (isSelected) {
+        _toggleSelection();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: widget.onLongPress,
-      onTap: _toggleSelection,
+      onLongPress: () {
+        _toggleSelection();
+        _showOptionsDialog();
+      },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -43,39 +106,36 @@ class _CustomItemListViewNewsHomeState
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Card(
-                elevation:
-                    isSelected ? 16 : 4, // زيادة الـ elevation عند التحديد
+                elevation: isSelected ? 16 : 4,
                 color: Theme.of(context).colorScheme.onPrimary,
                 child: Column(
                   children: [
-                    // عرض الصورة إذا كانت موجودة
                     if (widget.homeModel.image != null) ...[
                       CustomImage(
                         image: widget.homeModel.image!,
                         width: MediaQuery.of(context).size.width * 0.999,
                         height: MediaQuery.of(context).size.width * 0.6,
                       ),
-                      const SizedBox(
-                        height: 6,
-                      ),
+                      const SizedBox(height: 6),
                     ],
-                    // عرض النص إذا كان موجوداً
                     if (widget.homeModel.title != null) ...[
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: SingleChildScrollView(
                           child: SizedBox(
                             width: double.infinity,
-                            child: ReadMoreText(widget.homeModel.title!,
-                                style: AppStyles.styleMedium20(context),
-                                trimMode: TrimMode.Line,
-                                trimLines: 7,
-                                colorClickableText: Colors.pink,
-                                trimCollapsedText: AppLocalizations.of(context)!
-                                    .translate('showmore'),
-                                trimExpandedText: AppLocalizations.of(context)!
-                                    .translate('showless'),
-                                moreStyle: AppStyles.styleBold16(context)),
+                            child: ReadMoreText(
+                              widget.homeModel.title!,
+                              style: AppStyles.styleMedium20(context),
+                              trimMode: TrimMode.Line,
+                              trimLines: 7,
+                              colorClickableText: Colors.pink,
+                              trimCollapsedText: AppLocalizations.of(context)!
+                                  .translate('showmore'),
+                              trimExpandedText: AppLocalizations.of(context)!
+                                  .translate('showless'),
+                              moreStyle: AppStyles.styleBold16(context),
+                            ),
                           ),
                         ),
                       ),

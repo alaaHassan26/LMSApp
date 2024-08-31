@@ -4,9 +4,9 @@ import 'package:lms/features/home/data/model/home_model.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_iteam_listview_home.dart';
 
 class ListViewHomePage extends StatelessWidget {
-  final VoidCallback onLongPressPost;
-
-  const ListViewHomePage({super.key, required this.onLongPressPost});
+  const ListViewHomePage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,6 @@ class ListViewHomePage extends StatelessWidget {
         itemBuilder: (context, index) {
           return CustomItemListViewNewsHome(
             homeModel: item[index],
-            onLongPress: onLongPressPost,
           );
         });
   }
