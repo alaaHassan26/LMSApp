@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
+import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
-import 'package:lms/core/widget/custom_image.dart';
 import 'package:lms/features/home/data/model/home_model.dart';
+import 'package:lms/features/home/presentation/views/widget/custom_image_list_view.dart';
+
 import 'package:readmore/readmore.dart';
 
 class CustomItemListViewNewsHome extends StatefulWidget {
@@ -22,69 +26,6 @@ class _CustomItemListViewNewsHomeState
   void _toggleSelection() {
     setState(() {
       isSelected = !isSelected;
-    });
-  }
-
-  void _showOptionsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-          ),
-          contentPadding: const EdgeInsets.all(12),
-          content: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.copy),
-                  title: Text(AppLocalizations.of(context)!.translate('copy')),
-                  onTap: () {
-                    // قم بوضع منطق النسخ هنا
-                    Navigator.of(context).pop();
-                    _toggleSelection(); // لإعادة تعيين الظلال
-                  },
-                ),
-                // ListTile(
-                //   leading: const Icon(Icons.share),
-                //   title: Text(AppLocalizations.of(context)!.translate('share')),
-                //   onTap: () {
-                //     // قم بوضع منطق المشاركة هنا
-                //     Navigator.of(context).pop();
-                //     _toggleSelection(); // لإعادة تعيين الظلال
-                //   },
-                // ),
-                ListTile(
-                  leading: const Icon(Icons.push_pin),
-                  title: Text(AppLocalizations.of(context)!.translate('pin')),
-                  onTap: () {
-                    // قم بوضع منطق التثبيت هنا
-                    Navigator.of(context).pop();
-                    _toggleSelection(); // لإعادة تعيين الظلال
-                  },
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.cancel),
-                  title:
-                      Text(AppLocalizations.of(context)!.translate('cancel')),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _toggleSelection();
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    ).then((_) {
-      if (isSelected) {
-        _toggleSelection();
-      }
     });
   }
 
@@ -107,14 +48,15 @@ class _CustomItemListViewNewsHomeState
               ),
               child: Card(
                 elevation: isSelected ? 16 : 4,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: isSelected
+                    ? const Color(0xff27DEBF)
+                    : Theme.of(context).colorScheme.onPrimary,
                 child: Column(
                   children: [
-                    if (widget.homeModel.image != null) ...[
-                      CustomImage(
-                        image: widget.homeModel.image!,
-                        width: MediaQuery.of(context).size.width * 0.999,
-                        height: MediaQuery.of(context).size.width * 0.6,
+                    if (widget.homeModel.image != null &&
+                        widget.homeModel.image!.isNotEmpty) ...[
+                      CustomImageListView(
+                        homeModel: widget.homeModel,
                       ),
                       const SizedBox(height: 6),
                     ],
@@ -140,32 +82,82 @@ class _CustomItemListViewNewsHomeState
                         ),
                       ),
                     ],
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: Divider(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      child: Row(
-                        children: [
-                          Row(
+                    if (widget.homeModel.pdfUrl != null) ...[
+                      const SizedBox(height: 6),
+                      GestureDetector(
+                        onTap: () {
+                          GoRouter.of(context).push(AppRouter.kPDFViewerPage,
+                              extra: widget.homeModel.pdfUrl!);
+                        },
+                        child: Card(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Iconsax.message_search),
-                              const SizedBox(width: 12),
+                              IconButton(
+                                onPressed: () {
+                                  GoRouter.of(context).push(
+                                      AppRouter.kPDFViewerPage,
+                                      extra: widget.homeModel.pdfUrl!);
+                                },
+                                icon: const Icon(
+                                  Icons.picture_as_pdf_sharp,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
                               Text(
                                 AppLocalizations.of(context)!
-                                    .translate('comment'),
+                                    .translate('view_pdf'),
                                 style: AppStyles.styleMedium20(context),
                               ),
                             ],
                           ),
-                          const Spacer(),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 18,
-                          )
-                        ],
+                        ),
+                      ),
+                    ],
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: Divider(),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        GoRouter.of(context).push(AppRouter.kCommentsPage);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 6),
+                        child: Row(
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Iconsax.message_search),
+                                const SizedBox(width: 12),
+                                TextButton(
+                                  onPressed: () {
+                                    GoRouter.of(context)
+                                        .push(AppRouter.kCommentsPage);
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('comment'),
+                                    style: AppStyles.styleMedium20(context),
+                                  ),
+                                )
+                              ],
+                            ),
+                            const Spacer(),
+                            IconButton(
+                                onPressed: () {
+                                  GoRouter.of(context)
+                                      .push(AppRouter.kCommentsPage);
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 18,
+                                ))
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -175,17 +167,64 @@ class _CustomItemListViewNewsHomeState
           ),
           Row(
             children: [
-              Transform.rotate(
-                angle: isArabic(context) ? 180 : 90,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.reply),
-                ),
-              ),
+              isSelected
+                  ? const Icon(Icons.check)
+                  : Transform.rotate(
+                      angle: isArabic(context) ? 180 : 90,
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.reply),
+                      ),
+                    ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  void _showOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          contentPadding: const EdgeInsets.all(16),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.copy),
+                title: Text(AppLocalizations.of(context)!.translate('copy')),
+                onTap: () {
+                  if (widget.homeModel.title != null) {
+                    Clipboard.setData(
+                      ClipboardData(text: widget.homeModel.title ?? ''),
+                    );
+                  }
+                  Navigator.of(context).pop();
+                  _toggleSelection();
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.cancel),
+                title: Text(AppLocalizations.of(context)!.translate('cancel')),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _toggleSelection();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ).then((_) {
+      if (isSelected) {
+        _toggleSelection();
+      }
+    });
   }
 }

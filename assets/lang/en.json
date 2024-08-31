@@ -21,5 +21,11 @@
 "copy" : "copy",
 "share" : "share" ,
 "pin" : "pin",
-"cancel" : "cancel"
+"cancel" : "cancel",
+"comments" : "Comments",
+"like" :"Like",
+"reply" : "Reply",
+"wac" : "Write a comment...",
+"min" : "13 m",
+"view_pdf" : "Pdf"
 }

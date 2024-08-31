@@ -4,18 +4,22 @@ import 'package:lms/core/utils/appstyles.dart';
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
-    required this.labelText,
+    this.labelText,
     this.isPassword = false,
     this.controller,
     this.errorText,
     this.onChanged,
+    this.hintText,
+    this.sizeTextFiled,
   });
 
-  final String labelText;
+  final String? labelText;
   final bool isPassword;
   final TextEditingController? controller;
   final String? errorText;
   final Function(String)? onChanged;
+  final String? hintText;
+  final double? sizeTextFiled;
 
   @override
   State<StatefulWidget> createState() => _CustomTextFieldState();
@@ -43,7 +47,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           controller: widget.controller,
           obscureText: widget.isPassword && !isPasswordVisible,
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(20),
+            hintText: widget.hintText,
+            contentPadding: EdgeInsets.all(widget.sizeTextFiled ?? 20),
             labelText: widget.labelText,
             labelStyle: AppStyles.styleMedium20(context),
             suffixIcon: widget.isPassword
