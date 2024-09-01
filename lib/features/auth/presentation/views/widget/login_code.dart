@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/widget/custom_dropdown_lang.dart';
-import 'package:lms/features/auth/presentation/views/widget/custom_text_field_sign_in.dart';
+import 'package:lms/features/auth/presentation/views/widget/custom_text_field_login_code.dart';
 import 'package:lms/features/auth/presentation/views/widget/logo_and_name_sign_in.dart';
 
-class SignInBody extends StatefulWidget {
-  const SignInBody({super.key});
+class LogInCode extends StatefulWidget {
+  const LogInCode({super.key});
 
   @override
-  State<StatefulWidget> createState() => _SignInBodyState();
+  State<StatefulWidget> createState() => _LogInCodeState();
 }
 
-class _SignInBodyState extends State<SignInBody> {
+class _LogInCodeState extends State<LogInCode> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -35,7 +34,7 @@ class _SignInBodyState extends State<SignInBody> {
       return;
     }
 
-    if (_isEmailValid && _isPasswordValid && _agreedToTerms) {
+    if (_isEmailValid && _agreedToTerms) {
       GoRouter.of(context).go(AppRouter.kNavigationMenu);
 
       // ابو حسين هنا تنفيذ عملية تسجيل الدخول هنا
@@ -91,9 +90,10 @@ class _SignInBodyState extends State<SignInBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -101,7 +101,12 @@ class _SignInBodyState extends State<SignInBody> {
                 const SizedBox(height: 4.0),
                 const LogoAndNameSignIn(),
                 const SizedBox(height: 20.0),
-                CustomTextFieldSignIn(
+                CustomTextFieldLogInCodeAndforgotPassword(
+                  errorText: _isEmailValid
+                      ? null
+                      : AppLocalizations.of(context)!.translate('entercode'),
+                  labelText:
+                      AppLocalizations.of(context)!.translate('entercode'),
                   emailController: _emailController,
                   isEmailValid: _isEmailValid,
                   passwordController: _passwordController,
@@ -110,21 +115,6 @@ class _SignInBodyState extends State<SignInBody> {
                   onPasswordChanged: _onPasswordChanged,
                 ),
                 const SizedBox(height: 16.0),
-                Align(
-                  alignment: isArabic(context)
-                      ? Alignment.centerLeft
-                      : Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      GoRouter.of(context).push(AppRouter.kForgotPassword);
-                    },
-                    child: Text(
-                      AppLocalizations.of(context)!
-                          .translate('forgot_password'),
-                      style: AppStyles.styleMedium16(context),
-                    ),
-                  ),
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -167,19 +157,6 @@ class _SignInBodyState extends State<SignInBody> {
                 ),
                 const SizedBox(
                   height: 26,
-                ),
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        GoRouter.of(context).push(AppRouter.kLogInCode);
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!.translate('logincode'),
-                        style: AppStyles.styleMedium16(context),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),

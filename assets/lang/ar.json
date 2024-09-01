@@ -26,5 +26,10 @@
 "reply" : "رد",
 "wac" : "اكتب تعليقاً...",
 "min" :"13 د",
-"view_pdf" : "Pdf"
+"view_pdf" : "Pdf",
+"logincode" : "تسجيل الدخول بأستخدام الكود؟",
+"entercode" : "ادخل الكود",
+"download_pdf": "تحميل PDF...",
+  "pdf_loaded": "تم التحميل. اضغط لعرض الـ PDF",
+  "wait_pdf_loading": "انتظر تحميل الـ PDF..."
 }

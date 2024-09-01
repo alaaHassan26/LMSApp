@@ -20,10 +20,8 @@ class _CustomImageListViewState extends State<CustomImageListView> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Card(
-      color: isDarkMode ? Colors.black12 : Colors.white,
-      elevation: .4,
+      elevation: 0,
       child: Column(
         children: [
           SizedBox(
@@ -58,7 +56,6 @@ class _CustomImageListViewState extends State<CustomImageListView> {
             effect: const WormEffect(
               dotHeight: 8,
               dotWidth: 8,
-              dotColor: Colors.grey,
             ),
           ),
           const SizedBox(

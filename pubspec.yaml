@@ -50,7 +50,13 @@ dependencies:
   dio: ^5.6.0
   path_provider: ^2.1.4
   loading_animation_widget: ^1.2.1
+<<<<<<< HEAD
   short_navigation: ^1.0.0
+=======
+  open_file: ^3.5.3
+  pdf_image_renderer: ^0.7.0
+  pdf: ^3.11.1
+>>>>>>> 5a2af92757682ea176813afff97e36b68f5ec7e6
 dev_dependencies:
   flutter_test:
     sdk: flutter

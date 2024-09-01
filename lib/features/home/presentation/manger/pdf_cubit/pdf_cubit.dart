@@ -13,8 +13,7 @@ class PDFViewerCubit extends Cubit<PDFViewerState> {
       final dir = await getApplicationDocumentsDirectory();
 
       // إنشاء اسم فريد للملف بناءً على رابط الـ PDF
-      final fileName = pdfUrl.hashCode
-          .toString(); // يمكنك استخدام hashCode أو أي طريقة أخرى لإنشاء اسم فريد
+      final fileName = pdfUrl.hashCode.toString();
       final file = File('${dir.path}/$fileName.pdf');
 
       if (!file.existsSync()) {

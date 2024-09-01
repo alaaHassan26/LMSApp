@@ -27,5 +27,10 @@
 "reply" : "Reply",
 "wac" : "Write a comment...",
 "min" : "13 m",
-"view_pdf" : "Pdf"
+"view_pdf" : "Pdf",
+"logincode" : "Login using the code?",
+"entercode" : "Enter the code",
+"download_pdf": "Download PDF...",
+  "pdf_loaded": "Loaded. Tap to view the PDF",
+  "wait_pdf_loading": "Wait for the PDF to load..."
 }

@@ -14,7 +14,8 @@ class ListViewHomePage extends StatelessWidget {
       HomeModel(
           image: null,
           title: AppLocalizations.of(context)!.translate('design'),
-          pdfUrl: 'https://www.gotronic.fr/pj2-34976-1794.pdf'),
+          pdfUrl: 'https://www.gotronic.fr/pj2-34976-1794.pdf',
+          namePdf: 'pj2-34976-1794.pdf'),
       HomeModel(
           image: [
             'assets/images/rebot.jpg',
@@ -22,9 +23,13 @@ class ListViewHomePage extends StatelessWidget {
           ],
           title: AppLocalizations.of(context)!.translate('mobile'),
           pdfUrl:
-              'https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf'),
+              'https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf',
+          namePdf: 'A000066-datasheet.pdf'),
       const HomeModel(
-          image: ['assets/images/lms_test.jpg'], title: null, pdfUrl: null),
+          image: ['assets/images/lms_test.jpg'],
+          title: null,
+          pdfUrl: null,
+          namePdf: null),
       HomeModel(
           image: [
             'assets/images/arduino.jpg',
@@ -32,12 +37,14 @@ class ListViewHomePage extends StatelessWidget {
             'assets/images/lms_test.jpg'
           ],
           title: AppLocalizations.of(context)!.translate('it_is_one'),
-          pdfUrl: null),
+          pdfUrl: null,
+          namePdf: null),
       const HomeModel(
           image: null,
           title: null,
           pdfUrl:
-              'https://www.theseus.fi/bitstream/handle/10024/37806/Shakhatreh_Fareed.pdf'),
+              'https://www.theseus.fi/bitstream/handle/10024/37806/Shakhatreh_Fareed.pdf',
+          namePdf: 'Shakhatreh_Fareed.pdf'),
     ];
     return ListView.builder(
         itemCount: item.length,
