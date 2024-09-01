@@ -453,6 +453,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  short_navigation:
+    dependency: "direct main"
+    description:
+      name: short_navigation
+      sha256: dbf89d35626b0b29150f5351e11c8f5e2f57f2be2e7e4cf85dca77e49884172e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
