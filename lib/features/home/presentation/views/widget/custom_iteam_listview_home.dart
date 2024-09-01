@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:lms/core/functions/direction_arabic.dart';
+
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
+
 import 'package:lms/features/home/data/model/home_model.dart';
+
 import 'package:lms/features/home/presentation/views/widget/custom_image_list_view.dart';
+import 'package:lms/features/home/presentation/views/widget/download_pdf_page.dart';
 
 import 'package:readmore/readmore.dart';
 
@@ -41,142 +45,94 @@ class _CustomItemListViewNewsHomeState
         children: [
           Expanded(
             flex: 50,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Card(
-                elevation: isSelected ? 16 : 4,
-                color: isSelected
-                    ? const Color(0xff27DEBF)
-                    : Theme.of(context).colorScheme.onPrimary,
-                child: Column(
-                  children: [
-                    if (widget.homeModel.image != null &&
-                        widget.homeModel.image!.isNotEmpty) ...[
-                      CustomImageListView(
-                        homeModel: widget.homeModel,
+            child: Column(
+              children: [
+                if (widget.homeModel.image != null &&
+                    widget.homeModel.image!.isNotEmpty) ...[
+                  CustomImageListView(
+                    homeModel: widget.homeModel,
+                  ),
+                  const SizedBox(height: 6),
+                ],
+                if (widget.homeModel.title != null) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ReadMoreText(
+                        widget.homeModel.title!,
+                        style: AppStyles.styleMedium20(context),
+                        trimMode: TrimMode.Line,
+                        trimLines: 7,
+                        colorClickableText: Colors.pink,
+                        trimCollapsedText:
+                            AppLocalizations.of(context)!.translate('showmore'),
+                        trimExpandedText:
+                            AppLocalizations.of(context)!.translate('showless'),
+                        moreStyle: AppStyles.styleBold16(context),
                       ),
-                      const SizedBox(height: 6),
-                    ],
-                    if (widget.homeModel.title != null) ...[
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: SingleChildScrollView(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ReadMoreText(
-                              widget.homeModel.title!,
-                              style: AppStyles.styleMedium20(context),
-                              trimMode: TrimMode.Line,
-                              trimLines: 7,
-                              colorClickableText: Colors.pink,
-                              trimCollapsedText: AppLocalizations.of(context)!
-                                  .translate('showmore'),
-                              trimExpandedText: AppLocalizations.of(context)!
-                                  .translate('showless'),
-                              moreStyle: AppStyles.styleBold16(context),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    if (widget.homeModel.pdfUrl != null) ...[
-                      const SizedBox(height: 6),
-                      GestureDetector(
-                        onTap: () {
-                          GoRouter.of(context).push(AppRouter.kPDFViewerPage,
-                              extra: widget.homeModel.pdfUrl!);
-                        },
-                        child: Card(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  GoRouter.of(context).push(
-                                      AppRouter.kPDFViewerPage,
-                                      extra: widget.homeModel.pdfUrl!);
-                                },
-                                icon: const Icon(
-                                  Icons.picture_as_pdf_sharp,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              Text(
+                    ),
+                  ),
+                ],
+                if (widget.homeModel.pdfUrl != null) ...[
+                  const SizedBox(height: 6),
+                  DownloadPdfPage(
+                    pdfName: widget.homeModel.namePdf!,
+                    pdfUrl: widget.homeModel.pdfUrl!,
+                  ),
+                ],
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 120),
+                  child: Divider(),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    GoRouter.of(context).push(AppRouter.kCommentsPage);
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: Row(
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Iconsax.message_search),
+                            const SizedBox(width: 12),
+                            TextButton(
+                              onPressed: () {
+                                GoRouter.of(context)
+                                    .push(AppRouter.kCommentsPage);
+                              },
+                              child: Text(
                                 AppLocalizations.of(context)!
-                                    .translate('view_pdf'),
+                                    .translate('comment'),
                                 style: AppStyles.styleMedium20(context),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: Divider(),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        GoRouter.of(context).push(AppRouter.kCommentsPage);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 6),
-                        child: Row(
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Iconsax.message_search),
-                                const SizedBox(width: 12),
-                                TextButton(
-                                  onPressed: () {
-                                    GoRouter.of(context)
-                                        .push(AppRouter.kCommentsPage);
-                                  },
-                                  child: Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('comment'),
-                                    style: AppStyles.styleMedium20(context),
-                                  ),
-                                )
-                              ],
-                            ),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {
-                                  GoRouter.of(context)
-                                      .push(AppRouter.kCommentsPage);
-                                },
-                                icon: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 18,
-                                ))
+                            )
                           ],
                         ),
-                      ),
+                        const Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              GoRouter.of(context)
+                                  .push(AppRouter.kCommentsPage);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 18,
+                            ))
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  child: Divider(
+                    height: 26,
+                  ),
+                )
+              ],
             ),
-          ),
-          Row(
-            children: [
-              isSelected
-                  ? const Icon(Icons.check)
-                  : Transform.rotate(
-                      angle: isArabic(context) ? 180 : 90,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.reply),
-                      ),
-                    ),
-            ],
           ),
         ],
       ),

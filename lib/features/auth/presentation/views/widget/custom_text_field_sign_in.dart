@@ -9,6 +9,8 @@ class CustomTextFieldSignIn extends StatelessWidget {
     required bool isEmailValid,
     required TextEditingController passwordController,
     required bool isPasswordValid,
+    required this.onEmailChanged,
+    required this.onPasswordChanged,
   })  : _emailController = emailController,
         _isEmailValid = isEmailValid,
         _passwordController = passwordController,
@@ -18,6 +20,8 @@ class CustomTextFieldSignIn extends StatelessWidget {
   final bool _isEmailValid;
   final TextEditingController _passwordController;
   final bool _isPasswordValid;
+  final Function(String) onEmailChanged;
+  final Function(String) onPasswordChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,7 @@ class CustomTextFieldSignIn extends StatelessWidget {
           errorText: _isEmailValid
               ? null
               : AppLocalizations.of(context)!.translate('please_enter_email'),
+          onChanged: onEmailChanged,
         ),
         const SizedBox(height: 16.0),
         CustomTextField(
@@ -39,6 +44,7 @@ class CustomTextFieldSignIn extends StatelessWidget {
               ? null
               : AppLocalizations.of(context)!
                   .translate('please_enter_password'),
+          onChanged: onPasswordChanged,
         ),
       ],
     );
