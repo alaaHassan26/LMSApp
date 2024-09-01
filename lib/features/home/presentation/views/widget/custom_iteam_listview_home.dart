@@ -57,21 +57,19 @@ class _CustomItemListViewNewsHomeState
                   if (widget.homeModel.title != null) ...[
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: SingleChildScrollView(
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ReadMoreText(
-                            widget.homeModel.title!,
-                            style: AppStyles.styleMedium20(context),
-                            trimMode: TrimMode.Line,
-                            trimLines: 7,
-                            colorClickableText: Colors.pink,
-                            trimCollapsedText: AppLocalizations.of(context)!
-                                .translate('showmore'),
-                            trimExpandedText: AppLocalizations.of(context)!
-                                .translate('showless'),
-                            moreStyle: AppStyles.styleBold16(context),
-                          ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ReadMoreText(
+                          widget.homeModel.title!,
+                          style: AppStyles.styleMedium20(context),
+                          trimMode: TrimMode.Line,
+                          trimLines: 7,
+                          colorClickableText: Colors.pink,
+                          trimCollapsedText: AppLocalizations.of(context)!
+                              .translate('showmore'),
+                          trimExpandedText: AppLocalizations.of(context)!
+                              .translate('showless'),
+                          moreStyle: AppStyles.styleBold16(context),
                         ),
                       ),
                     ),
