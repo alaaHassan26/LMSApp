@@ -39,7 +39,7 @@ class _CustomItemListViewNewsHomeState
       child: Row(
         children: [
           Expanded(
-            flex: 50,
+            flex: 60,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
