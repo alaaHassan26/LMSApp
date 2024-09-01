@@ -69,6 +69,7 @@ class _CustomItemListViewNewsHomeState
                             child: ReadMoreText(
                               widget.homeModel.title!,
                               style: AppStyles.styleMedium20(context),
+textAlign: TextAlign.justify,                              
                               trimMode: TrimMode.Line,
                               trimLines: 7,
                               colorClickableText: Colors.pink,
