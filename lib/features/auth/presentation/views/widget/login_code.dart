@@ -75,11 +75,11 @@ class _LogInCodeState extends State<LogInCode> {
     }
 
     if (_isEmailValid && _agreedToTerms) {
-      final macAddress = _deviceId ?? '08-BF-B8-79-6C-3F'; 
+      final macAddress = _deviceId ; 
       final loginCode = _emailController.text;
 
       print(_deviceId);
-      context.read<LoginCubit>().loginWithCode(macAddress, loginCode);
+      context.read<LoginCubit>().loginWithCode(macAddress!, loginCode);
     }
   }
 
