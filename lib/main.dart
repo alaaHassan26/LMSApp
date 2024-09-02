@@ -6,13 +6,22 @@ import 'package:lms/core/manger/app_lang_cubit/app_lang_cubit.dart';
 import 'package:lms/core/models/Enums/lang_event_type.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
+import 'package:lms/features/auth/presentation/manger/auth_cubit/auth_cubit.dart';
+
+import 'core/Server/Bloc_Observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = SimpleBlocObserver();
 
   await CacheHelper().init();
 
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(
+    providers: [
+           BlocProvider(create: (context) => LoginCubit()),
+
+    ],child:  const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

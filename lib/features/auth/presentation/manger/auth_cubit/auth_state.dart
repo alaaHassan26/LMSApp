@@ -1,16 +1,20 @@
-part of 'auth_cubit.dart';
 
-@immutable
-sealed class AuthState {}
+import '../../../Data/Model/login_email_model.dart';
 
-final class AuthInitial extends AuthState {}
+class LoginState {}
 
-final class AuthLoading extends AuthState {}
+class LoginInitial extends LoginState {}
 
-final class AuthSuccess extends AuthState {}
+class LoginLoading extends LoginState {}
 
-final class AuthErorr extends AuthState {
+class LoginSuccess extends LoginState {
+  final LoginEmailResponse loginResponse;
+
+  LoginSuccess(this.loginResponse);
+}
+
+class LoginFailure extends LoginState {
   final String error;
 
-  AuthErorr({required this.error});
+  LoginFailure(this.error);
 }

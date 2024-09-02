@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:lms/core/utils/Constatns.dart';
 
-class NewApiService {
+class ApiService {
   final Dio _dio;
 
-  NewApiService()
+  ApiService()
       : _dio = Dio(BaseOptions(
           baseUrl: CS.Api,
         ));

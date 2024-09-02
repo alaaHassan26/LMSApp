@@ -8,7 +8,7 @@ abstract class Failure {
 
 
 class UnexpectedError extends Failure {
-UnexpectedError() : super('حصلت مشكلة غير متوقعة');
+UnexpectedError() : super('حصلت مشكلة غير ');
 }
 
 class ServerFailure extends Failure {
