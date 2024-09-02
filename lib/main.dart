@@ -6,6 +6,7 @@ import 'package:lms/core/manger/app_lang_cubit/app_lang_cubit.dart';
 import 'package:lms/core/models/Enums/lang_event_type.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/auth/presentation/manger/auth_cubit/auth_cubit.dart';
 
 import 'core/Server/Bloc_Observer.dart';
@@ -18,9 +19,9 @@ void main() async {
 
   runApp(MultiBlocProvider(
     providers: [
-           BlocProvider(create: (context) => LoginCubit()),
-
-    ],child:  const MyApp(),
+      BlocProvider(create: (context) => LoginCubit()),
+    ],
+    child: const MyApp(),
   ));
 }
 
@@ -40,14 +41,12 @@ class MyApp extends StatelessWidget {
               themeMode: ThemeMode.system,
               darkTheme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(
-                    seedColor: const Color(0xff27DEBF),
-                    brightness: Brightness.dark),
+                    seedColor: primaryColor, brightness: Brightness.dark),
                 useMaterial3: true,
               ),
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(
-                    seedColor: const Color(0xff27DEBF),
-                    brightness: Brightness.light),
+                    seedColor: primaryColor, brightness: Brightness.light),
                 useMaterial3: true,
               ),
               locale: Locale(state.languageCode!),
@@ -79,14 +78,12 @@ class MyApp extends StatelessWidget {
             themeMode: ThemeMode.system,
             darkTheme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
-                  seedColor: const Color(0xff27DEBF),
-                  brightness: Brightness.dark),
+                  seedColor: primaryColor, brightness: Brightness.dark),
               useMaterial3: true,
             ),
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
-                  seedColor: const Color(0xff27DEBF),
-                  brightness: Brightness.light),
+                  seedColor: primaryColor, brightness: Brightness.light),
               useMaterial3: true,
             ),
             supportedLocales: const [

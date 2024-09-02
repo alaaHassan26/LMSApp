@@ -7,9 +7,9 @@ class CustomTextFieldLogInCodeAndforgotPassword extends StatelessWidget {
     required TextEditingController emailController,
     required bool isEmailValid,
     required TextEditingController passwordController,
-    required bool isPasswordValid,
+    bool? isPasswordValid,
     required this.onEmailChanged,
-    required this.onPasswordChanged,
+    this.onPasswordChanged,
     this.labelText,
     this.errorText,
   }) : _emailController = emailController;
@@ -17,7 +17,7 @@ class CustomTextFieldLogInCodeAndforgotPassword extends StatelessWidget {
   final TextEditingController _emailController;
 
   final Function(String) onEmailChanged;
-  final Function(String) onPasswordChanged;
+  final Function(String)? onPasswordChanged;
   final String? labelText;
   final String? errorText;
   @override

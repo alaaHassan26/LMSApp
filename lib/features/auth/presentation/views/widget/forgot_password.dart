@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/auth/presentation/views/widget/custom_text_field_login_code.dart';
 import 'package:lms/features/auth/presentation/views/widget/logo_and_name_sign_in.dart';
 
@@ -18,20 +19,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isEmailValid = true;
-  bool _isPasswordValid = true;
+  void _signIn() {
+    setState(() {
+      _isEmailValid = _emailController.text.isNotEmpty;
+    });
+
+    if (_isEmailValid) {}
+  }
 
   void _onEmailChanged(String value) {
     if (!_isEmailValid && value.isNotEmpty) {
       setState(() {
         _isEmailValid = true;
-      });
-    }
-  }
-
-  void _onPasswordChanged(String value) {
-    if (!_isPasswordValid && value.isNotEmpty) {
-      setState(() {
-        _isPasswordValid = true;
       });
     }
   }
@@ -49,9 +48,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 const SizedBox(height: 4.0),
                 const LogoAndNameSignIn(),
                 const SizedBox(height: 20.0),
-                const Row(
+                Row(
                   children: [
-                    Text('ForgotPassword'),
+                    Text(AppLocalizations.of(context)!
+                        .translate('forgotpassword')),
                   ],
                 ),
                 const SizedBox(
@@ -66,23 +66,24 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   emailController: _emailController,
                   isEmailValid: _isEmailValid,
                   passwordController: _passwordController,
-                  isPasswordValid: _isPasswordValid,
                   onEmailChanged: _onEmailChanged,
-                  onPasswordChanged: _onPasswordChanged,
                 ),
                 const SizedBox(height: 16.0),
                 const SizedBox(height: 12.0),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _signIn();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
-                    disabledBackgroundColor: Colors.grey,
+                    disabledBackgroundColor: greyColor,
                     minimumSize: const Size.fromHeight(50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text('Send to the email',
+                  child: Text(
+                      AppLocalizations.of(context)!.translate('sendtotheemail'),
                       style: AppStyles.styleMedium20(context).copyWith(
                         color: Colors.white,
                       )),

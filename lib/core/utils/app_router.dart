@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:lms/cache/cache_helper.dart';
 import 'package:lms/features/auth/presentation/views/sign_in_view.dart';
 import 'package:lms/features/auth/presentation/views/widget/forgot_password.dart';
 import 'package:lms/features/auth/presentation/views/widget/login_code.dart';
@@ -13,10 +14,15 @@ abstract class AppRouter {
   static const kLogInCode = '/logInCode';
   static const kForgotPassword = '/forgotPassword';
   static final router = GoRouter(routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const SignInView(),
-    ),
+    CacheHelper().getData(key: 'token') != null
+        ? GoRoute(
+            path: '/',
+            builder: (context, state) => const NavigationMenu(),
+          )
+        : GoRoute(
+            path: '/',
+            builder: (context, state) => const SignInView(),
+          ),
     GoRoute(
       path: kNavigationMenu,
       builder: (context, state) => const NavigationMenu(),

@@ -37,6 +37,12 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                   isReady = true;
                 });
               },
+              onError: (error) {
+                // التعامل مع الأخطاء
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error loading PDF')),
+                );
+              },
             ),
             if (!isReady)
               Center(

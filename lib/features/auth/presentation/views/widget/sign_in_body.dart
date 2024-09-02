@@ -6,12 +6,13 @@ import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/core/widget/custom_dropdown_lang.dart';
 import 'package:lms/features/auth/presentation/views/widget/custom_text_field_sign_in.dart';
 import 'package:lms/features/auth/presentation/views/widget/logo_and_name_sign_in.dart';
 
 import '../../manger/auth_cubit/auth_cubit.dart';
-import '../../manger/auth_cubit/auth_state.dart'; 
+import '../../manger/auth_cubit/auth_state.dart';
 
 class SignInBody extends StatefulWidget {
   const SignInBody({super.key});
@@ -112,7 +113,7 @@ class _SignInBodyState extends State<SignInBody> {
         return AlertDialog(
           title: Row(
             children: [
-              const Icon(Icons.error, color: Colors.red),
+              const Icon(Icons.error, color: redColor),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.translate('error'),
@@ -148,7 +149,7 @@ class _SignInBodyState extends State<SignInBody> {
         return AlertDialog(
           title: Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.green),
+              const Icon(Icons.check_circle, color: greenColor),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.translate('success'),
@@ -184,12 +185,11 @@ class _SignInBodyState extends State<SignInBody> {
           if (state is LoginLoading) {
             _showLoadingDialog();
           } else if (state is LoginSuccess) {
-            Navigator.of(context).pop(); 
+            Navigator.of(context).pop();
             _showSuccessDialog();
-                            GoRouter.of(context).go(AppRouter.kNavigationMenu);
-
+            GoRouter.of(context).go(AppRouter.kNavigationMenu);
           } else if (state is LoginFailure) {
-            Navigator.of(context).pop(); 
+            Navigator.of(context).pop();
             _showErrorDialog(state.error);
           }
         },
@@ -253,7 +253,7 @@ class _SignInBodyState extends State<SignInBody> {
                     onPressed: _agreedToTerms ? _signIn : _showAgreementDialog,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
-                      disabledBackgroundColor: Colors.grey,
+                      disabledBackgroundColor: greyColor,
                       minimumSize: const Size.fromHeight(50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -262,10 +262,7 @@ class _SignInBodyState extends State<SignInBody> {
                     child: Text(
                       AppLocalizations.of(context)!.translate('sign_in'),
                       style: AppStyles.styleMedium20(context).copyWith(
-                        color: _agreedToTerms
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Colors.white,
-                      ),
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                   const SizedBox(

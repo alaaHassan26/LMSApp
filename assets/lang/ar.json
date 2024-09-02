@@ -31,5 +31,7 @@
 "entercode" : "ادخل الكود",
 "download_pdf": "تحميل PDF...",
   "pdf_loaded": "تم التحميل. اضغط لعرض الـ PDF",
-  "wait_pdf_loading": "انتظر تحميل الـ PDF..."
+  "wait_pdf_loading": "انتظر تحميل الـ PDF...",
+  "forgotpassword" : " هل نسيت كلمة المرور?",
+  "sendtotheemail" : "ارسال الى البريد الاكتروني"
 }

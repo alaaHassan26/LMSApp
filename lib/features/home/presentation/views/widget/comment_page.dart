@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/core/widget/custom_text_filed.dart';
 
 class CommentsPage extends StatelessWidget {
@@ -82,7 +83,7 @@ class CommentsPage extends StatelessWidget {
                         Text(
                           AppLocalizations.of(context)!.translate('min'),
                           style: AppStyles.styleMedium16(context)
-                              .copyWith(color: Colors.grey),
+                              .copyWith(color: greyColor),
                         ),
                         TextButton(
                           onPressed: () {},

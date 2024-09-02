@@ -32,5 +32,7 @@
 "entercode" : "Enter the code",
 "download_pdf": "Download PDF...",
   "pdf_loaded": "Loaded. Tap to view the PDF",
-  "wait_pdf_loading": "Wait for the PDF to load..."
+  "wait_pdf_loading": "Wait for the PDF to load...",
+  "forgotpassword" : "Forgot Password?",
+  "sendtotheemail" : "Send to the email"
 }

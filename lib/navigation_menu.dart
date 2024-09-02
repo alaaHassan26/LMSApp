@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/home/presentation/views/home_view.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -92,7 +93,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
             label: 'page 4',
           ),
         ],
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: greyColor,
         selectedLabelStyle: AppStyles.styleBold16(context),
         unselectedLabelStyle: AppStyles.styleMedium16(context),
         showUnselectedLabels: true,

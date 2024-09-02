@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/core/widget/custom_dropdown_lang.dart';
 import 'package:lms/features/auth/presentation/views/widget/custom_text_field_login_code.dart';
 import 'package:lms/features/auth/presentation/views/widget/logo_and_name_sign_in.dart';
@@ -46,12 +47,12 @@ class _LogInCodeState extends State<LogInCode> {
     try {
       if (Theme.of(context).platform == TargetPlatform.android) {
         final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        deviceId = androidInfo.id; 
+        deviceId = androidInfo.id;
       } else if (Theme.of(context).platform == TargetPlatform.iOS) {
         final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        deviceId = iosInfo.identifierForVendor ?? ''; 
+        deviceId = iosInfo.identifierForVendor ?? '';
       } else {
-        deviceId = ''; 
+        deviceId = '';
       }
       setState(() {
         _deviceId = deviceId;
@@ -75,7 +76,7 @@ class _LogInCodeState extends State<LogInCode> {
     }
 
     if (_isEmailValid && _agreedToTerms) {
-      final macAddress = _deviceId ; 
+      final macAddress = _deviceId;
       final loginCode = _emailController.text;
 
       print(_deviceId);
@@ -148,7 +149,7 @@ class _LogInCodeState extends State<LogInCode> {
         return AlertDialog(
           title: Row(
             children: [
-              const Icon(Icons.error, color: Colors.red),
+              const Icon(Icons.error, color: redColor),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.translate('error'),
@@ -184,7 +185,7 @@ class _LogInCodeState extends State<LogInCode> {
         return AlertDialog(
           title: Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.green),
+              const Icon(Icons.check_circle, color: greenColor),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.translate('success'),
@@ -243,7 +244,8 @@ class _LogInCodeState extends State<LogInCode> {
                     errorText: _isEmailValid
                         ? null
                         : AppLocalizations.of(context)!.translate('entercode'),
-                    labelText: AppLocalizations.of(context)!.translate('entercode'),
+                    labelText:
+                        AppLocalizations.of(context)!.translate('entercode'),
                     emailController: _emailController,
                     isEmailValid: _isEmailValid,
                     passwordController: _passwordController,
@@ -266,7 +268,8 @@ class _LogInCodeState extends State<LogInCode> {
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          AppLocalizations.of(context)!.translate('agree_to_terms_of_use'),
+                          AppLocalizations.of(context)!
+                              .translate('agree_to_terms_of_use'),
                           style: AppStyles.styleRegular20(context),
                         ),
                       ),
@@ -277,7 +280,7 @@ class _LogInCodeState extends State<LogInCode> {
                     onPressed: _agreedToTerms ? _signIn : _showAgreementDialog,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
-                      disabledBackgroundColor: Colors.grey,
+                      disabledBackgroundColor: greyColor,
                       minimumSize: const Size.fromHeight(50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -286,10 +289,7 @@ class _LogInCodeState extends State<LogInCode> {
                     child: Text(
                       AppLocalizations.of(context)!.translate('sign_in'),
                       style: AppStyles.styleMedium20(context).copyWith(
-                        color: _agreedToTerms
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Colors.white,
-                      ),
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                   const SizedBox(

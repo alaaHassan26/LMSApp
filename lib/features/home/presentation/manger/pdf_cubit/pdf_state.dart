@@ -13,3 +13,9 @@ class PDFError extends PDFViewerState {
   final String errorMessage;
   PDFError(this.errorMessage);
 }
+
+// حالة جديدة للتقدم في التحميل
+class PDFProgress extends PDFViewerState {
+  final int progress; // نسبة التحميل
+  PDFProgress(this.progress);
+}
