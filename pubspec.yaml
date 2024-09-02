@@ -1,6 +1,6 @@
 name: lms
 description: "A new Flutter project."
-publish_to: 'none' 
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -13,6 +13,7 @@ dependencies:
   bloc: ^8.1.4
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
+  device_info_plus: ^10.1.2
   dio: ^5.6.0
   flutter:
     sdk: flutter

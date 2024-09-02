@@ -1,5 +1,5 @@
 
-import '../../../Data/Model/login_email_model.dart';
+import '../../../Data/Model/login_model.dart';
 
 class LoginState {}
 
@@ -8,7 +8,7 @@ class LoginInitial extends LoginState {}
 class LoginLoading extends LoginState {}
 
 class LoginSuccess extends LoginState {
-  final LoginEmailResponse loginResponse;
+  final LoginResponse loginResponse;
 
   LoginSuccess(this.loginResponse);
 }
