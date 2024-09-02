@@ -11,7 +11,7 @@ import 'package:lms/features/auth/presentation/views/widget/custom_text_field_si
 import 'package:lms/features/auth/presentation/views/widget/logo_and_name_sign_in.dart';
 
 import '../../manger/auth_cubit/auth_cubit.dart';
-import '../../manger/auth_cubit/auth_state.dart'; // Import the state as well
+import '../../manger/auth_cubit/auth_state.dart'; 
 
 class SignInBody extends StatefulWidget {
   const SignInBody({super.key});
