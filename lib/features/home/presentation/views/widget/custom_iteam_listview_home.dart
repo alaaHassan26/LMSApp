@@ -38,58 +38,25 @@ class _CustomItemListViewNewsHomeState
       },
       child: Column(
         children: [
-          if (widget.homeModel.postTitle != null) ...[
-            ListTile(
-              title: SizedBox(
-                child: Text(
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  widget.homeModel.postTitle!,
-                  style: AppStyles.styleMedium20(context),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Icon(
+                  Iconsax.timer_start,
+                  size: 18,
                 ),
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Icon(
-                      Iconsax.timer_start,
-                      size: 18,
-                    ),
-                    const SizedBox(
-                      width: 6,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.translate('timer'),
-                      style: AppStyles.styleMedium16(context),
-                    )
-                  ],
+                const SizedBox(
+                  width: 6,
                 ),
-              ),
+                Text(
+                  AppLocalizations.of(context)!.translate('timer'),
+                  style: AppStyles.styleMedium16(context),
+                )
+              ],
             ),
-          ],
-          if (widget.homeModel.postTitle == null) ...[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Iconsax.timer_start,
-                    size: 18,
-                  ),
-                  const SizedBox(
-                    width: 6,
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.translate('timer'),
-                    style: AppStyles.styleMedium16(context),
-                  )
-                ],
-              ),
-            ),
-          ],
+          ),
           if (widget.homeModel.image != null &&
               widget.homeModel.image!.isNotEmpty) ...[
             CustomImageListView(
@@ -103,6 +70,7 @@ class _CustomItemListViewNewsHomeState
               child: SizedBox(
                 width: double.infinity,
                 child: ReadMoreText(
+                  textAlign: TextAlign.justify,
                   widget.homeModel.title!,
                   style: AppStyles.styleMedium20(context),
                   trimMode: TrimMode.Line,
