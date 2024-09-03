@@ -46,12 +46,26 @@ class PDFViewerCubit extends Cubit<PDFViewerState> {
         );
       }
 
-      // اضافة تأخير بسيط قبل الإظهار النهائي
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 250));
 
       emit(PDFLoaded(file.path));
     } catch (e) {
       emit(PDFError('Error downloading PDF: $e'));
+    }
+  }
+
+  Future<void> deletePDF(String pdfUrl) async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final fileName = pdfUrl.hashCode.toString();
+      final file = File('${dir.path}/$fileName.pdf');
+
+      if (file.existsSync()) {
+        await file.delete();
+        emit(PDFInitial());
+      }
+    } catch (e) {
+      emit(PDFError('Error deleting PDF: $e'));
     }
   }
 }

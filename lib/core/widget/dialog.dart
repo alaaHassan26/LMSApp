@@ -5,7 +5,11 @@
 // لإخفاء الـ
 // LoadingDialog.hide(context);
 // مع تمرير البراميتر النص والوجيت
-
+//  استخدم هذا loadingلل
+// LoadingAnimationWidget.discreteCircle(
+//                 color: Theme.of(context).colorScheme.onPrimary,
+//                 size: 46,
+//               ),
 import 'package:flutter/material.dart';
 import 'package:lms/core/utils/appstyles.dart';
 

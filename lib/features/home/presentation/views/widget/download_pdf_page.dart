@@ -40,9 +40,13 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                 '${widget.pdfName} (${state.progress}%)',
                 style: AppStyles.styleMedium20(context),
               ),
-              subtitle: Text(
-                AppLocalizations.of(context)!.translate('download_pdf'),
-                style: AppStyles.styleMedium16(context),
+              subtitle: SizedBox(
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  AppLocalizations.of(context)!.translate('download_pdf'),
+                  style: AppStyles.styleMedium16(context),
+                ),
               ),
             );
           } else if (state is PDFLoaded) {
@@ -65,11 +69,13 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                     .push(AppRouter.kPDFViewerPage, extra: state.filePath);
               },
               trailing: IconButton(
-                  onPressed: () {
-                    GoRouter.of(context)
-                        .push(AppRouter.kPDFViewerPage, extra: state.filePath);
-                  },
-                  icon: const Icon(Iconsax.folder_open)),
+                onPressed: () {
+                  final pdfCubit = context.read<PDFViewerCubit>();
+                  _showOptionsDialog(
+                      context, pdfCubit, state.filePath, widget.pdfUrl);
+                },
+                icon: const Icon(Iconsax.menu),
+              ),
             );
           } else if (state is PDFError) {
             return ListTile(
@@ -103,7 +109,7 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                       .downloadAndSavePDF(widget.pdfUrl);
                 },
                 child: SvgPicture.asset(
-                  'assets/images/downloadpdf.svg',
+                  'assets/images/imagpdf.svg',
                   width: MediaQuery.of(context).size.width * 0.15,
                   height: MediaQuery.of(context).size.width * 0.15,
                 ),
@@ -126,4 +132,63 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
 
   @override
   bool get wantKeepAlive => true;
+
+  void _showOptionsDialog(BuildContext context, PDFViewerCubit pdfCubit,
+      String filePath, String pdfUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            AppLocalizations.of(context)!.translate('options'),
+            style: AppStyles.styleMedium20(context),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Iconsax.folder_open),
+                title: Text(
+                  AppLocalizations.of(context)!.translate('open_file'),
+                  style: AppStyles.styleMedium16(context),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  GoRouter.of(context)
+                      .push(AppRouter.kPDFViewerPage, extra: filePath);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Iconsax.trash),
+                title: Text(
+                  AppLocalizations.of(context)!.translate('delete_file'),
+                  style: AppStyles.styleMedium16(context),
+                ),
+                onTap: () {
+                  Navigator.pop(context); // إغلاق الـ Dialog
+                  pdfCubit.deletePDF(pdfUrl);
+                },
+              ),
+              const Divider(),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                AppLocalizations.of(context)!.translate('cancel'),
+                style: AppStyles.styleMedium16(context).copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

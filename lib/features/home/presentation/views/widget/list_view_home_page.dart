@@ -14,8 +14,9 @@ class ListViewHomePage extends StatelessWidget {
       HomeModel(
           image: null,
           title: AppLocalizations.of(context)!.translate('design'),
-          pdfUrl: 'https://www.gotronic.fr/pj2-34976-1794.pdf',
-          namePdf: 'pj2-34976-1794.pdf'),
+          pdfUrl:
+              'https://d1wqtxts1xzle7.cloudfront.net/70949688/pdf-libre.pdf?1633146192=&response-content-disposition=inline%3B+filename%3DRancang_Bangun_Robot_Beroda_Pemadam_Api.pdf&Expires=1725365174&Signature=KFunHInl~akHiNjw1-YcIbX99pu4fPN6sF1ztf3O6xiAgRznu-ow7GF6DuJC6nOzbBbi3HxM2Rd3oG-0~V7lno6Z9LDT9iDBeHzN6~mE66Cf2OzERrleTwNhK9KdMvSYyo1SaTcGHchQ9AKgFngQKvnEc2YSoMvqFpRmCjMkWnGjF2HdcJLqmGFHrGhufCQiUAji5X0C9jksV-3xk2589lxeuEZtuw3JsvsmIpneO47YfhJPcpOeLoqaRdb4tLd-5VT-zTp-Jk8ujuGurG3xDLmtWYGt34IVoM-regLPILlDQgURa9maLVJxQZNh2tqyZcjfI3z3XbcjdF4mc5gIfg__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA',
+          namePdf: 'Robot by Arduino'),
       HomeModel(
           image: [
             'assets/images/rebot.jpg',
@@ -23,8 +24,8 @@ class ListViewHomePage extends StatelessWidget {
           ],
           title: AppLocalizations.of(context)!.translate('mobile'),
           pdfUrl:
-              'https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf',
-          namePdf: 'A000066-datasheet.pdf'),
+              'https://www.researchgate.net/profile/Asoke-Nath-4/publication/304624684_Gesture_Controlled_Robot_using_Arduino_and_Android/links/57750adb08ae1b18a7dfa026/Gesture-Controlled-Robot-using-Arduino-and-Android.pdf',
+          namePdf: 'Mobile Robot'),
       const HomeModel(
           image: ['assets/images/lms_test.jpg'],
           title: null,
@@ -49,8 +50,11 @@ class ListViewHomePage extends StatelessWidget {
     return ListView.builder(
         itemCount: item.length,
         itemBuilder: (context, index) {
-          return CustomItemListViewNewsHome(
-            homeModel: item[index],
+          return Card(
+            elevation: 2,
+            child: CustomItemListViewNewsHome(
+              homeModel: item[index],
+            ),
           );
         });
   }

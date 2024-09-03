@@ -34,5 +34,8 @@
   "pdf_loaded": "Loaded. Tap to view the PDF",
   "wait_pdf_loading": "Wait for the PDF to load...",
   "forgotpassword" : "Forgot Password?",
-  "sendtotheemail" : "Send to the email"
+  "sendtotheemail" : "Send to the email",
+  "delete_file" : "Delete file",
+  "open_file" : "Open file",
+  "options" : "Options"
 }
