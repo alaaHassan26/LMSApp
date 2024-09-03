@@ -6,6 +6,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/home/presentation/manger/pdf_cubit/pdf_cubit.dart';
 import 'package:lms/features/home/presentation/manger/pdf_cubit/pdf_state.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -36,9 +37,13 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                 color: Theme.of(context).colorScheme.onPrimary,
                 size: 46,
               ),
-              title: Text(
-                '${widget.pdfName} (${state.progress}%)',
-                style: AppStyles.styleMedium20(context),
+              title: SizedBox(
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  '${widget.pdfName} (${state.progress}%)',
+                  style: AppStyles.styleMedium20(context),
+                ),
               ),
               subtitle: SizedBox(
                 child: Text(
@@ -56,13 +61,21 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                 width: MediaQuery.of(context).size.width * 0.15,
                 height: MediaQuery.of(context).size.width * 0.15,
               ),
-              title: Text(
-                widget.pdfName,
-                style: AppStyles.styleMedium20(context),
+              title: SizedBox(
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  widget.pdfName,
+                  style: AppStyles.styleMedium20(context),
+                ),
               ),
-              subtitle: Text(
-                AppLocalizations.of(context)!.translate('pdf_loaded'),
-                style: AppStyles.styleMedium16(context),
+              subtitle: SizedBox(
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  AppLocalizations.of(context)!.translate('pdf_loaded'),
+                  style: AppStyles.styleMedium16(context),
+                ),
               ),
               onTap: () {
                 GoRouter.of(context)
@@ -84,9 +97,13 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                   width: MediaQuery.of(context).size.width * 0.15,
                   height: MediaQuery.of(context).size.width * 0.15,
                 ),
-                title: Text(
-                  widget.pdfName,
-                  style: AppStyles.styleMedium20(context),
+                title: SizedBox(
+                  child: Text(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    widget.pdfName,
+                    style: AppStyles.styleMedium20(context),
+                  ),
                 ),
                 subtitle: Text(
                   'Error',
@@ -103,20 +120,23 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
 
           return ListTile(
               leading: GestureDetector(
-                onTap: () {
-                  context
-                      .read<PDFViewerCubit>()
-                      .downloadAndSavePDF(widget.pdfUrl);
-                },
-                child: SvgPicture.asset(
-                  'assets/images/imagpdf.svg',
-                  width: MediaQuery.of(context).size.width * 0.15,
-                  height: MediaQuery.of(context).size.width * 0.15,
+                  onTap: () {
+                    context
+                        .read<PDFViewerCubit>()
+                        .downloadAndSavePDF(widget.pdfUrl);
+                  },
+                  child: const Icon(
+                    Iconsax.document_download,
+                    size: 52,
+                    color: redColor,
+                  )),
+              title: SizedBox(
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  widget.pdfName,
+                  style: AppStyles.styleMedium20(context),
                 ),
-              ),
-              title: Text(
-                widget.pdfName,
-                style: AppStyles.styleMedium20(context),
               ),
               trailing: IconButton(
                   onPressed: () {

@@ -21,27 +21,25 @@ class _CustomImageListViewState extends State<CustomImageListView> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero,
+      ),
       elevation: 0,
       child: Column(
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width,
+            width: double.infinity,
             height: MediaQuery.of(context).size.width * 0.75,
             child: PageView.builder(
               controller: _pageController,
               itemCount: widget.homeModel.image?.length ?? 1,
               itemBuilder: (context, index) {
-                return Container(
-                  width: MediaQuery.of(context).size.width * 0.999,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                return SizedBox(
+                  width: double.infinity,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
                     child: CustomImage(
                       image: widget.homeModel.image![index],
-                      width: MediaQuery.of(context).size.width * 0.999,
+                      width: double.infinity,
                       height: MediaQuery.of(context).size.width * 0.6,
                     ),
                   ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lms/features/home/presentation/views/widget/costom_pinned_post.dart';
 import 'package:lms/features/home/presentation/views/widget/list_view_home_page.dart';
 
 class HomeBody extends StatelessWidget {
@@ -11,7 +10,7 @@ class HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
-        CustomPinnedPost(),
+        // CustomPinnedPost(),
         Expanded(child: ListViewHomePage()),
       ],
     );

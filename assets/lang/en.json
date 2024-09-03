@@ -37,5 +37,7 @@
   "sendtotheemail" : "Send to the email",
   "delete_file" : "Delete file",
   "open_file" : "Open file",
-  "options" : "Options"
+  "options" : "Options",
+  "post_title" : "Post Title",
+  "timer" : "20 h"
 }

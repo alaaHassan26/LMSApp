@@ -12,11 +12,6 @@ class CustomImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-          bottomLeft: Radius.circular(6),
-          bottomRight: Radius.circular(6)),
       child: Image.asset(
         image,
         width: width,

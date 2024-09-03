@@ -36,5 +36,7 @@
   "sendtotheemail" : "ارسال الى البريد الاكتروني",
    "delete_file" : "حذف الملف",
   "open_file" : "فتح الملف",
-  "options" : "خيارات"
+  "options" : "خيارات",
+  "post_title" : "عنوان المنشور",
+   "timer" : "20 س"
 }

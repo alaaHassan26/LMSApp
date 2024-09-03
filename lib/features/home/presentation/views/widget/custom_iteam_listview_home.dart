@@ -36,95 +36,130 @@ class _CustomItemListViewNewsHomeState
         _toggleSelection();
         _showOptionsDialog();
       },
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            flex: 60,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
+          if (widget.homeModel.postTitle != null) ...[
+            ListTile(
+              title: SizedBox(
+                child: Text(
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  widget.homeModel.postTitle!,
+                  style: AppStyles.styleMedium20(context),
+                ),
               ),
-              child: Column(
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Iconsax.timer_start,
+                      size: 18,
+                    ),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.translate('timer'),
+                      style: AppStyles.styleMedium16(context),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+          if (widget.homeModel.postTitle == null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (widget.homeModel.image != null &&
-                      widget.homeModel.image!.isNotEmpty) ...[
-                    CustomImageListView(
-                      homeModel: widget.homeModel,
-                    ),
-                    const SizedBox(height: 6),
-                  ],
-                  if (widget.homeModel.title != null) ...[
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ReadMoreText(
-                          widget.homeModel.title!,
+                  const Icon(
+                    Iconsax.timer_start,
+                    size: 18,
+                  ),
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.translate('timer'),
+                    style: AppStyles.styleMedium16(context),
+                  )
+                ],
+              ),
+            ),
+          ],
+          if (widget.homeModel.image != null &&
+              widget.homeModel.image!.isNotEmpty) ...[
+            CustomImageListView(
+              homeModel: widget.homeModel,
+            ),
+            const SizedBox(height: 6),
+          ],
+          if (widget.homeModel.title != null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: ReadMoreText(
+                  widget.homeModel.title!,
+                  style: AppStyles.styleMedium20(context),
+                  trimMode: TrimMode.Line,
+                  trimLines: 7,
+                  colorClickableText: Colors.pink,
+                  trimCollapsedText:
+                      AppLocalizations.of(context)!.translate('showmore'),
+                  trimExpandedText:
+                      AppLocalizations.of(context)!.translate('showless'),
+                  moreStyle: AppStyles.styleBold16(context),
+                ),
+              ),
+            ),
+          ],
+          if (widget.homeModel.pdfUrl != null) ...[
+            const SizedBox(height: 6),
+            DownloadPdfPage(
+              pdfName: widget.homeModel.namePdf!,
+              pdfUrl: widget.homeModel.pdfUrl!,
+            ),
+          ],
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 48),
+            child: Divider(),
+          ),
+          GestureDetector(
+            onTap: () {
+              GoRouter.of(context).push(AppRouter.kCommentsPage);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              child: Row(
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Iconsax.message_search),
+                      const SizedBox(width: 12),
+                      TextButton(
+                        onPressed: () {
+                          GoRouter.of(context).push(AppRouter.kCommentsPage);
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('comment'),
                           style: AppStyles.styleMedium20(context),
-                          trimMode: TrimMode.Line,
-                          trimLines: 7,
-                          colorClickableText: Colors.pink,
-                          trimCollapsedText: AppLocalizations.of(context)!
-                              .translate('showmore'),
-                          trimExpandedText: AppLocalizations.of(context)!
-                              .translate('showless'),
-                          moreStyle: AppStyles.styleBold16(context),
                         ),
-                      ),
-                    ),
-                  ],
-                  if (widget.homeModel.pdfUrl != null) ...[
-                    const SizedBox(height: 6),
-                    DownloadPdfPage(
-                      pdfName: widget.homeModel.namePdf!,
-                      pdfUrl: widget.homeModel.pdfUrl!,
-                    ),
-                  ],
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 48),
-                    child: Divider(),
+                      )
+                    ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      GoRouter.of(context).push(AppRouter.kCommentsPage);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 6),
-                      child: Row(
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Iconsax.message_search),
-                              const SizedBox(width: 12),
-                              TextButton(
-                                onPressed: () {
-                                  GoRouter.of(context)
-                                      .push(AppRouter.kCommentsPage);
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('comment'),
-                                  style: AppStyles.styleMedium20(context),
-                                ),
-                              )
-                            ],
-                          ),
-                          const Spacer(),
-                          IconButton(
-                              onPressed: () {
-                                GoRouter.of(context)
-                                    .push(AppRouter.kCommentsPage);
-                              },
-                              icon: const Icon(
-                                Icons.arrow_forward_ios,
-                                size: 18,
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: () {
+                        GoRouter.of(context).push(AppRouter.kCommentsPage);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18,
+                      ))
                 ],
               ),
             ),
