@@ -55,9 +55,7 @@ class ListViewHomePage extends StatelessWidget {
     return ListView.builder(
         itemCount: item.length,
         itemBuilder: (context, index) {
-          final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           return Card(
-            color: isDarkMode ? null : whiteColor,
             margin: const EdgeInsets.symmetric(vertical: 3),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.zero,
