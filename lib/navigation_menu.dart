@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
-import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/home/presentation/views/home_view.dart';
 
@@ -71,35 +70,38 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Iconsax.home),
-            label: AppLocalizations.of(context)!.translate('home1'),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Iconsax.video_octagon),
-            label: AppLocalizations.of(context)!.translate('courses'),
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Iconsax.heart),
-            label: 'page 3',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Iconsax.personalcard),
-            label: 'page 4',
-          ),
-        ],
-        unselectedItemColor: greyColor,
-        selectedLabelStyle: AppStyles.styleBold16(context),
-        unselectedLabelStyle: AppStyles.styleMedium16(context),
-        showUnselectedLabels: true,
+    return Theme(
+      data: Theme.of(context).copyWith(
+          navigationBarTheme: NavigationBarThemeData(
+              labelTextStyle:
+                  WidgetStateProperty.all(AppStyles.styleMedium16(context)))),
+      child: Scaffold(
+        bottomNavigationBar: NavigationBar(
+          height: 80,
+          elevation: 0,
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: _onItemTapped,
+          destinations: [
+            NavigationDestination(
+              icon: const Icon(Iconsax.home),
+              label: AppLocalizations.of(context)!.translate('home1'),
+            ),
+            NavigationDestination(
+              icon: const Icon(Iconsax.video4),
+              label: AppLocalizations.of(context)!.translate('courses'),
+            ),
+            NavigationDestination(
+              icon: const Icon(Iconsax.heart),
+              label: AppLocalizations.of(context)!.translate('favorites'),
+            ),
+            NavigationDestination(
+              icon: const Icon(Iconsax.personalcard),
+              label: AppLocalizations.of(context)!.translate('account'),
+            ),
+          ],
+        ),
+        body: _screens[_selectedIndex],
       ),
-      body: _screens[_selectedIndex],
     );
   }
 }

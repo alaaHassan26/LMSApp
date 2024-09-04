@@ -145,6 +145,7 @@ class _LogInCodeState extends State<LogInCode> {
             GoRouter.of(context).go(AppRouter.kNavigationMenu);
           } else if (state is LoginFailure) {
             Navigator.of(context).pop();
+            LoadingDialog.hide(context);
             ErrorDialog.show(context, state.error);
           }
         },

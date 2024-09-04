@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
-import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/home/data/model/home_model.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_iteam_listview_home.dart';
 

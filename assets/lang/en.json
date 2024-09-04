@@ -44,5 +44,7 @@
   "cours_title" : "Coures Title",
   "cours_num" : "33 video",
   "courses" : "Courses",
-  "my_coureses" :"My Coureses"
+  "my_coureses" :"My Coureses",
+  "account" : "Account",
+  "favorites" : "Favorites"
 }
