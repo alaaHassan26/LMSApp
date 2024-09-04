@@ -38,5 +38,10 @@
   "open_file" : "فتح الملف",
   "options" : "خيارات",
   "post_title" : "عنوان المنشور",
-   "timer" : "20 س"
+   "timer" : "20 س",
+    "please_wait" : "من فضلك انتظر",
+    "cours_title" : "عنوان المحاضرة",
+    "cours_num" : "33 فيديو",
+    "courses" : "دروس",
+    "my_coureses" :"دروسي"
 }

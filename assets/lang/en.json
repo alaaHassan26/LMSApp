@@ -39,5 +39,10 @@
   "open_file" : "Open file",
   "options" : "Options",
   "post_title" : "Post Title",
-  "timer" : "20 h"
+  "timer" : "20 h",
+  "please_wait" : "Please Wait",
+  "cours_title" : "Coures Title",
+  "cours_num" : "33 video",
+  "courses" : "Courses",
+  "my_coureses" :"My Coureses"
 }

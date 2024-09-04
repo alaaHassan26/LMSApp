@@ -4,18 +4,17 @@
 
 // لإخفاء الـ
 // LoadingDialog.hide(context);
-// مع تمرير البراميتر النص والوجيت
-//  استخدم هذا loadingلل
-// LoadingAnimationWidget.discreteCircle(
-//                 color: Theme.of(context).colorScheme.onPrimary,
-//                 size: 46,
-//               ),
+
 import 'package:flutter/material.dart';
+import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoadingDialog {
-  static Future<void> show(BuildContext context,
-      {String? text, Widget? widget}) async {
+  static Future<void> show(
+    BuildContext context,
+  ) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -33,10 +32,13 @@ class LoadingDialog {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  widget!,
+                  LoadingAnimationWidget.discreteCircle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    size: 46,
+                  ),
                   const SizedBox(height: 32),
                   Text(
-                    text!,
+                    AppLocalizations.of(context)!.translate('please_wait'),
                     style: AppStyles.styleMedium20(context),
                   ),
                 ],
@@ -44,6 +46,130 @@ class LoadingDialog {
             ),
           ),
         );
+      },
+    );
+  }
+
+  static void hide(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+}
+
+class ErrorDialog {
+  static Future<void> show(BuildContext context, String errorMessage) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+            child: AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error, color: redColor),
+              const SizedBox(width: 8),
+              Text(
+                AppLocalizations.of(context)!.translate('error'),
+                style: AppStyles.styleSemiBold24(context),
+              ),
+            ],
+          ),
+          content: Text(
+            errorMessage,
+            style: AppStyles.styleMedium20(context),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                AppLocalizations.of(context)!.translate('okay'),
+                style: AppStyles.styleMedium16(context),
+              ),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  static void hide(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+}
+
+class SuccessDialog {
+  static Future<void> show(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+            child: AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.check_circle, color: greenColor),
+              const SizedBox(width: 8),
+              Text(
+                AppLocalizations.of(context)!.translate('success'),
+                style: AppStyles.styleSemiBold24(context),
+              ),
+            ],
+          ),
+          content: Text(
+            AppLocalizations.of(context)!.translate('login_successful'),
+            style: AppStyles.styleMedium20(context),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                AppLocalizations.of(context)!.translate('okay'),
+                style: AppStyles.styleMedium16(context),
+              ),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  static void hide(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+}
+
+class ShowAgreementDialog {
+  static Future<void> show(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+            child: AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)!.translate('terms_of_use'),
+            style: AppStyles.styleSemiBold24(context),
+          ),
+          content: Text(
+            AppLocalizations.of(context)!
+                .translate('must_agree_terms_before_proceeding'),
+            style: AppStyles.styleMedium20(context),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                AppLocalizations.of(context)!.translate('okay'),
+                style: AppStyles.styleMedium16(context),
+              ),
+            ),
+          ],
+        ));
       },
     );
   }

@@ -8,6 +8,7 @@ import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
 import 'package:lms/core/widget/custom_dropdown_lang.dart';
+import 'package:lms/core/widget/dialog.dart';
 import 'package:lms/features/auth/presentation/views/widget/custom_text_field_sign_in.dart';
 import 'package:lms/features/auth/presentation/views/widget/logo_and_name_sign_in.dart';
 
@@ -94,103 +95,20 @@ class _SignInBodyState extends State<SignInBody> {
     }
   }
 
-  void _showLoadingDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-  }
-
-  void _showErrorDialog(String errorMessage) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error, color: redColor),
-              const SizedBox(width: 8),
-              Text(
-                AppLocalizations.of(context)!.translate('error'),
-                style: AppStyles.styleSemiBold24(context),
-              ),
-            ],
-          ),
-          content: Text(
-            errorMessage,
-            style: AppStyles.styleMedium20(context),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                AppLocalizations.of(context)!.translate('okay'),
-                style: AppStyles.styleMedium16(context),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.check_circle, color: greenColor),
-              const SizedBox(width: 8),
-              Text(
-                AppLocalizations.of(context)!.translate('success'),
-                style: AppStyles.styleSemiBold24(context),
-              ),
-            ],
-          ),
-          content: Text(
-            AppLocalizations.of(context)!.translate('login_successful'),
-            style: AppStyles.styleMedium20(context),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                AppLocalizations.of(context)!.translate('okay'),
-                style: AppStyles.styleMedium16(context),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginLoading) {
-            _showLoadingDialog();
+            LoadingDialog.show(context);
           } else if (state is LoginSuccess) {
             Navigator.of(context).pop();
-            _showSuccessDialog();
+            SuccessDialog.show(context);
             GoRouter.of(context).go(AppRouter.kNavigationMenu);
           } else if (state is LoginFailure) {
             Navigator.of(context).pop();
-            _showErrorDialog(state.error);
+            ErrorDialog.show(context, state.error);
           }
         },
         child: SafeArea(

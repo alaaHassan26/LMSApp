@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/home/data/model/home_model.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_iteam_listview_home.dart';
 
@@ -54,7 +55,9 @@ class ListViewHomePage extends StatelessWidget {
     return ListView.builder(
         itemCount: item.length,
         itemBuilder: (context, index) {
+          final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           return Card(
+            color: isDarkMode ? null : whiteColor,
             margin: const EdgeInsets.symmetric(vertical: 3),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.zero,

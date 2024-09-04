@@ -5,13 +5,16 @@ class CustomImage extends StatelessWidget {
       {super.key,
       required this.width,
       required this.height,
-      required this.image});
+      required this.image,
+      this.borderRadius});
   final double width;
   final double height;
   final String image;
+  final BorderRadiusGeometry? borderRadius;
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
+      borderRadius: borderRadius ?? BorderRadius.circular(0),
       child: Image.asset(
         image,
         width: width,

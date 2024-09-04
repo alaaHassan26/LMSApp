@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
+import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/home/presentation/views/home_view.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -20,7 +21,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   final List<Widget> _screens = [
     const HomeView(),
-    const SizedBox(),
+    const CoursesPageView(),
     const SizedBox(),
     const SizedBox(),
   ];
@@ -80,9 +81,9 @@ class _NavigationMenuState extends State<NavigationMenu> {
             icon: const Icon(Iconsax.home),
             label: AppLocalizations.of(context)!.translate('home1'),
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Iconsax.book),
-            label: 'page 2',
+          BottomNavigationBarItem(
+            icon: const Icon(Iconsax.video_octagon),
+            label: AppLocalizations.of(context)!.translate('courses'),
           ),
           const BottomNavigationBarItem(
             icon: Icon(Iconsax.heart),

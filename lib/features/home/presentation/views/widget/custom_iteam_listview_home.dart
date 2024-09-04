@@ -106,7 +106,11 @@ class _CustomItemListViewNewsHomeState
                 children: [
                   Row(
                     children: [
-                      const Icon(Iconsax.message_search),
+                      IconButton(
+                          onPressed: () {
+                            GoRouter.of(context).push(AppRouter.kCommentsPage);
+                          },
+                          icon: const Icon(Iconsax.message_search)),
                       const SizedBox(width: 12),
                       TextButton(
                         onPressed: () {
