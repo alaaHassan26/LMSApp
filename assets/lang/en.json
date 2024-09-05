@@ -46,5 +46,6 @@
   "courses" : "Courses",
   "my_coureses" :"My Coureses",
   "account" : "Account",
-  "favorites" : "Favorites"
+  "favorites" : "Favorites",
+  "search" : "Search"
 }

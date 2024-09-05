@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/custom_item_list_view.dart';
 
 class CustomListViewCourses extends StatelessWidget {
@@ -9,14 +10,17 @@ class CustomListViewCourses extends StatelessWidget {
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
           child: Card(
               elevation: 2,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(18)),
               ),
-              child: CustomItemListView()),
+              child: CustomItemListView(
+                courseTitle:
+                    AppLocalizations.of(context)!.translate('cours_title'),
+              )),
         );
       },
     );
