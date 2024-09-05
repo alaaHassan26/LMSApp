@@ -16,12 +16,7 @@ class SearchAndFilterBar extends StatelessWidget {
           children: [
             Expanded(
               child: TextField(
-                onTap: () {
-                  // عند التركيز على مربع البحث، إخفاء الدروس
-                  context.read<SearchCubit>().clearSearch();
-                },
                 onChanged: (value) {
-                  // البحث أثناء الكتابة
                   context.read<SearchCubit>().search(value);
                 },
                 decoration: InputDecoration(

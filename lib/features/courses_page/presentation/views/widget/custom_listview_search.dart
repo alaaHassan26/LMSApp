@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lms/core/utils/app_localiizations.dart';
+import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/features/courses_page/data/models/search_model.dart';
 import 'package:lms/features/courses_page/presentation/manger/search_cubit/search_cubit.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/custom_item_list_view.dart';
@@ -16,7 +18,16 @@ class CustomListViewSearch extends StatelessWidget {
       child: BlocBuilder<SearchCubit, List<SearchModel>>(
         builder: (context, searchResults) {
           if (searchResults.isEmpty) {
-            return const CustomListViewCourses();
+            final isSearching = context.read<SearchCubit>().isSearching;
+            if (!isSearching) {
+              return const CustomListViewCourses();
+            } else {
+              return Center(
+                child: Text(
+                    AppLocalizations.of(context)!.translate('no_results_found'),
+                    style: AppStyles.styleRegular20(context)),
+              );
+            }
           } else {
             return ListView.builder(
               itemCount: searchResults.length,

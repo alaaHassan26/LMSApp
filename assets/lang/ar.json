@@ -46,5 +46,6 @@
     "my_coureses" :"دروسي",
     "account" : "الحساب",
   "favorites" : "المفضلة",
-  "search" : "بحث"
+  "search" : "بحث",
+  "no_results_found" :"لا توجد نتائج"
 }

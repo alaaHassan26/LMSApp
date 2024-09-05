@@ -15,10 +15,16 @@ class SearchCubit extends Cubit<List<SearchModel>> {
     const SearchModel(nameTitleCours: 'علي حسين'),
   ];
 
+  bool isSearching = false;
+
   void search(String query) {
+    isSearching = query.isNotEmpty;
+    query = query.trim();
     if (query.isEmpty) {
+      isSearching = false;
       emit([]);
     } else {
+      isSearching = true;
       List<SearchModel> results = allCourses.where((course) {
         return course.nameTitleCours
             .toLowerCase()
@@ -33,9 +39,5 @@ class SearchCubit extends Cubit<List<SearchModel>> {
 
       emit(results);
     }
-  }
-
-  void clearSearch() {
-    emit([]);
   }
 }
