@@ -47,5 +47,12 @@
     "account" : "الحساب",
   "favorites" : "المفضلة",
   "search" : "بحث",
-  "no_results_found" :"لا توجد نتائج"
+  "no_results_found" :"لا توجد نتائج",
+  "settings": "الاعدادات",
+  "m_profile" : " ملفي الشخصي",
+  "lang" : "اللغة" ,
+  "darkmode" : "الوضع الداكن" ,
+  "about" : "حول" ,
+  "report" : "ابلاغ",
+  "sinout" : "تسجيل خروج"
 }

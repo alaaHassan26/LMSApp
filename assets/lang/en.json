@@ -48,5 +48,12 @@
   "account" : "Account",
   "favorites" : "Favorites",
   "search" : "Search",
-  "no_results_found" :"No results found"
+  "no_results_found" :"No results found",
+  "settings": "Settings",
+  "m_profile" : "My Profile",
+  "lang" : "Language" ,
+  "darkmode" : "Dark Mode" ,
+  "about" : "About" ,
+  "report" : "Report",
+  "sinout" : "Sign out"
 }

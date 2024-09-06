@@ -5,6 +5,7 @@ import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/home/presentation/views/home_view.dart';
+import 'package:lms/features/settings/presentation/views/settings_view.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({super.key});
@@ -22,7 +23,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
     const HomeView(),
     const CoursesPageView(),
     const SizedBox(),
-    const SizedBox(),
+    const SettingsView(),
   ];
 
   void initScreens() {
@@ -95,8 +96,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
               label: AppLocalizations.of(context)!.translate('favorites'),
             ),
             NavigationDestination(
-              icon: const Icon(Iconsax.personalcard),
-              label: AppLocalizations.of(context)!.translate('account'),
+              icon: const Icon(Iconsax.setting),
+              label: AppLocalizations.of(context)!.translate('settings'),
             ),
           ],
         ),
