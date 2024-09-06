@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/functions/direction_arabic.dart';
+import 'package:lms/core/utils/appstyles.dart';
 
 class CustomListTitleSetting extends StatelessWidget {
   const CustomListTitleSetting({
@@ -18,7 +19,10 @@ class CustomListTitleSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
         leading: Icon(icon),
-        title: Text(title),
+        title: Text(
+          title,
+          style: AppStyles.styleMedium20(context),
+        ),
         trailing: trailing ??
             IconButton(
               onPressed: onPressed,
