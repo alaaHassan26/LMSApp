@@ -9,23 +9,16 @@ class ThemeToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Row(
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * .1,
-        ),
-        Switch(
-          value: isDarkMode,
-          onChanged: (value) {
-            var themeCubit = context.read<AppThemeCubit>();
-            if (value) {
-              themeCubit.changeTheme(ThemeState.dark);
-            } else {
-              themeCubit.changeTheme(ThemeState.ligth);
-            }
-          },
-        ),
-      ],
+    return Switch(
+      value: isDarkMode,
+      onChanged: (value) {
+        var themeCubit = context.read<AppThemeCubit>();
+        if (value) {
+          themeCubit.changeTheme(ThemeState.dark);
+        } else {
+          themeCubit.changeTheme(ThemeState.ligth);
+        }
+      },
     );
   }
 }
