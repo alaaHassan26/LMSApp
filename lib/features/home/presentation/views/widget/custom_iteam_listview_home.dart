@@ -30,7 +30,7 @@ class _CustomItemListViewNewsHomeState
   }
 
   Map<String, String> formatDateTime(DateTime dateTime) {
-    String date = DateFormat('yyyy - M - d').format(dateTime);
+    String date = DateFormat('yyyy / M / d').format(dateTime);
     String time = DateFormat('HH:mm a').format(dateTime);
     return {'date': date, 'time': time};
   }
@@ -90,6 +90,14 @@ class _CustomItemListViewNewsHomeState
             ),
             const SizedBox(height: 6),
           ],
+          if (widget.newsModel.file != null) ...[
+            const SizedBox(height: 6),
+            DownloadPdfPage(
+              pdfName: widget.newsModel.filename!,
+              pdfUrl: widget.newsModel.file!,
+            ),
+          ],
+          const SizedBox(height: 6),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
@@ -109,13 +117,6 @@ class _CustomItemListViewNewsHomeState
               ),
             ),
           ),
-          if (widget.newsModel.file != null) ...[
-            const SizedBox(height: 6),
-            DownloadPdfPage(
-              pdfName: widget.newsModel.filename!,
-              pdfUrl: widget.newsModel.file!,
-            ),
-          ],
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 48),
             child: Divider(),

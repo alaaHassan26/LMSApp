@@ -8,7 +8,8 @@ class PdfViewerPage extends StatefulWidget {
   final String filePath;
   final String pdfName;
 
-  const PdfViewerPage({super.key, required this.filePath, required this.pdfName}); 
+  const PdfViewerPage(
+      {super.key, required this.filePath, required this.pdfName});
 
   @override
   State<StatefulWidget> createState() => _PdfViewerPageState();
@@ -22,9 +23,9 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.pdfName), titleTextStyle: AppStyles.styleMedium18(context).copyWith(color: Colors.black)
-      ),
+          centerTitle: true,
+          title: Text(widget.pdfName),
+          titleTextStyle: AppStyles.styleMedium18(context)),
       body: SafeArea(
         child: Stack(
           children: [
