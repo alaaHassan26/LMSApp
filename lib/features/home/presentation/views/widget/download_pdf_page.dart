@@ -78,10 +78,13 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                   style: AppStyles.styleMedium16(context),
                 ),
               ),
-              onTap: () {
-                GoRouter.of(context)
-                    .push(AppRouter.kPDFViewerPage, extra: state.filePath);
-              },
+          onTap: () {
+  GoRouter.of(context).push(AppRouter.kPDFViewerPage, extra: {
+    'filePath': state.filePath,
+    'pdfName': widget.pdfName,
+  });
+},
+
               trailing: IconButton(
                 onPressed: () {
                   final pdfCubit = context.read<PDFViewerCubit>();

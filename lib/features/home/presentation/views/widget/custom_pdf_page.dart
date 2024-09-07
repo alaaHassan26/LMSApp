@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../../../../core/utils/appstyles.dart';
+
 class PdfViewerPage extends StatefulWidget {
   final String filePath;
+  final String pdfName;
 
-  const PdfViewerPage({super.key, required this.filePath});
+  const PdfViewerPage({super.key, required this.filePath, required this.pdfName}); 
 
   @override
   State<StatefulWidget> createState() => _PdfViewerPageState();
@@ -20,7 +23,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('PDF'),
+        title: Text(widget.pdfName), titleTextStyle: AppStyles.styleMedium18(context).copyWith(color: Colors.black)
       ),
       body: SafeArea(
         child: Stack(
@@ -38,9 +41,8 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                 });
               },
               onError: (error) {
-                // التعامل مع الأخطاء
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error loading PDF')),
+                  const SnackBar(content: Text('Error loading PDF')),
                 );
               },
             ),

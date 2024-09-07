@@ -31,13 +31,18 @@ abstract class AppRouter {
       path: kCommentsPage,
       builder: (context, state) => const CommentsPage(),
     ),
+
     GoRoute(
-      path: kPDFViewerPage,
-      builder: (context, state) {
-        final pdfUrl = state.extra as String;
-        return PdfViewerPage(filePath: pdfUrl);
-      },
-    ),
+  path: kPDFViewerPage,
+  builder: (context, state) {
+    final Map<String, String> extras = state.extra as Map<String, String>;
+    return PdfViewerPage(
+      filePath: extras['filePath']!,
+      pdfName: extras['pdfName']!, 
+    );
+  },
+),
+
     GoRoute(
       path: kLogInCode,
       builder: (context, state) => const LogInCode(),
