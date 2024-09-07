@@ -37,8 +37,7 @@ class CustomItemSetting extends StatelessWidget {
                 CustomListTitleSetting(
                   icon: Icons.dark_mode,
                   title: AppLocalizations.of(context)!.translate('darkmode'),
-                  trailing:
-                      const SizedBox(width: 100, child: ThemeToggleButton()),
+                  trailing: const ThemeToggleButton(),
                 ),
               ],
             ),
