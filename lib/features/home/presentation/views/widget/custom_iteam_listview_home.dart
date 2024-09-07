@@ -112,7 +112,7 @@ class _CustomItemListViewNewsHomeState
           if (widget.newsModel.file != null) ...[
             const SizedBox(height: 6),
             DownloadPdfPage(
-              pdfName: widget.newsModel.file!,
+              pdfName: widget.newsModel.filename!,
               pdfUrl: widget.newsModel.file!,
             ),
           ],

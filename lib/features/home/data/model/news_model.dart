@@ -5,6 +5,7 @@ class NewsModel {
   final String text;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? filename;
   final List<NewsImage> images;
 
   NewsModel({
@@ -14,6 +15,7 @@ class NewsModel {
     required this.text,
     required this.createdAt,
     required this.updatedAt,
+    this.filename,
     required this.images,
   });
 
@@ -25,13 +27,12 @@ class NewsModel {
       text: json['text'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      filename: json['filename'],
       images: (json['images'] as List<dynamic>)
           .map((image) => NewsImage.fromJson(image))
           .toList(),
     );
   }
-
-  get pdfUrl => null;
 
   Map<String, dynamic> toJson() {
     return {
@@ -41,6 +42,7 @@ class NewsModel {
       'text': text,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'filename': filename,
       'images': images.map((image) => image.toJson()).toList(),
     };
   }
