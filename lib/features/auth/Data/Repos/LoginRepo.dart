@@ -15,7 +15,7 @@ class LoginRepository {
       String email, String password) async {
     try {
       final response = await apiService.post(
-        'api/login',
+        '/api/login',
         data: {
           'email': email,
           'password': password,
@@ -42,7 +42,7 @@ class LoginRepository {
       String macAddress, String loginCode) async {
     try {
       final response = await apiService.post(
-        'api/login',
+        '/api/login',
         data: {
           'mac_address': macAddress,
           'login_code': loginCode,
