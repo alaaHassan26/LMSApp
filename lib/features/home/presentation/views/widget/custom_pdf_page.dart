@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../../core/utils/appstyles.dart';
@@ -21,11 +22,13 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
           title: Text(widget.pdfName),
-          titleTextStyle: AppStyles.styleMedium18(context)),
+          titleTextStyle: AppStyles.styleMedium18(context)
+              .copyWith(color: isDarkMode ? whiteColor : Colors.black)),
       body: SafeArea(
         child: Stack(
           children: [
