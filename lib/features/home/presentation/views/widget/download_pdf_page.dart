@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lms/core/utils/Constatns.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
@@ -111,9 +112,11 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                 ),
                 trailing: IconButton(
                     onPressed: () {
+
+                      print('${CS.Api} ${widget.pdfUrl}');
                       context
                           .read<PDFViewerCubit>()
-                          .downloadAndSavePDF(widget.pdfUrl);
+                          .downloadAndSavePDF('${CS.Api}${widget.pdfUrl}');
                     },
                     icon: const Icon(Iconsax.document_download)));
           }
@@ -123,7 +126,7 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                   onTap: () {
                     context
                         .read<PDFViewerCubit>()
-                        .downloadAndSavePDF(widget.pdfUrl);
+                        .downloadAndSavePDF('${CS.Api}${widget.pdfUrl}');
                   },
                   child: const Icon(
                     Iconsax.document_download,
@@ -142,7 +145,7 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                   onPressed: () {
                     context
                         .read<PDFViewerCubit>()
-                        .downloadAndSavePDF(widget.pdfUrl);
+                        .downloadAndSavePDF('${CS.Api}${widget.pdfUrl}');
                   },
                   icon: const Icon(Iconsax.document_download)));
         },
@@ -187,8 +190,8 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                   style: AppStyles.styleMedium16(context),
                 ),
                 onTap: () {
-                  Navigator.pop(context); // إغلاق الـ Dialog
-                  pdfCubit.deletePDF(pdfUrl);
+                  Navigator.pop(context);
+                  pdfCubit.deletePDF('${CS.Api}${widget.pdfUrl}');
                 },
               ),
               const Divider(),

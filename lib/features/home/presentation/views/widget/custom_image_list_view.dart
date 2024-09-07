@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:lms/core/utils/Constatns.dart';
 import 'package:lms/core/widget/custom_image.dart';
-import 'package:lms/features/home/data/model/home_model.dart';
+import 'package:lms/features/home/data/model/news_model.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CustomImageListView extends StatefulWidget {
   const CustomImageListView({
     super.key,
-    required this.homeModel,
+    required this.newsModel,
   });
 
-  final HomeModel homeModel;
+  final NewsModel newsModel;
 
   @override
   State<CustomImageListView> createState() => _CustomImageListViewState();
 }
+
+
+@override
 
 class _CustomImageListViewState extends State<CustomImageListView> {
   final PageController _pageController = PageController();
@@ -32,13 +36,13 @@ class _CustomImageListViewState extends State<CustomImageListView> {
             height: MediaQuery.of(context).size.width * 0.75,
             child: PageView.builder(
               controller: _pageController,
-              itemCount: widget.homeModel.image?.length ?? 1,
+              itemCount: widget.newsModel.images.length,
               itemBuilder: (context, index) {
                 return SizedBox(
                   width: double.infinity,
                   child: ClipRRect(
                     child: CustomImage(
-                      image: widget.homeModel.image![index],
+                      image:'${CS.Api}${widget.newsModel.images[index].imagePath}',
                       width: double.infinity,
                       height: MediaQuery.of(context).size.width * 0.6,
                     ),
@@ -50,7 +54,7 @@ class _CustomImageListViewState extends State<CustomImageListView> {
           const SizedBox(height: 12),
           SmoothPageIndicator(
             controller: _pageController,
-            count: widget.homeModel.image?.length ?? 1,
+            count: widget.newsModel.images.length,
             effect: const WormEffect(
               dotHeight: 8,
               dotWidth: 8,

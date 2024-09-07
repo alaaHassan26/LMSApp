@@ -15,7 +15,7 @@ class LoginRepository {
       String email, String password) async {
     try {
       final response = await apiService.post(
-        'login',
+        'api/login',
         data: {
           'email': email,
           'password': password,
@@ -42,7 +42,7 @@ class LoginRepository {
       String macAddress, String loginCode) async {
     try {
       final response = await apiService.post(
-        'login',
+        'api/login',
         data: {
           'mac_address': macAddress,
           'login_code': loginCode,
@@ -53,7 +53,7 @@ class LoginRepository {
       print("Response Data: ${response.data}");
 
       final loginResponse = LoginResponse.fromJson(response.data);
-      print("LoginResponse: ${loginResponse}");
+      print("LoginResponse: $loginResponse");
       CacheHelper().saveData(key: 'saveToken', value: loginResponse.token);
       return Right(loginResponse);
     } catch (e) {

@@ -12,6 +12,7 @@ dependencies:
   another_flushbar: ^1.12.30
   back_button_interceptor: ^7.0.3
   bloc: ^8.1.4
+  cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   device_info_plus: ^10.1.2
@@ -32,6 +33,7 @@ dependencies:
   pdf_image_renderer: ^0.7.0
   readmore: ^3.0.0
   shared_preferences: ^2.2.3
+  shimmer: ^3.0.0
   short_navigation: ^1.0.0
   smooth_page_indicator: ^1.2.0+3
 

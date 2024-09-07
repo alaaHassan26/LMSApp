@@ -31,7 +31,6 @@ class PDFViewerCubit extends Cubit<PDFViewerState> {
       final file = File('${dir.path}/$fileName.pdf');
 
       if (!file.existsSync()) {
-        // اظهار مؤشر التحميل فوراً
         emit(PDFProgress(0));
 
         await Dio().download(
