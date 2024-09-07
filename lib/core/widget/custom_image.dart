@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:lms/core/widget/shimmer_featured.dart';
 
 class CustomImage extends StatelessWidget {
   const CustomImage({
@@ -20,7 +20,6 @@ class CustomImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.circular(0),
       child: Stack(
-        fit: StackFit.expand,
         children: [
           Image.network(
             image,
@@ -31,24 +30,27 @@ class CustomImage extends StatelessWidget {
               if (progress == null) {
                 return child;
               } else {
-                return _buildShimmerEffect();
+                return const ShimmerFeaturedList();
               }
             },
-            errorBuilder: (context, error, stackTrace) => _buildShimmerEffect(),
+            errorBuilder: (context, error, stackTrace) => const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.warning_amber_outlined,
+                  size: 32,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Image Not Available',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildShimmerEffect() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Container(
-        width: width,
-        height: height,
-        color: Colors.white,
       ),
     );
   }

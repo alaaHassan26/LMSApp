@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:dio/dio.dart';
 import 'package:lms/core/utils/Constatns.dart';
 
@@ -22,7 +24,8 @@ class ApiService {
     return response;
   }
 
-  Future<Response> post(String endpoint, {
+  Future<Response> post(
+    String endpoint, {
     String? token,
     dynamic data,
   }) async {

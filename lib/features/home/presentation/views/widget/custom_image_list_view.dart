@@ -16,9 +16,7 @@ class CustomImageListView extends StatefulWidget {
   State<CustomImageListView> createState() => _CustomImageListViewState();
 }
 
-
 @override
-
 class _CustomImageListViewState extends State<CustomImageListView> {
   final PageController _pageController = PageController();
 
@@ -33,7 +31,7 @@ class _CustomImageListViewState extends State<CustomImageListView> {
         children: [
           SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.width * 0.75,
+            height: MediaQuery.of(context).size.width * 1,
             child: PageView.builder(
               controller: _pageController,
               itemCount: widget.newsModel.images.length,
@@ -42,9 +40,10 @@ class _CustomImageListViewState extends State<CustomImageListView> {
                   width: double.infinity,
                   child: ClipRRect(
                     child: CustomImage(
-                      image:'${CS.Api}${widget.newsModel.images[index].imagePath}',
+                      image:
+                          '${CS.Api}${widget.newsModel.images[index].imagePath}',
                       width: double.infinity,
-                      height: MediaQuery.of(context).size.width * 0.6,
+                      height: double.infinity,
                     ),
                   ),
                 );

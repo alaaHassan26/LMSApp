@@ -19,7 +19,8 @@ class CustomItemListView extends StatelessWidget {
               topLeft: Radius.circular(18), topRight: Radius.circular(18)),
           width: double.infinity,
           height: MediaQuery.of(context).size.width * 0.5,
-          image: 'assets/images/rebot.jpg',
+          image:
+              'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg',
         ),
         const SizedBox(height: 8),
         ListTile(
