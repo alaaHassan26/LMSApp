@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lms/core/widget/shimmer_featured.dart';
 
@@ -21,19 +22,15 @@ class CustomImage extends StatelessWidget {
       borderRadius: borderRadius ?? BorderRadius.circular(0),
       child: Stack(
         children: [
-          Image.network(
-            image,
+          CachedNetworkImage(
+            imageUrl: image,
             width: width,
             height: height,
             fit: BoxFit.cover,
-            loadingBuilder: (context, child, progress) {
-              if (progress == null) {
-                return child;
-              } else {
-                return const ShimmerFeaturedList();
-              }
-            },
-            errorBuilder: (context, error, stackTrace) => const Column(
+            placeholder: (context, url) => SizedBox(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: const ShimmerFeaturedList()),
+            errorWidget: (context, url, error) => const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
