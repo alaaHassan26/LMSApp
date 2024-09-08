@@ -63,6 +63,14 @@ abstract class AppStyles {
     );
   }
 
+  static TextStyle styleMedium24(BuildContext context) {
+    return TextStyle(
+      fontSize: getResponsiveFontSize(context, fontSize: 24),
+      fontFamily: isArabic(context) ? 'Fustat' : 'Montserrat',
+      fontWeight: FontWeight.w500,
+    );
+  }
+
   // static TextStyle styleMedium20 = TextStyle(
   //   color: const Color(0xFFFFFFFF),
   //   fontSize: getResponsiveFontSize(fontSize: 20),

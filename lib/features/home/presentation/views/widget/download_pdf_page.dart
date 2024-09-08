@@ -78,13 +78,12 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                   style: AppStyles.styleMedium16(context),
                 ),
               ),
-          onTap: () {
-  GoRouter.of(context).push(AppRouter.kPDFViewerPage, extra: {
-    'filePath': state.filePath,
-    'pdfName': widget.pdfName,
-  });
-},
-
+              onTap: () {
+                GoRouter.of(context).push(AppRouter.kPDFViewerPage, extra: {
+                  'filePath': state.filePath,
+                  'pdfName': widget.pdfName,
+                });
+              },
               trailing: IconButton(
                 onPressed: () {
                   final pdfCubit = context.read<PDFViewerCubit>();
@@ -115,7 +114,6 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                 ),
                 trailing: IconButton(
                     onPressed: () {
-
                       print('${CS.Api} ${widget.pdfUrl}');
                       context
                           .read<PDFViewerCubit>()
@@ -182,8 +180,10 @@ class _DownloadPdfPageState extends State<DownloadPdfPage>
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  GoRouter.of(context)
-                      .push(AppRouter.kPDFViewerPage, extra: filePath);
+                  GoRouter.of(context).push(AppRouter.kPDFViewerPage, extra: {
+                    'filePath': filePath,
+                    'pdfName': widget.pdfName,
+                  });
                 },
               ),
               ListTile(

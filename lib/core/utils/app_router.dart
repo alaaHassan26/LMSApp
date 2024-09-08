@@ -3,8 +3,10 @@ import 'package:lms/cache/cache_helper.dart';
 import 'package:lms/features/auth/presentation/views/sign_in_view.dart';
 import 'package:lms/features/auth/presentation/views/widget/forgot_password.dart';
 import 'package:lms/features/auth/presentation/views/widget/login_code.dart';
+import 'package:lms/features/home/data/model/news_model.dart';
 import 'package:lms/features/home/presentation/views/widget/comment_page.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_pdf_page.dart';
+import 'package:lms/features/home/presentation/views/widget/image_view.dart';
 import 'package:lms/navigation_menu.dart';
 
 abstract class AppRouter {
@@ -13,6 +15,7 @@ abstract class AppRouter {
   static const kPDFViewerPage = '/pDFViewerPage';
   static const kLogInCode = '/logInCode';
   static const kForgotPassword = '/forgotPassword';
+  static const kImageView = '/imageView';
   static final router = GoRouter(routes: [
     CacheHelper().getData(key: 'token') != null
         ? GoRoute(
@@ -31,18 +34,16 @@ abstract class AppRouter {
       path: kCommentsPage,
       builder: (context, state) => const CommentsPage(),
     ),
-
     GoRoute(
-  path: kPDFViewerPage,
-  builder: (context, state) {
-    final Map<String, String> extras = state.extra as Map<String, String>;
-    return PdfViewerPage(
-      filePath: extras['filePath']!,
-      pdfName: extras['pdfName']!, 
-    );
-  },
-),
-
+      path: kPDFViewerPage,
+      builder: (context, state) {
+        final Map<String, String> extras = state.extra as Map<String, String>;
+        return PdfViewerPage(
+          filePath: extras['filePath']!,
+          pdfName: extras['pdfName']!,
+        );
+      },
+    ),
     GoRoute(
       path: kLogInCode,
       builder: (context, state) => const LogInCode(),
@@ -50,6 +51,15 @@ abstract class AppRouter {
     GoRoute(
       path: kForgotPassword,
       builder: (context, state) => const ForgotPassword(),
+    ),
+    GoRoute(
+      path: kImageView,
+      builder: (context, state) {
+        final newsModel = state.extra as NewsModel;
+        return ImageView(
+          newsModel: newsModel,
+        );
+      },
     )
   ]);
 }

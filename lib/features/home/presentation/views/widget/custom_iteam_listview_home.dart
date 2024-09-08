@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
@@ -30,8 +31,19 @@ class _CustomItemListViewNewsHomeState
   }
 
   Map<String, String> formatDateTime(DateTime dateTime) {
-    String date = DateFormat('yyyy / M / d').format(dateTime);
-    String time = DateFormat('HH:mm a').format(dateTime);
+    bool arabic = isArabic(context);
+
+    String timeFormat = arabic ? 'hh:mm a' : 'hh:mm a';
+    String time = DateFormat(timeFormat).format(dateTime);
+
+    if (arabic) {
+      time = time.replaceAll('AM', 'ص').replaceAll('PM', 'م');
+    }
+
+    String date = arabic
+        ? DateFormat('yyyy / M / d', 'ar').format(dateTime)
+        : DateFormat('yyyy / M / d').format(dateTime);
+
     return {'date': date, 'time': time};
   }
 
@@ -85,8 +97,14 @@ class _CustomItemListViewNewsHomeState
             ),
           ),
           if (widget.newsModel.images.isNotEmpty) ...[
-            CustomImageListView(
-              newsModel: widget.newsModel,
+            GestureDetector(
+              onTap: () {
+                GoRouter.of(context)
+                    .push(AppRouter.kImageView, extra: widget.newsModel);
+              },
+              child: CustomImageListView(
+                newsModel: widget.newsModel,
+              ),
             ),
             const SizedBox(height: 6),
           ],
