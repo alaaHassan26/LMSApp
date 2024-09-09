@@ -2,29 +2,19 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 class CustomSnackbar {
-  static void showSuccess(BuildContext context, String message) {
+  static void showSnackBar(
+      BuildContext context, String message, TextStyle? style) {
     Flushbar(
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
+      margin: const EdgeInsets.fromLTRB(8, kToolbarHeight + 4, 8, 0),
+      padding: const EdgeInsets.all(24),
+      borderRadius: BorderRadius.circular(24),
       icon: const Icon(
         Icons.check_circle,
       ),
-      title: "Success",
-      message: message,
-      duration: const Duration(seconds: 3),
-      flushbarPosition: FlushbarPosition.TOP,
-    ).show(context);
-  }
-
-  static void showError(BuildContext context, String message) {
-    Flushbar(
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      icon: const Icon(
-        Icons.error_outline,
+      messageText: Text(
+        message,
+        style: style,
       ),
-      title: "Error",
-      message: message,
       duration: const Duration(seconds: 3),
       flushbarPosition: FlushbarPosition.TOP,
     ).show(context);

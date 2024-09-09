@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:lms/core/functions/direction_arabic.dart';
+import 'package:lms/core/utils/Constatns.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
+import 'package:lms/core/widget/snackbar.dart';
 import 'package:lms/features/home/data/model/news_model.dart';
+import 'package:lms/features/home/presentation/manger/download_image_cubit/download_image_cubit.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_image_list_view.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:readmore/readmore.dart';
 
 class ImageView extends StatefulWidget {
@@ -40,19 +45,18 @@ class _ImageViewState extends State<ImageView> {
   @override
   Widget build(BuildContext context) {
     final dateTime = formatDateTime(widget.newsModel.createdAt);
-
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: black38Color,
-        body: GestureDetector(
-          onTap: () {
-            setState(() {
-              showInfo = !showInfo;
-            });
-          },
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Scaffold(
+      backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+      body: GestureDetector(
+        onTap: () {
+          setState(() {
+            showInfo = !showInfo;
+          });
+        },
+        child: SafeArea(
           child: Stack(
             children: [
-              // الصورة في منتصف الشاشة
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -61,12 +65,13 @@ class _ImageViewState extends State<ImageView> {
                   ),
                 ],
               ),
-
               showInfo
                   ? CustomViewImageHeader(
-                      showInfo: showInfo, dateTime: dateTime)
+                      showInfo: showInfo,
+                      dateTime: dateTime,
+                      newsModel: widget.newsModel,
+                    )
                   : const SizedBox(),
-
               showInfo
                   ? CustomViewImageBottom(widget: widget)
                   : const SizedBox(),
@@ -102,7 +107,7 @@ class CustomViewImageBottom extends StatelessWidget {
             ),
           ),
           child: SingleChildScrollView(
-            controller: scrollController, // التمرير للنص
+            controller: scrollController,
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
@@ -145,30 +150,35 @@ class CustomViewImageHeader extends StatelessWidget {
     super.key,
     required this.showInfo,
     required this.dateTime,
+    required this.newsModel,
   });
 
   final bool showInfo;
   final Map<String, String> dateTime;
+  final NewsModel newsModel;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedPositioned(
-      top: showInfo ? 0 : -100,
-      left: 0,
-      right: 0,
-      duration: const Duration(milliseconds: 300),
-      child: Container(
+    return BlocProvider(
+      create: (context) => DownloadCubit(),
+      child: AnimatedPositioned(
+        top: showInfo ? 0 : -100,
+        left: 0,
+        right: 0,
+        duration: const Duration(milliseconds: 300),
+        child: Container(
           color: Colors.black.withOpacity(0.6),
           padding: const EdgeInsets.all(10),
           child: ListTile(
             leading: IconButton(
-                onPressed: () {
-                  GoRouter.of(context).pop();
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                )),
+              onPressed: () {
+                GoRouter.of(context).pop();
+              },
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
             title: Text(
               AppLocalizations.of(context)!.translate('news'),
               style: AppStyles.styleMedium24(context)
@@ -184,9 +194,7 @@ class CustomViewImageHeader extends StatelessWidget {
                       size: 18,
                       color: Colors.white,
                     ),
-                    const SizedBox(
-                      width: 6,
-                    ),
+                    const SizedBox(width: 6),
                     Text(
                       dateTime['time']!,
                       style: AppStyles.styleMedium16(context)
@@ -202,9 +210,7 @@ class CustomViewImageHeader extends StatelessWidget {
                       style: AppStyles.styleMedium16(context)
                           .copyWith(color: Colors.white),
                     ),
-                    const SizedBox(
-                      width: 6,
-                    ),
+                    const SizedBox(width: 6),
                     const Icon(
                       Iconsax.calendar,
                       size: 18,
@@ -214,13 +220,44 @@ class CustomViewImageHeader extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Iconsax.menu,
-                  color: Colors.white,
-                )),
-          )),
+            trailing: BlocConsumer<DownloadCubit, DownloadState>(
+              listener: (context, state) {
+                if (state is DownloadSuccess) {
+                  return CustomSnackbar.showSnackBar(
+                      context,
+                      AppLocalizations.of(context)!.translate('imag_download'),
+                      AppStyles.styleMedium20(context)
+                          .copyWith(color: Colors.white));
+                } else if (state is DownloadFailure) {
+                  return CustomSnackbar.showSnackBar(
+                      context,
+                      'Error',
+                      AppStyles.styleMedium20(context)
+                          .copyWith(color: Colors.white));
+                }
+              },
+              builder: (context, state) {
+                if (state is DownloadLoading) {
+                  return LoadingAnimationWidget.discreteCircle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    size: 36,
+                  );
+                } else {
+                  return IconButton(
+                    onPressed: () {
+                      final imageUrl =
+                          '${CS.Api}${newsModel.images[0].imagePath}';
+                      context.read<DownloadCubit>().downloadImage(imageUrl);
+                    },
+                    icon: const Icon(Iconsax.document_download,
+                        color: Colors.white),
+                  );
+                }
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

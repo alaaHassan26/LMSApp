@@ -55,5 +55,6 @@
   "darkmode" : "Dark Mode" ,
   "about" : "About" ,
   "report" : "Report",
-  "sinout" : "Sign out"
+  "sinout" : "Sign out",
+  "imag_download" : "Imag download successful"
 }
