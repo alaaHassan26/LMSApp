@@ -1,12 +1,12 @@
-// abstract class DownloadState {}
+abstract class DownloadState {}
 
-// class DownloadInitial extends DownloadState {}
+class DownloadInitial extends DownloadState {}
 
-// class DownloadLoading extends DownloadState {}
+class DownloadLoading extends DownloadState {}
 
-// class DownloadSuccess extends DownloadState {}
+class DownloadSuccess extends DownloadState {}
 
-// class DownloadFailure extends DownloadState {
-//   final String error;
-//   DownloadFailure(this.error);
-// }
+class DownloadFailure extends DownloadState {
+  final String error;
+  DownloadFailure(this.error);
+}
