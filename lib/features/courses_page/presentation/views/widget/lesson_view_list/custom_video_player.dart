@@ -2,26 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:better_player/better_player.dart';
 
 class CustomVideoPlayer extends StatefulWidget {
-  const CustomVideoPlayer({
-    super.key,
-  });
+  final String videoUrl;
+
+  const CustomVideoPlayer({required this.videoUrl, super.key});
 
   @override
   State<StatefulWidget> createState() => _CustomVideoPlayerState();
 }
 
 class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
-  late BetterPlayerController _betterPlayerController;
+  BetterPlayerController? _betterPlayerController;
 
   @override
   void initState() {
     super.initState();
-//ابو حسين هنا تخلي رابط الفيديو ويجب ان يكون اما بصيغة
-//m3u8
-// او mpd
+    _setupVideoPlayer(widget.videoUrl);
+  }
+
+  void _setupVideoPlayer(String videoUrl) {
+    _betterPlayerController?.dispose();
+
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
+      BetterPlayerDataSourceType.network,
+      videoUrl,
+    );
 
     _betterPlayerController = BetterPlayerController(
       const BetterPlayerConfiguration(
@@ -47,8 +51,17 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   }
 
   @override
+  void didUpdateWidget(CustomVideoPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.videoUrl != widget.videoUrl) {
+      _betterPlayerController?.dispose();
+      _setupVideoPlayer(widget.videoUrl);
+    }
+  }
+
+  @override
   void dispose() {
-    _betterPlayerController.dispose();
+    _betterPlayerController?.dispose();
     super.dispose();
   }
 
@@ -56,7 +69,9 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 16 / 9,
-      child: BetterPlayer(controller: _betterPlayerController),
+      child: _betterPlayerController != null
+          ? BetterPlayer(controller: _betterPlayerController!)
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }
