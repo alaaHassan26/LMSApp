@@ -56,5 +56,8 @@
   "about" : "About" ,
   "report" : "Report",
   "sinout" : "Sign out",
-  "imag_download" : "Imag download successful"
+  "imag_download" : "Imag download successful",
+  "next" : "Next",
+  "previous" : "Previous",
+  "description" : "Description"
 }

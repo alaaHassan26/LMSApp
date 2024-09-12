@@ -71,7 +71,7 @@ abstract class AppRouter {
     ),
     GoRoute(
       path: kVideoPlayerBody,
-      builder: (context, state) => const VideoPlayerBody(),
+      builder: (context, state) => VideoPlayerBody(),
     ),
   ]);
 }

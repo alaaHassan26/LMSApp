@@ -55,5 +55,8 @@
   "about" : "حول" ,
   "report" : "ابلاغ",
   "sinout" : "تسجيل خروج",
-  "imag_download" : "نجح تنزيل الصورة"
+  "imag_download" : "نجح تنزيل الصورة",
+  "next" : "التالي",
+  "previous" : "السابق",
+  "description" : "الوصف"
 }

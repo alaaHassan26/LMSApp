@@ -1,6 +1,6 @@
-part of 'video_cubit.dart';
+// part of 'video_cubit.dart';
 
-@immutable
-sealed class VideoState {}
+// @immutable
+// sealed class VideoState {}
 
-final class VideoInitial extends VideoState {}
+// final class VideoInitial extends VideoState {}
