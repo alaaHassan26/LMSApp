@@ -954,6 +954,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.2.5"
+<<<<<<< HEAD
+=======
   wakelock_plus:
     dependency: transitive
     description:
@@ -970,6 +972,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+>>>>>>> 9686b4796bc0871a0ecef548a273ac4f8241d988
   web:
     dependency: transitive
     description:
