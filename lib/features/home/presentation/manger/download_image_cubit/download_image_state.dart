@@ -1,6 +1,12 @@
-// part of 'download_image_cubit.dart';
+abstract class DownloadState {}
 
-// @immutable
-// sealed class DownloadImageState {}
+class DownloadInitial extends DownloadState {}
 
-// final class DownloadImageInitial extends DownloadImageState {}
+class DownloadLoading extends DownloadState {}
+
+class DownloadSuccess extends DownloadState {}
+
+class DownloadFailure extends DownloadState {
+  final String error;
+  DownloadFailure(this.error);
+}

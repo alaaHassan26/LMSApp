@@ -9,9 +9,23 @@ rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
-    project.evaluationDependsOn(":app")
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin("com.android.application") ||
+                project.plugins.hasPlugin("com.android.library")) {
+            project.android {
+                compileSdkVersion 34
+                buildToolsVersion "34.0.0"
+            }
+        }
+    }
 }
+
+// يجب ارجاع هذا اذا تمت حل المشكلة وحذف الفوق نفسم اسم الدالة
+// subprojects {
+//     project.evaluationDependsOn(":app")
+// }
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
