@@ -17,7 +17,8 @@ class VideoPlayerBody extends StatelessWidget {
   final List<String> videoUrls = [
     'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     'https://test-streams.mux.dev/test_001/stream.m3u8',
-    'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8'
+    'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8',
+    'https://youtu.be/6uCMEZU3J68?si=FNjJmzv_lqaqN4m6'
   ];
 
   VideoPlayerBody({super.key});

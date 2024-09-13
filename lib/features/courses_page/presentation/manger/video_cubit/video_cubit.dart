@@ -1,5 +1,6 @@
 import 'package:better_player/better_player.dart';
 import 'package:bloc/bloc.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class VideoCubit extends Cubit<int> {
   final List<String> videoUrls;
@@ -22,6 +23,30 @@ class VideoCubit extends Cubit<int> {
 
   String getCurrentVideoUrl() {
     return videoUrls[state];
+  }
+
+  Future<String?> getYouTubeVideoUrl(String youtubeUrl) async {
+    var yt = YoutubeExplode();
+    try {
+      var video = await yt.videos.get(youtubeUrl);
+      var manifest = await yt.videos.streamsClient.getManifest(video.id);
+      var streamInfo = manifest.muxed.bestQuality;
+      return streamInfo.url.toString();
+    } catch (e) {
+      print("Error fetching YouTube URL: $e");
+      return null;
+    } finally {
+      yt.close();
+    }
+  }
+
+  Future<String> getVideoUrl() async {
+    String currentUrl = getCurrentVideoUrl();
+    if (currentUrl.contains('youtube.com') || currentUrl.contains('youtu.be')) {
+      return await getYouTubeVideoUrl(currentUrl) ?? currentUrl;
+    } else {
+      return currentUrl;
+    }
   }
 
   bool isFirstVideo() {

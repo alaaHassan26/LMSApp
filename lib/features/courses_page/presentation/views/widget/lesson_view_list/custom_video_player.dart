@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:better_player/better_player.dart';
+import 'package:lms/features/courses_page/presentation/manger/video_cubit/video_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomVideoPlayer extends StatefulWidget {
   final String videoUrl;
@@ -16,10 +18,11 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    _setupVideoPlayer(widget.videoUrl);
+    _setupVideoPlayer();
   }
 
-  void _setupVideoPlayer(String videoUrl) {
+  void _setupVideoPlayer() async {
+    final videoUrl = await context.read<VideoCubit>().getVideoUrl();
     _betterPlayerController?.dispose();
 
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
@@ -48,6 +51,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
       ),
       betterPlayerDataSource: betterPlayerDataSource,
     );
+    setState(() {});
   }
 
   @override
@@ -55,7 +59,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.videoUrl != widget.videoUrl) {
       _betterPlayerController?.dispose();
-      _setupVideoPlayer(widget.videoUrl);
+      _setupVideoPlayer();
     }
   }
 
