@@ -59,5 +59,10 @@
   "imag_download" : "Imag download successful",
   "next" : "Next",
   "previous" : "Previous",
-  "description" : "Description"
+  "description" : "Description",
+  "please_answer_all_questions_completely" : "Please answer all questions completely!",
+  "correct_answer" : "Correct Answer",
+  "please_select_the_required_number_of_answers" : "Please select the required number of answers.",
+  "your_score" : "Your Score",
+  "view_results" : "View Results"
 }

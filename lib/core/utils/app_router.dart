@@ -5,6 +5,8 @@ import 'package:lms/features/auth/presentation/views/widget/forgot_password.dart
 import 'package:lms/features/auth/presentation/views/widget/login_code.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/list_lesson_body.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/video_player_body.dart';
+import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/mcq_body.dart';
+import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/custom_mcq_page.dart';
 import 'package:lms/features/home/data/model/news_model.dart';
 import 'package:lms/core/widget/comment_page.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_pdf_page.dart';
@@ -20,6 +22,8 @@ abstract class AppRouter {
   static const kImageView = '/imageView';
   static const kListLessonBody = '/listLessonBody';
   static const kVideoPlayerBody = '/customVideoPlayer';
+  static const kMCQBody = '/mCQBody';
+  static const kMcqQuestionPage = '/mcqQuestionPage';
   static final router = GoRouter(routes: [
     CacheHelper().getData(key: 'token') != null
         ? GoRoute(
@@ -72,6 +76,14 @@ abstract class AppRouter {
     GoRoute(
       path: kVideoPlayerBody,
       builder: (context, state) => VideoPlayerBody(),
+    ),
+    GoRoute(
+      path: kMCQBody,
+      builder: (context, state) => MCQBody(),
+    ),
+    GoRoute(
+      path: kMcqQuestionPage,
+      builder: (context, state) => McqQuestionPage(),
     ),
   ]);
 }

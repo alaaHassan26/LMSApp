@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
-import 'package:lms/features/courses_page/presentation/views/widget/courses_body.dart';
+import 'package:lms/features/courses_page/presentation/views/widget/sheet.dart';
+import 'package:lms/features/courses_page/presentation/views/widget/courses_view_list/courses_body.dart';
 
 class CoursesPageView extends StatelessWidget {
   const CoursesPageView({super.key});
@@ -21,7 +22,12 @@ class CoursesPageView extends StatelessWidget {
         centerTitle: true,
         backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
       ),
-      body: const CourcsesBody(),
+      body: const Stack(
+        children: [
+          CourcsesBody(),
+          CustomBottom(),
+        ],
+      ),
     );
   }
 }
