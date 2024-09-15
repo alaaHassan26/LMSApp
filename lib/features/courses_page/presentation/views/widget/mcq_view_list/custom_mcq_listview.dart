@@ -22,7 +22,7 @@ class CustomMcqListView extends StatelessWidget {
                 courseTitle: 'اسم المادة',
                 courseNumber: "عدد الاسئلة 5",
                 onTap: () {
-                  GoRouter.of(context).push(AppRouter.kMcqQuestionPage);
+                  GoRouter.of(context).push(AppRouter.kStartMcqPage);
                 },
               )),
         );

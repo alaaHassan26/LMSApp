@@ -63,5 +63,20 @@
   "correct_answer" : "شرح السوال",
   "please_select_the_required_number_of_answers" : "الرجاء اختيار عدد الاجابات المطلوبة.",
   "your_score" : "نتيجتك",
-  "view_results" : "عرض النتيجة"
+  "view_results" : "عرض النتيجة",
+  "educational_lessons" : "الدروس التعليمية" ,
+  "mcq_question" : "اسئلة MCQ",
+  "download" : "التحميلات",
+  "number_of_uestions" : "عدد الاسئلة",
+  "start_youer_test" : "ابدأ",
+  "exam_name" : "اسم الامتحان",
+   
+   "next_test" : "التالي",
+   "previous_question" : "السابق",
+   "correct_answers" : "إجابات صحيحة",
+   "wrong_answers" : "إجابات خاطئة",
+   "skipped_questions" : "اسئلة تم تخطيها",
+    "end_and_back" : "انهاء والرجوع",
+     "clarify_the_answer" : "توضيح الجواب",
+     "another_quiz" : "اختبار اخر"
 }

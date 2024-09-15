@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lms/core/utils/app_localiizations.dart';
+import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/data/models/search_model.dart';
 
 import 'package:lms/features/courses_page/presentation/manger/search_cubit/search_cubit.dart';
@@ -23,14 +26,26 @@ class CourcsesBody extends StatelessWidget {
       const SearchModel(nameTitleCours: 'حسن'),
       const SearchModel(nameTitleCours: 'علي حسين'),
     ];
-    return BlocProvider(
-      create: (context) => SearchCubit(allCourses: allCourses),
-      child: const Column(
-        children: [
-          SearchAndFilterBar(),
-          CustomListViewSearch(),
-        ],
-      ),
-    );
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Scaffold(
+        backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+            AppLocalizations.of(context)!.translate('my_coureses'),
+            style: AppStyles.styleSemiBold24(context),
+          ),
+          centerTitle: true,
+          backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+        ),
+        body: BlocProvider(
+          create: (context) => SearchCubit(allCourses: allCourses),
+          child: const Column(
+            children: [
+              SearchAndFilterBar(),
+              CustomListViewSearch(),
+            ],
+          ),
+        ));
   }
 }
