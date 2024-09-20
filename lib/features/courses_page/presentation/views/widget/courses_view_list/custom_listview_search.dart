@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
+import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/features/courses_page/data/models/search_model.dart';
 import 'package:lms/features/courses_page/presentation/manger/search_cubit/search_cubit.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/custom_item_list_view.dart';
-import 'package:lms/features/courses_page/presentation/views/widget/custom_list_view_courses.dart';
+import 'package:lms/features/courses_page/presentation/views/widget/courses_view_list/custom_list_view_courses.dart';
 
 class CustomListViewSearch extends StatelessWidget {
   const CustomListViewSearch({
@@ -43,6 +45,9 @@ class CustomListViewSearch extends StatelessWidget {
                     ),
                     child: CustomItemListView(
                       courseTitle: course.nameTitleCours,
+                      onTap: () {
+                        GoRouter.of(context).push(AppRouter.kListLessonBody);
+                      },
                     ),
                   ),
                 );

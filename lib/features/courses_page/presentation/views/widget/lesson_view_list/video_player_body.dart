@@ -1,131 +1,194 @@
-import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
-import 'package:lms/features/courses_page/presentation/manger/video_cubit/video_cubit.dart';
+import 'package:lms/core/utils/colors.dart';
+import 'package:lms/features/courses_page/data/models/video_links.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/comment_video_lesson.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/list_view_video_accessories.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'custom_video_player.dart';
 
 class VideoPlayerBody extends StatelessWidget {
-  //ابو حسين هنا تخلي رابط الفيديو ويجب ان يكون اما بصيغة
-//m3u8
-// او mpd
-  final List<String> videoUrls = [
-    'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-    'https://test-streams.mux.dev/test_001/stream.m3u8',
-    'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8'
-  ];
+  final List<VideoLinksModel> videos;
+  final int initialIndex;
 
-  VideoPlayerBody({super.key});
+  const VideoPlayerBody({
+    super.key,
+    required this.videos,
+    required this.initialIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => VideoCubit(videoUrls),
-      child: BlocBuilder<VideoCubit, int>(
-        builder: (context, state) {
-          final cubit = context.read<VideoCubit>();
+    return SafeArea(
+      child: Scaffold(
+        body: VideoPlayerContent(
+          videos: videos,
+          initialIndex: initialIndex,
+        ),
+      ),
+    );
+  }
+}
 
-          return DefaultTabController(
-            length: 2,
-            child: SafeArea(
-              child: Scaffold(
-                body: Column(
-                  children: [
-                    BlocBuilder<VideoCubit, int>(
-                      builder: (context, state) {
-                        return CustomVideoPlayer(
-                          videoUrl: cubit.getCurrentVideoUrl(),
-                        );
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
-                      child: Row(
-                        children: [
-                          if (!cubit.isFirstVideo())
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () => cubit.previousVideo(
-                                      context.read<BetterPlayerController?>()),
-                                  icon: Icon(isArabic(context)
-                                      ? Iconsax.arrow_circle_right
-                                      : Iconsax.arrow_circle_left),
-                                ),
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('previous'),
-                                  style: AppStyles.styleMedium16(context),
-                                ),
-                              ],
-                            ),
-                          const Spacer(),
-                          if (!cubit.isLastVideo())
-                            Row(
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('next'),
-                                  style: AppStyles.styleMedium16(context),
-                                ),
-                                IconButton(
-                                  onPressed: () => cubit.nextVideo(
-                                      context.read<BetterPlayerController?>()),
-                                  icon: Icon(isArabic(context)
-                                      ? Iconsax.arrow_circle_left
-                                      : Iconsax.arrow_circle_right),
-                                ),
-                              ],
-                            ),
-                        ],
-                      ),
-                    ),
-                    ListTile(
-                      title: SizedBox(
-                        child: Text(
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          'برمجة الاردوينو بواسطة لغة اردوينو المبنيه على لغة c++ و c المهندس علاء',
-                          style: AppStyles.styleMedium24(context),
+class VideoPlayerContent extends StatefulWidget {
+  final List<VideoLinksModel> videos;
+  final int initialIndex;
+
+  const VideoPlayerContent({
+    super.key,
+    required this.videos,
+    required this.initialIndex,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _VideoPlayerContentState();
+}
+
+class _VideoPlayerContentState extends State<VideoPlayerContent>
+    with SingleTickerProviderStateMixin {
+  late PageController _pageController;
+  late TabController _tabController;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: _currentIndex);
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  void _nextVideo() {
+    if (_currentIndex < widget.videos.length - 1) {
+      _currentIndex++;
+      _pageController.animateToPage(
+        _currentIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  // الانتقال إلى الصفحة السابقة باستخدام PageController
+  void _previousVideo() {
+    if (_currentIndex > 0) {
+      _currentIndex--;
+      _pageController.animateToPage(
+        _currentIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      controller: _pageController,
+      onPageChanged: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      itemCount: widget.videos.length,
+      itemBuilder: (context, index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: CustomVideoPlayer(
+                videoUrl: widget.videos[index].videoLink,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Row(
+                children: [
+                  if (_currentIndex > 0)
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: _previousVideo,
+                          icon: Icon(isArabic(context)
+                              ? Iconsax.arrow_circle_right
+                              : Iconsax.arrow_circle_left),
                         ),
-                      ),
-                    ),
-                    TabBar(
-                      indicatorColor: Colors.green,
-                      labelColor: Theme.of(context).colorScheme.primary,
-                      labelStyle: AppStyles.styleMedium18(context),
-                      tabs: [
-                        Tab(
-                          text: AppLocalizations.of(context)!
-                              .translate('description'),
-                        ),
-                        Tab(
-                          text: AppLocalizations.of(context)!
-                              .translate('comments'),
+                        Text(
+                          AppLocalizations.of(context)!.translate('previous'),
+                          style: AppStyles.styleMedium16(context),
                         ),
                       ],
                     ),
-                    const Expanded(
-                      child: TabBarView(
-                        children: [
-                          ListViewVideoAccessories(),
-                          CommentsVideoLesson()
-                        ],
-                      ),
+                  const Spacer(),
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: widget.videos.length,
+                    effect: const WormEffect(
+                      activeDotColor: primaryColor,
+                      dotHeight: 8,
+                      dotWidth: 8,
                     ),
-                  ],
+                  ),
+                  const Spacer(),
+                  if (_currentIndex < widget.videos.length - 1)
+                    Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.translate('next'),
+                          style: AppStyles.styleMedium16(context),
+                        ),
+                        IconButton(
+                          onPressed: _nextVideo,
+                          icon: Icon(isArabic(context)
+                              ? Iconsax.arrow_circle_left
+                              : Iconsax.arrow_circle_right),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                child: Text(
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  widget.videos[_currentIndex].videoTitle,
+                  style: AppStyles.styleMedium24(context),
                 ),
               ),
             ),
-          );
-        },
-      ),
+            TabBar(
+              controller: _tabController,
+              indicatorColor: Colors.green,
+              labelColor: Theme.of(context).colorScheme.primary,
+              labelStyle: AppStyles.styleMedium18(context),
+              tabs: [
+                Tab(
+                  text: AppLocalizations.of(context)!.translate('description'),
+                ),
+                Tab(
+                  text: AppLocalizations.of(context)!.translate('comments'),
+                ),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: const [
+                  ListViewVideoAccessories(),
+                  CommentsVideoLesson(),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -8,9 +8,6 @@ class CustomSnackbar {
       margin: const EdgeInsets.fromLTRB(8, kToolbarHeight + 4, 8, 0),
       padding: const EdgeInsets.all(24),
       borderRadius: BorderRadius.circular(24),
-      icon: const Icon(
-        Icons.check_circle,
-      ),
       messageText: Text(
         message,
         style: style,

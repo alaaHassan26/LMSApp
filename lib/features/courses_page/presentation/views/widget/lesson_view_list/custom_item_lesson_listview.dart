@@ -5,10 +5,16 @@ import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/widget/custom_image.dart';
+import 'package:lms/features/courses_page/data/models/video_links.dart';
 
 class CustomItemLessonListView extends StatelessWidget {
+  final List<VideoLinksModel> videos; // تمرير قائمة الفيديوهات
+  final int index; // فهرس الفيديو الحالي
+
   const CustomItemLessonListView({
     super.key,
+    required this.videos,
+    required this.index,
   });
 
   @override
@@ -18,7 +24,11 @@ class CustomItemLessonListView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
         child: GestureDetector(
           onTap: () {
-            GoRouter.of(context).push(AppRouter.kVideoPlayerBody);
+            // تمرير قائمة الفيديوهات والفهرس الحالي
+            GoRouter.of(context).push(AppRouter.kVideoPlayerBody, extra: {
+              'videos': videos,
+              'initialIndex': index,
+            });
           },
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -28,7 +38,7 @@ class CustomItemLessonListView extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
                     children: [
-                      // Profile Image
+                      // صورة الفيديو
                       SizedBox(
                         width: constraints.maxWidth * 0.25,
                         height: constraints.maxWidth * 0.25,
@@ -41,13 +51,14 @@ class CustomItemLessonListView extends StatelessWidget {
                       ),
                       const SizedBox(width: 16.0),
 
-                      // Texts (name, description, time)
+                      // نصوص (اسم الفيديو، الوصف)
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // استخدام العنوان من الفيديو الحالي
                             SizedBox(
-                              child: Text('الفصل الاول',
+                              child: Text(videos[index].videoTitle,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppStyles.styleMedium24(context)),
@@ -63,18 +74,19 @@ class CustomItemLessonListView extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       const SizedBox(width: 12.0),
                       IconButton(
                         onPressed: () {
-                          GoRouter.of(context).push(AppRouter.kVideoPlayerBody);
+                          GoRouter.of(context)
+                              .push(AppRouter.kVideoPlayerBody, extra: {
+                            'videos': videos,
+                            'initialIndex': index,
+                          });
                         },
                         icon: Icon(isArabic(context)
                             ? Iconsax.arrow_circle_left
                             : Iconsax.arrow_circle_right),
                       ),
-
-                      // Attached Image
                     ],
                   ),
                 ),

@@ -2,18 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lms/features/courses_page/data/models/search_model.dart';
 
 class SearchCubit extends Cubit<List<SearchModel>> {
-  SearchCubit() : super([]);
+  SearchCubit({required this.allCourses}) : super([]);
 
-  List<SearchModel> allCourses = [
-    const SearchModel(nameTitleCours: 'Flutter Basics'),
-    const SearchModel(nameTitleCours: 'Dart Advanced'),
-    const SearchModel(nameTitleCours: 'Machine Learning'),
-    const SearchModel(nameTitleCours: 'علاء'),
-    const SearchModel(nameTitleCours: 'علي عبد'),
-    const SearchModel(nameTitleCours: 'علاء حسن'),
-    const SearchModel(nameTitleCours: 'حسن'),
-    const SearchModel(nameTitleCours: 'علي حسين'),
-  ];
+  final List<SearchModel> allCourses;
 
   bool isSearching = false;
 
