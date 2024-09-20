@@ -1,40 +1,161 @@
+import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:lms/cache/cache_helper.dart';
-
 import '../../../../core/Server/Api_Dio.dart';
 import '../../../../core/Server/Error_Failures.dart';
+import '../model/news_comments_model.dart';
 import '../model/news_model.dart';
 
 class NewsRepository {
-   ApiService apiService = ApiService();
-
-  NewsRepository();
+  final ApiService apiService = ApiService();
 
   Future<Either<Failure, List<NewsModel>>> getNews() async {
     try {
+      String? token = CacheHelper().getData(key: 'saveToken');
+      if (token == null) return Left(ServerFailure('Token is null'));
 
-          String? token = CacheHelper().getData(key: 'saveToken');
+      // Fetch data from API
+      final response = await apiService.get('/api/get_news', token: token);
 
-      final response = await apiService.get('/api/get_news' , token:token! );
+      if (response.statusCode == 200) {
+        final List<NewsModel> newsList = (response.data['result'] as List)
+            .map((newsJson) => NewsModel.fromJson(newsJson))
+            .toList();
 
-      print('Response data: ${response.data} + $token');
-
-      final List<NewsModel> newsList = (response.data['result'] as List)
-          .map((newsJson) => NewsModel.fromJson(newsJson))
-          .toList();
-
-      return Right(newsList);
+        // Save new data to cache
+        await CacheHelper().saveData(
+          key: 'cached_news',
+          value: jsonEncode(newsList.map((e) => e.toJson()).toList()),
+        );
+        print('News data cached successfully');
+        return Right(newsList);
+      } else {
+        return Left(ServerFailure('Failed to fetch news'));
+      }
     } catch (e) {
-      if (e is DioException) {
-        print('DioError: ${e.message}');
-        print('DioError Response: ${e.response?.data}');
-        print('DioError Type: ${e.type}');
-        return Left(ServerFailure.fromDioError(e));
+      // Handle the error and attempt to use cached data
+      print('Error occurred: $e');
+      final cachedData = CacheHelper().getData(key: 'cached_news');
+      if (cachedData != null) {
+        print('Using cached news due to error');
+        final List<NewsModel> cachedNewsList = (jsonDecode(cachedData) as List)
+            .map((newsJson) => NewsModel.fromJson(newsJson))
+            .toList();
+        return Right(cachedNewsList);
       }
 
-      print('General Error: ${e.toString()}');
-      return Left(ServerFailure(e.toString()));
+      if (e is DioException) {
+        return Left(ServerFailure.fromDioError(e));
+      } else {
+        return Left(ServerFailure(e.toString()));
+      }
+    }
+  }
+
+  Future<Either<Failure, List<NewsCommentModel>>> getComments(String newsId) async {
+    try {
+      String? token = CacheHelper().getData(key: 'saveToken');
+      if (token == null) return Left(ServerFailure('Token is null'));
+
+      // Fetch data from API
+      final response = await apiService.get('/api/get_user_comments?news_id=$newsId', token: token);
+
+      if (response.statusCode == 200) {
+        final List<NewsCommentModel> commentsList = (response.data['result'] as List)
+            .map((commentJson) => NewsCommentModel.fromJson(commentJson))
+            .toList();
+
+        // Save new data to cache
+        await CacheHelper().saveData(
+          key: 'cached_comments_$newsId',
+          value: jsonEncode(commentsList.map((e) => e.toJson()).toList()),
+        );
+        print('Comments data cached successfully');
+        return Right(commentsList);
+      } else {
+        return Left(ServerFailure('Failed to fetch comments'));
+      }
+    } catch (e) {
+      // Handle the error and attempt to use cached data
+      print('Error occurred: $e');
+      final cachedData = CacheHelper().getData(key: 'cached_comments_$newsId');
+      if (cachedData != null) {
+        print('Using cached comments due to error');
+        final List<NewsCommentModel> cachedCommentsList = (jsonDecode(cachedData) as List)
+            .map((commentJson) => NewsCommentModel.fromJson(commentJson))
+            .toList();
+        return Right(cachedCommentsList);
+      }
+
+      if (e is DioException) {
+        return Left(ServerFailure.fromDioError(e));
+      } else {
+        return Left(ServerFailure(e.toString()));
+      }
+    }
+  }
+
+  Future<Either<Failure, NewsCommentModel>> addComment(String newsId, String content) async {
+    try {
+      final String? token = CacheHelper().getData(key: 'saveToken');
+      if (token == null) return Left(ServerFailure('Token is null'));
+
+      final payload = {
+        'content': content,
+        'news_id': newsId,
+      };
+
+      final response = await apiService.post(
+        '/api/add_comment',
+        data: jsonEncode(payload),
+        token: token,
+      );
+
+      if (response.statusCode == 200) {
+        final newsComment = NewsCommentModel.fromJson(response.data['result']);
+        return Right(newsComment);
+      } else {
+        return Left(ServerFailure('Failed to add comment'));
+      }
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailure.fromDioError(e));
+      } else {
+        return Left(ServerFailure(e.toString()));
+      }
+    }
+  }
+
+  Future<Either<Failure, NewsCommentModel>> addReplay(String newsId, String content, String parentCommentId) async {
+    try {
+      final String? token = CacheHelper().getData(key: 'saveToken');
+      if (token == null) return Left(ServerFailure('Token is null'));
+
+      final payload = {
+        'content': content,
+        'news_id': newsId,
+        'parent_comment_id': parentCommentId,
+      };
+
+      final response = await apiService.post(
+        '/api/reply_comment',
+        data: jsonEncode(payload),
+        token: token,
+      );
+
+      if (response.statusCode == 200) {
+        final newsComment = NewsCommentModel.fromJson(response.data['result']);
+        return Right(newsComment);
+      } else {
+        return Left(ServerFailure('Failed to add reply'));
+      }
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailure.fromDioError(e));
+      } else {
+        return Left(ServerFailure(e.toString()));
+      }
     }
   }
 }

@@ -139,9 +139,13 @@ class _CustomItemListViewNewsHomeState
             padding: EdgeInsets.symmetric(horizontal: 48),
             child: Divider(),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
-              GoRouter.of(context).push(AppRouter.kCommentsPage);
+                            print(widget.newsModel.id);
+GoRouter.of(context).push(
+  AppRouter.kCommentsPage,
+  extra: widget.newsModel.id,
+);
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -151,14 +155,19 @@ class _CustomItemListViewNewsHomeState
                     children: [
                       IconButton(
                           onPressed: () {
-                            GoRouter.of(context).push(AppRouter.kCommentsPage);
-                          },
+            GoRouter.of(context).push(
+              AppRouter.kCommentsPage,
+              extra: widget.newsModel.id,
+            );   
+                                   },
                           icon: const Icon(Iconsax.message_search)),
                       const SizedBox(width: 12),
                       TextButton(
                         onPressed: () {
-                          GoRouter.of(context).push(AppRouter.kCommentsPage);
-                        },
+            GoRouter.of(context).push(
+              AppRouter.kCommentsPage,
+              extra: widget.newsModel.id,
+            );                        },
                         child: Text(
                           AppLocalizations.of(context)!.translate('comment'),
                           style: AppStyles.styleMedium20(context),
@@ -169,8 +178,10 @@ class _CustomItemListViewNewsHomeState
                   const Spacer(),
                   IconButton(
                       onPressed: () {
-                        GoRouter.of(context).push(AppRouter.kCommentsPage);
-                      },
+            GoRouter.of(context).push(
+              AppRouter.kCommentsPage,
+              extra: widget.newsModel.id,
+            );                      },
                       icon: const Icon(
                         Icons.arrow_forward_ios,
                         size: 18,

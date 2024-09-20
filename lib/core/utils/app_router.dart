@@ -34,10 +34,14 @@ abstract class AppRouter {
       path: kNavigationMenu,
       builder: (context, state) => const NavigationMenu(),
     ),
-    GoRoute(
-      path: kCommentsPage,
-      builder: (context, state) => const CommentsPage(),
-    ),
+GoRoute(
+  path: kCommentsPage,
+  builder: (context, state) {
+    final newsId = state.extra as String;
+    return CommentsPage(newsId: newsId);
+  },
+),
+
     GoRoute(
       path: kPDFViewerPage,
       builder: (context, state) {
