@@ -5,6 +5,7 @@ import 'package:lms/features/auth/presentation/views/sign_in_view.dart';
 import 'package:lms/features/auth/presentation/views/widget/forgot_password.dart';
 import 'package:lms/features/auth/presentation/views/widget/login_code.dart';
 import 'package:lms/features/courses_page/data/models/question_model.dart';
+import 'package:lms/features/courses_page/data/models/video_links.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/courses_view_list/courses_body.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/download_video/download_video_body.dart';
@@ -99,7 +100,22 @@ abstract class AppRouter {
     ),
     GoRoute(
       path: kVideoPlayerBody,
-      builder: (context, state) => VideoPlayerBody(),
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>?; // توقع استقبال Map
+        if (data != null) {
+          final videos = data['videos']
+              as List<VideoLinksModel>; // استلام قائمة الفيديوهات
+          final initialIndex =
+              data['initialIndex'] as int; // استلام الفهرس الابتدائي
+          return VideoPlayerBody(videos: videos, initialIndex: initialIndex);
+        } else {
+          return const Scaffold(
+            body: Center(
+              child: Text('Error: No videos available'),
+            ),
+          );
+        }
+      },
     ),
     GoRoute(
       path: kMCQBody,
