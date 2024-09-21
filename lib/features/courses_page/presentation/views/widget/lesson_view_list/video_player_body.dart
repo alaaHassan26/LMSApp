@@ -7,6 +7,7 @@ import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/data/models/video_links.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/comment_video_lesson.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/list_view_video_accessories.dart';
+
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'custom_video_player.dart';
 
@@ -22,12 +23,29 @@ class VideoPlayerBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: VideoPlayerContent(
-          videos: videos,
-          initialIndex: initialIndex,
-        ),
+    void showCommentsSheet(BuildContext context) {
+      showModalBottomSheet(
+        isScrollControlled: true,
+        useSafeArea: true,
+        context: context,
+        builder: (context) => const CommentsVideoLesson(),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          GestureDetector(
+              onTap: () => showCommentsSheet(context),
+              child: const Icon(Iconsax.message)),
+          const SizedBox(
+            width: 24,
+          )
+        ],
+      ),
+      body: VideoPlayerContent(
+        videos: videos,
+        initialIndex: initialIndex,
       ),
     );
   }
@@ -50,7 +68,7 @@ class VideoPlayerContent extends StatefulWidget {
 class _VideoPlayerContentState extends State<VideoPlayerContent>
     with SingleTickerProviderStateMixin {
   late PageController _pageController;
-  late TabController _tabController;
+
   late int _currentIndex;
 
   @override
@@ -58,7 +76,6 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
     super.initState();
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: _currentIndex);
-    _tabController = TabController(length: 2, vsync: this);
   }
 
   void _nextVideo() {
@@ -96,96 +113,94 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
       itemCount: widget.videos.length,
       itemBuilder: (context, index) {
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: CustomVideoPlayer(
-                videoUrl: widget.videos[index].videoLink,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              child: Row(
-                children: [
-                  if (_currentIndex > 0)
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: _previousVideo,
-                          icon: Icon(isArabic(context)
-                              ? Iconsax.arrow_circle_right
-                              : Iconsax.arrow_circle_left),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .3,
+                  width: double.infinity,
+                  child: CustomVideoPlayer(
+                    videoUrl: widget.videos[index].videoLink,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  child: Row(
+                    children: [
+                      if (_currentIndex > 0)
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: _previousVideo,
+                              icon: Icon(isArabic(context)
+                                  ? Iconsax.arrow_circle_right
+                                  : Iconsax.arrow_circle_left),
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .translate('previous'),
+                              style: AppStyles.styleMedium16(context),
+                            ),
+                          ],
                         ),
-                        Text(
-                          AppLocalizations.of(context)!.translate('previous'),
-                          style: AppStyles.styleMedium16(context),
+                      const Spacer(),
+                      SmoothPageIndicator(
+                        controller: _pageController,
+                        count: widget.videos.length,
+                        effect: const WormEffect(
+                          activeDotColor: primaryColor,
+                          dotHeight: 8,
+                          dotWidth: 8,
                         ),
-                      ],
-                    ),
-                  const Spacer(),
-                  SmoothPageIndicator(
-                    controller: _pageController,
-                    count: widget.videos.length,
-                    effect: const WormEffect(
-                      activeDotColor: primaryColor,
-                      dotHeight: 8,
-                      dotWidth: 8,
+                      ),
+                      const Spacer(),
+                      if (_currentIndex < widget.videos.length - 1)
+                        Row(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.translate('next'),
+                              style: AppStyles.styleMedium16(context),
+                            ),
+                            IconButton(
+                              onPressed: _nextVideo,
+                              icon: Icon(isArabic(context)
+                                  ? Iconsax.arrow_circle_left
+                                  : Iconsax.arrow_circle_right),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SizedBox(
+                    child: Text(
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      widget.videos[_currentIndex].videoTitle,
+                      style: AppStyles.styleMedium24(context),
                     ),
                   ),
-                  const Spacer(),
-                  if (_currentIndex < widget.videos.length - 1)
-                    Row(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.translate('next'),
-                          style: AppStyles.styleMedium16(context),
-                        ),
-                        IconButton(
-                          onPressed: _nextVideo,
-                          icon: Icon(isArabic(context)
-                              ? Iconsax.arrow_circle_left
-                              : Iconsax.arrow_circle_right),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SizedBox(
-                child: Text(
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  widget.videos[_currentIndex].videoTitle,
-                  style: AppStyles.styleMedium24(context),
-                ),
-              ),
-            ),
-            TabBar(
-              controller: _tabController,
-              indicatorColor: Colors.green,
-              labelColor: Theme.of(context).colorScheme.primary,
-              labelStyle: AppStyles.styleMedium18(context),
-              tabs: [
-                Tab(
-                  text: AppLocalizations.of(context)!.translate('description'),
-                ),
-                Tab(
-                  text: AppLocalizations.of(context)!.translate('comments'),
                 ),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: const [
-                  ListViewVideoAccessories(),
-                  CommentsVideoLesson(),
-                ],
-              ),
+            const SizedBox(
+              height: 12,
             ),
+            const Divider(
+              color: primaryColor,
+              thickness: 3,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            const ListViewVideoAccessories(),
           ],
         );
       },

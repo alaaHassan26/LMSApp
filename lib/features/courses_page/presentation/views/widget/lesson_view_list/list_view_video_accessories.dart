@@ -22,13 +22,15 @@ class ListViewVideoAccessories extends StatelessWidget {
               ),
             );
           } else if (state is NewsLoaded) {
-            return ListView.builder(
-              itemCount: state.news.length,
-              itemBuilder: (context, index) {
-                return CustomItemVideoAccessoriesListView(
-                  newsModel: state.news[index],
-                );
-              },
+            return Expanded(
+              child: ListView.builder(
+                itemCount: state.news.length,
+                itemBuilder: (context, index) {
+                  return CustomItemVideoAccessoriesListView(
+                    newsModel: state.news[index],
+                  );
+                },
+              ),
             );
           } else if (state is NewsError) {
             return Center(child: Text(state.error));
