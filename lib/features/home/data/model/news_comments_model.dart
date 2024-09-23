@@ -4,11 +4,11 @@ class NewsCommentModel {
   final String newsId;
   final String? parentCommentId; 
   final int isProfessor; 
-  final String content;
+   String content;
   final DateTime createdAt;
   final DateTime? updatedAt; 
   final UserModel user;
-  final List<NewsCommentModel>? children; 
+  late final List<NewsCommentModel>? children; 
 
   NewsCommentModel({
     required this.id,
@@ -62,7 +62,7 @@ class NewsCommentModel {
 
 class UserModel {
   final String id;
-  final String? image; 
+  final String? image;  // Nullable
   final String name;
   final String email;
   final int userType;
@@ -73,7 +73,7 @@ class UserModel {
 
   UserModel({
     required this.id,
-    this.image,
+    this.image,  // Nullable
     required this.name,
     required this.email,
     required this.userType,
@@ -85,13 +85,13 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
-      image: json['image'],
-      name: json['name'],
-      email: json['email'],
-      userType: json['user_type'],
-      accountStatus: json['account_status'],
-      randomCode: json['random_code'],
+      id: json['id'] ?? '',  // Provide a default value
+      image: json['image'],  // Nullable handling
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      userType: json['user_type'] ?? 0,  // Provide default value
+      accountStatus: json['account_status'] ?? 0,  // Provide default value
+      randomCode: json['random_code'] ?? '',
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -100,7 +100,7 @@ class UserModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'image': image,
+      'image': image,  // Nullable handling
       'name': name,
       'email': email,
       'user_type': userType,

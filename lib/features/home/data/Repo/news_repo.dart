@@ -53,48 +53,37 @@ class NewsRepository {
     }
   }
 
-  Future<Either<Failure, List<NewsCommentModel>>> getComments(String newsId) async {
-    try {
-      String? token = CacheHelper().getData(key: 'saveToken');
-      if (token == null) return Left(ServerFailure('Token is null'));
+Future<Either<Failure, List<NewsCommentModel>>> getComments(String newsId) async {
+  try {
+    String? token = CacheHelper().getData(key: 'saveToken') as String?;
+    if (token == null) return Left(ServerFailure('Token is null'));
 
-      // Fetch data from API
-      final response = await apiService.get('/api/get_user_comments?news_id=$newsId', token: token);
+    // Fetch data from API
+    final response = await apiService.get('/api/get_user_comments?news_id=$newsId', token: token);
 
-      if (response.statusCode == 200) {
-        final List<NewsCommentModel> commentsList = (response.data['result'] as List)
-            .map((commentJson) => NewsCommentModel.fromJson(commentJson))
-            .toList();
+    if (response.statusCode == 200) {
 
-        // Save new data to cache
-        await CacheHelper().saveData(
-          key: 'cached_comments_$newsId',
-          value: jsonEncode(commentsList.map((e) => e.toJson()).toList()),
-        );
-        print('Comments data cached successfully');
-        return Right(commentsList);
-      } else {
-        return Left(ServerFailure('Failed to fetch comments'));
-      }
-    } catch (e) {
-      // Handle the error and attempt to use cached data
-      print('Error occurred: $e');
-      final cachedData = CacheHelper().getData(key: 'cached_comments_$newsId');
-      if (cachedData != null) {
-        print('Using cached comments due to error');
-        final List<NewsCommentModel> cachedCommentsList = (jsonDecode(cachedData) as List)
-            .map((commentJson) => NewsCommentModel.fromJson(commentJson))
-            .toList();
-        return Right(cachedCommentsList);
-      }
+      print(response);
+      final List<NewsCommentModel> commentsList = (response.data['result'] as List)
+          .map((commentJson) => NewsCommentModel.fromJson(commentJson))
+          .toList();
 
-      if (e is DioException) {
-        return Left(ServerFailure.fromDioError(e));
-      } else {
-        return Left(ServerFailure(e.toString()));
-      }
+      return Right(commentsList);
+    } else {
+      return Left(ServerFailure('Failed to fetch comments'));
+    }
+  } catch (e) {
+    print('Error occurred: $e');
+
+    // Handle the error without falling back to cached data
+    if (e is DioException) {
+      return Left(ServerFailure.fromDioError(e));
+    } else {
+      return Left(ServerFailure(e.toString()));
     }
   }
+}
+
 
   Future<Either<Failure, NewsCommentModel>> addComment(String newsId, String content) async {
     try {

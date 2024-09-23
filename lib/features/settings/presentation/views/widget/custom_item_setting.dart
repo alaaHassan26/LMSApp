@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/functions/theme_toggle_button.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
+import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/widget/custom_dropdown_lang.dart';
 import 'package:lms/features/settings/presentation/views/widget/custom_list_title_setting.dart';
@@ -94,7 +96,11 @@ class CustomItemSetting extends StatelessWidget {
                 CustomListTitleSetting(
                   icon: Iconsax.logout,
                   title: AppLocalizations.of(context)!.translate('sinout'),
-                  onPressed: () {},
+                  onPressed: () {
+
+context.go(AppRouter.kLogIn);
+
+                  },
                 ),
                 CustomListTitleSetting(
                   icon: Icons.repeat,

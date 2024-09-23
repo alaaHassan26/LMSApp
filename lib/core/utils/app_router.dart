@@ -37,6 +37,10 @@ abstract class AppRouter {
   static const kCourcsesBody = '/courcsesBody';
   static const kDownloadVideoBody = '/downloadVideoBody';
   static const kCoursesPageView = '/coursesPageView';
+  static const kLogIn = '/kLogIn';
+
+
+  
   static final router = GoRouter(routes: [
     CacheHelper().getData(key: 'token') != null
         ? GoRoute(
@@ -51,6 +55,8 @@ abstract class AppRouter {
       path: kNavigationMenu,
       builder: (context, state) => const NavigationMenu(),
     ),
+
+    
 GoRoute(
   path: kCommentsPage,
   builder: (context, state) {
@@ -72,6 +78,9 @@ GoRoute(
     GoRoute(
       path: kLogInCode,
       builder: (context, state) => const LogInCode(),
+    ),   GoRoute(
+      path: kLogIn,
+      builder: (context, state) => const SignInView(),
     ),
     GoRoute(
       path: kCoursesPageView,
