@@ -2,13 +2,13 @@ class NewsCommentModel {
   final String id;
   final String userId;
   final String newsId;
-  final String? parentCommentId; 
-  final int isProfessor; 
-   String content;
+  final String? parentCommentId;
+  final int isProfessor;
+  String content;
   final DateTime createdAt;
-  final DateTime? updatedAt; 
+  final DateTime? updatedAt;
   final UserModel user;
-  late final List<NewsCommentModel>? children; 
+  late final List<NewsCommentModel>? children;
 
   NewsCommentModel({
     required this.id,
@@ -32,7 +32,9 @@ class NewsCommentModel {
       isProfessor: json['is_professor'],
       content: json['content'],
       createdAt: DateTime.parse(json['created_at']),
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
       user: UserModel.fromJson(json['user']),
       children: json['children'] != null
           ? (json['children'] as List<dynamic>)
@@ -53,16 +55,14 @@ class NewsCommentModel {
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'user': user.toJson(),
-      'children': children != null
-          ? children!.map((child) => child.toJson()).toList()
-          : null,
+      'children': children?.map((child) => child.toJson()).toList(),
     };
   }
 }
 
 class UserModel {
   final String id;
-  final String? image;  // Nullable
+  final String? image; // Nullable
   final String name;
   final String email;
   final int userType;
@@ -73,7 +73,7 @@ class UserModel {
 
   UserModel({
     required this.id,
-    this.image,  // Nullable
+    this.image, // Nullable
     required this.name,
     required this.email,
     required this.userType,
@@ -85,12 +85,12 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] ?? '',  // Provide a default value
-      image: json['image'],  // Nullable handling
+      id: json['id'] ?? '', // Provide a default value
+      image: json['image'], // Nullable handling
       name: json['name'] ?? '',
       email: json['email'] ?? '',
-      userType: json['user_type'] ?? 0,  // Provide default value
-      accountStatus: json['account_status'] ?? 0,  // Provide default value
+      userType: json['user_type'] ?? 0, // Provide default value
+      accountStatus: json['account_status'] ?? 0, // Provide default value
       randomCode: json['random_code'] ?? '',
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
@@ -100,7 +100,7 @@ class UserModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'image': image,  // Nullable handling
+      'image': image, // Nullable handling
       'name': name,
       'email': email,
       'user_type': userType,
