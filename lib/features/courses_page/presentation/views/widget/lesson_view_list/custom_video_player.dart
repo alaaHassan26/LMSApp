@@ -16,9 +16,12 @@ class CustomVideoPlayer extends StatelessWidget {
         buildWhen: (previous, current) =>
             previous != current, // تحسين الأداء بمنع إعادة البناء غير الضرورية
         builder: (context, state) {
+
+          print(videoUrl);
           if (state is VideoLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is VideoLoaded) {
+
             return AspectRatio(
               aspectRatio: 16 / 9,
               child: BetterPlayer(controller: state.betterPlayerController),

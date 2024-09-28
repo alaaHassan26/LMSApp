@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lms/features/home/data/model/news_comments_model.dart';
+import '../../../../../cache/cache_helper.dart';
 import '../../../data/Repo/news_repo.dart';
 import 'news_comment_state.dart';
 
@@ -26,6 +27,13 @@ class CommentsCubit extends Cubit<CommentsState> {
     if (currentState is! CommentsLoaded) return;
 
     // ابو حسين هنا تعليق مؤقت محليًا
+
+
+    var cachedUserName = CacheHelper().getData(key: 'user_name');
+    var userImage = CacheHelper().getData(key: 'user_image');
+
+
+
     final tempComment = NewsCommentModel(
       id: DateTime.now().toString(), // معرف مؤقت
       userId: 'currentUserId', // معرف المستخدم الحالي
@@ -36,9 +44,10 @@ class CommentsCubit extends Cubit<CommentsState> {
       updatedAt: null,
       user: UserModel(
         id: 'currentUserId',
-        name: 'Current User',
+        
+        name: cachedUserName,
         email: 'user@example.com',
-        image: null,
+        image: '$userImage',
         userType: 0,
         accountStatus: 1,
         randomCode: '',

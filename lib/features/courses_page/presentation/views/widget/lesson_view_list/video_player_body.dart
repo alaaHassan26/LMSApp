@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/functions/direction_arabic.dart';
+import 'package:lms/core/utils/Constatns.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
-import 'package:lms/features/courses_page/data/models/video_links.dart';
+import 'package:lms/features/courses_page/data/models/lessons_model.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/comment_video_lesson.dart';
-import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/list_view_video_accessories.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'custom_video_player.dart';
 
 class VideoPlayerBody extends StatelessWidget {
-  final List<VideoLinksModel> videos;
+  final List<Lesson> videos;
   final int initialIndex;
 
   const VideoPlayerBody({
@@ -52,7 +52,7 @@ class VideoPlayerBody extends StatelessWidget {
 }
 
 class VideoPlayerContent extends StatefulWidget {
-  final List<VideoLinksModel> videos;
+  final List<Lesson> videos;
   final int initialIndex;
 
   const VideoPlayerContent({
@@ -117,13 +117,18 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .3,
-                  width: double.infinity,
-                  child: CustomVideoPlayer(
-                    videoUrl: widget.videos[index].videoLink,
-                  ),
-                ),
+          SizedBox(
+  height: MediaQuery.of(context).size.height * .3,
+  width: double.infinity,
+  child: CustomVideoPlayer(
+    videoUrl: widget.videos[index].video != null && widget.videos[index].video!.isNotEmpty
+        ? '${CS.Api}${widget.videos[index].video}'
+        : (widget.videos[index].videoUrl != null && widget.videos[index].videoUrl!.isNotEmpty
+            ? 'https://youtu.be/${widget.videos[index].videoUrl}'
+            : ''), 
+  ),
+),
+
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -183,7 +188,7 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
                     child: Text(
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      widget.videos[_currentIndex].videoTitle,
+                      widget.videos[_currentIndex].title!,
                       style: AppStyles.styleMedium24(context),
                     ),
                   ),
@@ -200,7 +205,7 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
             const SizedBox(
               height: 12,
             ),
-            const ListViewVideoAccessories(),
+            // const ListViewVideoAccessories(),
           ],
         );
       },

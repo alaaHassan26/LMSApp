@@ -37,13 +37,20 @@ class CustomVideoPlayerCubit extends Cubit<VideoState> {
     try {
       // التحقق إذا كان الرابط هو رابط YouTube
       if (videoUrl.contains('youtu')) {
+
+        print('is youtube');
         _youtubeExplode = YoutubeExplode();
         var videoId = VideoId(videoUrl);
+                print(videoId);
+
         var videoStreamInfo =
             await _youtubeExplode!.videos.streamsClient.getManifest(videoId);
 
         // الحصول على أعلى جودة للفيديو
         videoUrl = videoStreamInfo.muxed.withHighestBitrate().url.toString();
+
+                        print(videoUrl);
+
       }
 
       // إذا كان هناك مشغل قديم، قم بتفريغ موارده
@@ -78,6 +85,8 @@ class CustomVideoPlayerCubit extends Cubit<VideoState> {
 
       emit(VideoLoaded(_betterPlayerController!));
     } catch (e) {
+
+      print(e);
       emit(VideoError("Error loading video: $e"));
     }
   }

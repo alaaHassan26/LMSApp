@@ -5,11 +5,10 @@ import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/widget/custom_image.dart';
-import 'package:lms/features/courses_page/data/models/video_links.dart';
-
+import 'package:lms/features/courses_page/data/models/lessons_model.dart';
 class CustomItemLessonListView extends StatelessWidget {
-  final List<VideoLinksModel> videos; // تمرير قائمة الفيديوهات
-  final int index; // فهرس الفيديو الحالي
+  final List<Lesson> videos; // List of videos
+  final int index; 
 
   const CustomItemLessonListView({
     super.key,
@@ -23,13 +22,7 @@ class CustomItemLessonListView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
         child: GestureDetector(
-          onTap: () {
-            // تمرير قائمة الفيديوهات والفهرس الحالي
-            GoRouter.of(context).push(AppRouter.kVideoPlayerBody, extra: {
-              'videos': videos,
-              'initialIndex': index,
-            });
-          },
+          onTap: () => _navigateToVideoPlayer(context),
           child: LayoutBuilder(
             builder: (context, constraints) {
               return Card(
@@ -38,51 +31,42 @@ class CustomItemLessonListView extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
                     children: [
-                      // صورة الفيديو
                       SizedBox(
                         width: constraints.maxWidth * 0.25,
                         height: constraints.maxWidth * 0.25,
                         child: CustomImage(
                           width: double.infinity,
-                          height: MediaQuery.of(context).size.width * 0.5,
-                          image:
-                              'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg',
+                          height: double.infinity,
+                          image: videos[index].image?.isNotEmpty == true 
+                              ? videos[index].image! 
+                              : 'https://via.placeholder.com/150',
+                          // Handle image loading errors (if needed)
                         ),
                       ),
                       const SizedBox(width: 16.0),
-
-                      // نصوص (اسم الفيديو، الوصف)
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // استخدام العنوان من الفيديو الحالي
-                            SizedBox(
-                              child: Text(videos[index].videoTitle,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppStyles.styleMedium24(context)),
+                            Text(
+                              videos[index].title ?? 'عنوان غير متوفر',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.styleMedium24(context),
                             ),
                             const SizedBox(height: 4.0),
-                            SizedBox(
-                              child: Text(
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  'برمجة الاردوينو بواسطة لغة اردوينو المبنيه على لغة c++ و c المهندس علاء',
-                                  style: AppStyles.styleMedium20(context)),
+                            Text(
+                              videos[index].content ?? 'وصف غير متوفر',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.styleMedium20(context),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(width: 12.0),
                       IconButton(
-                        onPressed: () {
-                          GoRouter.of(context)
-                              .push(AppRouter.kVideoPlayerBody, extra: {
-                            'videos': videos,
-                            'initialIndex': index,
-                          });
-                        },
+                        onPressed: () => _navigateToVideoPlayer(context),
                         icon: Icon(isArabic(context)
                             ? Iconsax.arrow_circle_left
                             : Iconsax.arrow_circle_right),
@@ -96,5 +80,12 @@ class CustomItemLessonListView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _navigateToVideoPlayer(BuildContext context) {
+    GoRouter.of(context).push(AppRouter.kVideoPlayerBody, extra: {
+      'videos': videos,
+      'initialIndex': index,
+    });
   }
 }

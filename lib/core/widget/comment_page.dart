@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lms/core/functions/format_data.dart';
+import 'package:lms/core/utils/Constatns.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
@@ -90,15 +92,16 @@ class _CommentsPageState extends State<CommentsPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundImage: commentModel.user.image != null
-                ? NetworkImage(commentModel.user.image!)
-                : null,
-            radius: 20,
-            child: commentModel.user.image == null
-                ? Text(commentModel.user.name.substring(0, 1))
-                : null,
-          ),
+CircleAvatar(
+  backgroundImage: commentModel.user.image != null
+      ? CachedNetworkImageProvider('${CS.Api}${commentModel.user.image!}')
+      : null,
+  radius: 20,
+  child: commentModel.user.image == null
+      ? Text(commentModel.user.name.substring(0, 1))
+      : null,
+),
+
           const SizedBox(width: 8),
           Expanded(
             child: Padding(

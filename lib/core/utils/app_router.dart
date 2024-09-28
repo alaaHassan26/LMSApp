@@ -4,8 +4,8 @@ import 'package:lms/cache/cache_helper.dart';
 import 'package:lms/features/auth/presentation/views/sign_in_view.dart';
 import 'package:lms/features/auth/presentation/views/widget/forgot_password.dart';
 import 'package:lms/features/auth/presentation/views/widget/login_code.dart';
+import 'package:lms/features/courses_page/data/models/lessons_model.dart';
 import 'package:lms/features/courses_page/data/models/question_model.dart';
-import 'package:lms/features/courses_page/data/models/video_links.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/courses_view_list/courses_body.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/download_video/download_video_body.dart';
@@ -103,17 +103,23 @@ abstract class AppRouter {
         );
       },
     ),
-    GoRoute(
+
+        GoRoute(
       path: kListLessonBody,
-      builder: (context, state) => const ListLessonBody(),
+      builder: (context, state) {
+        final categoryId = state.extra as String;
+    return ListLessonBody(categoryId: categoryId); 
+      },
     ),
+
+
     GoRoute(
       path: kVideoPlayerBody,
       builder: (context, state) {
         final data = state.extra as Map<String, dynamic>?; // توقع استقبال Map
         if (data != null) {
           final videos = data['videos']
-              as List<VideoLinksModel>; // استلام قائمة الفيديوهات
+              as List<Lesson>; // استلام قائمة الفيديوهات
           final initialIndex =
               data['initialIndex'] as int; // استلام الفهرس الابتدائي
           return VideoPlayerBody(videos: videos, initialIndex: initialIndex);

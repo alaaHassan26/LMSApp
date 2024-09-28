@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/functions/direction_arabic.dart';
+import 'package:lms/core/utils/Constatns.dart';
 
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/widget/custom_image.dart';
@@ -9,10 +10,11 @@ import 'package:lms/core/widget/custom_image.dart';
 class CustomItemListView extends StatelessWidget {
   final String courseTitle;
   final String? courseNumber;
+  final String? image;
   final Function()? onTap;
 
   const CustomItemListView(
-      {super.key, required this.courseTitle, this.courseNumber, this.onTap});
+      {super.key, required this.courseTitle, this.courseNumber, this.onTap, this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class CustomItemListView extends StatelessWidget {
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.15,
             image:
-                'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg',
+              '${CS.Api}$image'??  'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg',
           ),
           const SizedBox(height: 8),
           ListTile(

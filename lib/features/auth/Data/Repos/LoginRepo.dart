@@ -23,6 +23,12 @@ class LoginRepository {
       );
 
       final loginResponse = LoginResponse.fromJson(response.data);
+
+      var userName = loginResponse.result[0].name; 
+      var Image = loginResponse.result[0].image; 
+
+CacheHelper().saveData(key: 'user_name', value: userName);
+CacheHelper().saveData(key: 'user_image', value: Image);
       CacheHelper().saveData(key: 'saveToken', value: loginResponse.token);
       return Right(loginResponse);
     } catch (e) {
@@ -49,12 +55,19 @@ class LoginRepository {
         },
       );
 
+
+
+
       print("Response Status Code: ${response.statusCode}");
       print("Response Data: ${response.data}");
 
       final loginResponse = LoginResponse.fromJson(response.data);
       print("LoginResponse: $loginResponse");
       CacheHelper().saveData(key: 'saveToken', value: loginResponse.token);
+var userName = loginResponse.result[0].name; 
+
+print(userName! + '32r3rr3');
+CacheHelper().saveData(key: 'user_name', value: userName);
       return Right(loginResponse);
     } catch (e) {
       print("Error: $e");

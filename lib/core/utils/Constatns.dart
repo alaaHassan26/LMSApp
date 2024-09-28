@@ -3,7 +3,7 @@
 class CS{
 
 
- static String Api = "https://efredgvrergv34345435.online:8443";
+ static String Api = "https://efredgvrergv34345435.online/api";
 
 
 

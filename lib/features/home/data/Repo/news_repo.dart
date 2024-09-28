@@ -75,7 +75,6 @@ Future<Either<Failure, List<NewsCommentModel>>> getComments(String newsId) async
   } catch (e) {
     print('Error occurred: $e');
 
-    // Handle the error without falling back to cached data
     if (e is DioException) {
       return Left(ServerFailure.fromDioError(e));
     } else {
