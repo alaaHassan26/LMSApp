@@ -17,19 +17,46 @@ class ListLessonBody extends StatelessWidget {
       create: (context) => LessonsCubit()..fetchLessons(categoryId), 
       child: Scaffold(
         appBar: AppBar(
-          actions: const [
-            Text('33'),
-            SizedBox(width: 3),
-            Icon(Iconsax.video),
-            SizedBox(width: 12),
-          ],
-          title: SizedBox(
-            child: Text(
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              'أنظمة الوقت الحقيقي(RTS)',
-              style: AppStyles.styleMedium24(context),
+          actions: [
+            BlocBuilder<LessonsCubit, LessonsState>(
+              builder: (context, state) {
+                String timeCourse = '0';
+                String timeType = '';
+
+                if (state is LessonsLoaded && state.lessons.isNotEmpty) {
+                  timeCourse = state.lessons[0].course!.timeCourse;
+                  timeType = state.lessons[0].course!.timeType;
+                }
+
+                return Row(
+                  children: [
+                    Text('$timeCourse $timeType', style: AppStyles.styleMedium18(context)),
+                    const SizedBox(width: 3),
+                    const Icon(Iconsax.video_time),
+                    const SizedBox(width: 12),
+                  ],
+                );
+              },
             ),
+          ],
+          title: BlocBuilder<LessonsCubit, LessonsState>(
+            builder: (context, state) {
+              String nameOfCourse = "Course"; 
+
+              if (state is LessonsLoaded && state.lessons.isNotEmpty) {
+                nameOfCourse = state.lessons[0].course!.title;
+              }
+     if (state is NoLessons) {
+                nameOfCourse = 'لا توجد دروس';
+              }
+
+              return Text(
+                nameOfCourse,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppStyles.styleMedium24(context),
+              );
+            },
           ),
         ),
         body: BlocBuilder<LessonsCubit, LessonsState>(
@@ -37,13 +64,14 @@ class ListLessonBody extends StatelessWidget {
             if (state is LessonsLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is LessonsError) {
-                          print(state.message);
-
               return Center(child: Text(state.message));
             } else if (state is LessonsLoaded) {
-              return CustomLessonListView(videos: state.lessons,); // Pass lessons to the custom list view
+              return CustomLessonListView(videos: state.lessons); 
             }
-            return const SizedBox(); // Default case if no state matches
+            else if (state is NoLessons) {
+              return Center(child: Text('لا توجد دروس' , style: AppStyles.styleBold16(context),),); 
+            }
+            return const SizedBox(); 
           },
         ),
       ),

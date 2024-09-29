@@ -205,7 +205,8 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
             const SizedBox(
               height: 12,
             ),
-            // const ListViewVideoAccessories(),
+
+            Text(widget.videos[_currentIndex].file ?? 'حبيبي علاء حط الملف هنا اذا توفر ، اذا ماكو شوفلك فد اسلوب تكول لا يوجد ملف'),
           ],
         );
       },

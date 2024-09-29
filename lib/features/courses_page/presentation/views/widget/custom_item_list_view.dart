@@ -28,7 +28,7 @@ class CustomItemListView extends StatelessWidget {
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.15,
             image:
-              '${CS.Api}$image'??  'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg',
+              '${CS.Api}$image',
           ),
           const SizedBox(height: 8),
           ListTile(

@@ -12,12 +12,21 @@ class LessonsCubit extends Cubit<LessonsState> {
 
   LessonsCubit() : super(const LessonsInitial());
 
+
   Future<void> fetchLessons(String categoryId) async {
     emit(const LessonsLoading());
+    
     final Either<Failure, List<Lesson>> result = await coursesRepository.getLessons(categoryId);
+    
     result.fold(
       (failure) => emit(LessonsError(failure.err)),
-      (lessons) => emit(LessonsLoaded(lessons)),
+      (lessons) {
+        if (lessons.isEmpty) {
+          emit(const NoLessons());
+        } else {
+          emit(LessonsLoaded(lessons));
+        }
+      },
     );
   }
 }

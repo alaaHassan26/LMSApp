@@ -10,14 +10,20 @@ class LessonsInitial extends LessonsState {
   const LessonsInitial();
 
   @override
-  List<Object> get props => []; // No specific properties to compare
+  List<Object> get props => []; 
 }
 
 class LessonsLoading extends LessonsState {
   const LessonsLoading();
 
   @override
-  List<Object> get props => []; // No specific properties to compare
+  List<Object> get props => []; 
+}
+class NoLessons extends LessonsState {
+  const NoLessons();
+
+  @override
+  List<Object> get props => []; 
 }
 
 class LessonsLoaded extends LessonsState {
