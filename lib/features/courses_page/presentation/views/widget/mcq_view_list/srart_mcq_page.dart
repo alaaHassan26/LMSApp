@@ -42,7 +42,7 @@ class _StartMcqPageState extends State<StartMcqPage> {
       backgroundColor: isDarkMode ? null : greyColor.shade300,
       appBar: AppBar(
         backgroundColor: isDarkMode ? null : greyColor.shade300,
-        title: Text(AppLocalizations.of(context)!.translate('exam_name')),
+        title: Text( widget.title),
       ),
       body: BlocBuilder<McqCubit, McqState>(
         builder: (context, state) {
