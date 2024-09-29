@@ -25,7 +25,7 @@ class QuestionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     bool isAnswerIncomplete = selectedAnswers[questionIndex].length !=
-        question.correctAnswerIndices.length;
+        question.correctAnswerIndices!.length;
 
     return SingleChildScrollView(
       child: Column(
@@ -40,7 +40,7 @@ class QuestionWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(question.questionText,
+                  Text(question.questionText!,
                       textAlign: TextAlign.center,
                       style: AppStyles.styleMedium24(context)),
                   const Padding(
@@ -50,9 +50,9 @@ class QuestionWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Column(
-                      children: List.generate(question.answers.length, (index) {
+                      children: List.generate(question.answers!.length, (index) {
                         bool isCorrect =
-                            question.correctAnswerIndices.contains(index);
+                            question.correctAnswerIndices!.contains(index);
                         bool isSelected =
                             selectedAnswers[questionIndex].contains(index);
 
@@ -76,7 +76,7 @@ class QuestionWidget extends StatelessWidget {
                                           isCorrect ? Colors.green : Colors.red,
                                     )
                                   : const Icon(Icons.radio_button_unchecked),
-                              title: Text(question.answers[index],
+                              title: Text(question.answers![index],
                                   style: AppStyles.styleMedium18(context)),
                               trailing: showResults && isCorrect
                                   ? IconButton(
@@ -96,7 +96,7 @@ class QuestionWidget extends StatelessWidget {
                                                   context),
                                             ),
                                             content: Text(
-                                              question.explanation,
+                                              question.explanation!,
                                               style: AppStyles.styleMedium18(
                                                   context),
                                             ),
@@ -124,7 +124,7 @@ class QuestionWidget extends StatelessWidget {
 
                                 if (!newSelectedAnswers.contains(index)) {
                                   if (newSelectedAnswers.length <
-                                      question.correctAnswerIndices.length) {
+                                      question.correctAnswerIndices!.length) {
                                     newSelectedAnswers.add(index);
                                   }
                                 } else {

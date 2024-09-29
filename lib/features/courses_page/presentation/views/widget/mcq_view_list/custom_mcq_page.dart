@@ -40,7 +40,7 @@ class _McqQuestionPageState extends State<McqQuestionPage> {
       selectedAnswers[currentQuestionIndex] = newSelectedAnswers;
 
       if (selectedAnswers[currentQuestionIndex].length ==
-          widget.questions[currentQuestionIndex].correctAnswerIndices.length) {
+          widget.questions[currentQuestionIndex].correctAnswerIndices!.length) {
         showResults = true;
         if (const ListEquality().equals(selectedAnswers[currentQuestionIndex],
             widget.questions[currentQuestionIndex].correctAnswerIndices)) {

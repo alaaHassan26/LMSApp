@@ -152,10 +152,17 @@ abstract class AppRouter {
         }
       },
     ),
-    GoRoute(
-      path: kStartMcqPage,
-      builder: (context, state) => const StartMcqPage(),
-    ),
+GoRoute(
+  path: AppRouter.kStartMcqPage,
+  builder: (context, state) {
+    final extraData = state.extra as Map<String, dynamic>;
+    final questions = extraData['questions'] as String;
+    final title = extraData['title'] as String;
+
+    return StartMcqPage(questions: questions, title: title);
+  },
+),
+
     GoRoute(
       path: kResultsPage,
       builder: (context, state) {
