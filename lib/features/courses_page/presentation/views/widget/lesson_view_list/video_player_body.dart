@@ -202,16 +202,7 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
                       height: 16,
                     ),
                     ReadMoreText(
-                      '''
-اهداء للطيب علي عبد الشهيد
-لاتحزن بعد وتبچي على الراح
-وعوف ادموع عينك لا تبديهه
-ووگف على الجرح لاتصرخ وياه
-وراح اكتب قصيدة والك اهديهَ
-مدينة الم روحي لاتظــن ترتاح
-وانه ابن المدينة وتيهت بيه
-يل عندك جرح وتگلي مجروح
-''',
+              widget.videos[index].content!,
                       style: AppStyles.styleMedium20(context),
                       trimLines: 3,
                       trimCollapsedText:
@@ -222,11 +213,13 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
                     const SizedBox(height: 12),
                     const Divider(thickness: 3),
                     const SizedBox(height: 12),
+
+                        widget.videos[index].file != null ?
                     DownloadPdfPage(
                       pdfName: 'Pdf',
                       pdfUrl:
-                          widget.videos[_currentIndex].file ?? 'لا يوجد ملف',
-                    ),
+                          widget.videos[index].file!
+                    ) : Center(child: Text('No Attachment'))
                   ],
                 ),
               ),
