@@ -139,7 +139,7 @@ abstract class AppRouter {
     GoRoute(
       path: kMcqQuestionPage,
       builder: (context, state) {
-        final questions = state.extra as List<QuestionModel>?;
+        final questions = state.extra as List<McqQuestion>?;
 
         if (questions != null) {
           return McqQuestionPage(questions: questions);

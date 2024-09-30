@@ -29,7 +29,6 @@ class _StartMcqPageState extends State<StartMcqPage> {
     final mcqCubit = context.read<McqCubit>();
     mcqCubit.getQuestions(widget.questions); 
 
-    print(widget.questions);
     
 
   }
@@ -50,7 +49,6 @@ class _StartMcqPageState extends State<StartMcqPage> {
             return Center(child: CircularProgressIndicator());
           } else if (state is McqFailure) {
 
-            print(state.errorMessage);
             return Center(child: Text('Error: ${state.errorMessage}'));
           } else if (state is McqSuccess) {
             final questions = state.questions;
@@ -115,8 +113,9 @@ class _StartMcqPageState extends State<StartMcqPage> {
                         const Expanded(child: SizedBox()),
                         GestureDetector(
                           onTap: () {
+
                             GoRouter.of(context)
-                                .go(AppRouter.kMcqQuestionPage, extra: questions);
+                                .push(AppRouter.kMcqQuestionPage, extra: questions);
                           },
                           child: Card(
                             margin: const EdgeInsets.symmetric(vertical: 3),
@@ -130,7 +129,7 @@ class _StartMcqPageState extends State<StartMcqPage> {
                                 children: [
                                   TextButton(
                                     onPressed: () {
-                                      GoRouter.of(context).go(
+                                      GoRouter.of(context).push(
                                           AppRouter.kMcqQuestionPage,
                                           extra: questions);
                                     },
@@ -143,7 +142,8 @@ class _StartMcqPageState extends State<StartMcqPage> {
                                   const Spacer(),
                                   IconButton(
                                     onPressed: () {
-                                      GoRouter.of(context).go(
+
+                                      GoRouter.of(context).push(
                                           AppRouter.kMcqQuestionPage,
                                           extra: questions);
                                     },
@@ -164,7 +164,7 @@ class _StartMcqPageState extends State<StartMcqPage> {
               ),
             );
           }
-          return Container(); // Default empty container if no state matched
+          return Container();
         },
       ),
     );
