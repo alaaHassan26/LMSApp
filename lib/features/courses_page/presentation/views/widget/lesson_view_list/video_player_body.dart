@@ -7,7 +7,8 @@ import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/data/models/lessons_model.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/comment_video_lesson.dart';
-
+import 'package:lms/core/widget/download_pdf_page.dart';
+import 'package:readmore/readmore.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'custom_video_player.dart';
 
@@ -36,11 +37,10 @@ class VideoPlayerBody extends StatelessWidget {
       appBar: AppBar(
         actions: [
           GestureDetector(
-              onTap: () => showCommentsSheet(context),
-              child: const Icon(Iconsax.message)),
-          const SizedBox(
-            width: 24,
-          )
+            onTap: () => showCommentsSheet(context),
+            child: const Icon(Iconsax.message),
+          ),
+          const SizedBox(width: 24),
         ],
       ),
       body: VideoPlayerContent(
@@ -68,7 +68,6 @@ class VideoPlayerContent extends StatefulWidget {
 class _VideoPlayerContentState extends State<VideoPlayerContent>
     with SingleTickerProviderStateMixin {
   late PageController _pageController;
-
   late int _currentIndex;
 
   @override
@@ -89,7 +88,6 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
     }
   }
 
-  // الانتقال إلى الصفحة السابقة باستخدام PageController
   void _previousVideo() {
     if (_currentIndex > 0) {
       _currentIndex--;
@@ -112,102 +110,128 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
       },
       itemCount: widget.videos.length,
       itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-          SizedBox(
-  height: MediaQuery.of(context).size.height * .3,
-  width: double.infinity,
-  child: CustomVideoPlayer(
-    videoUrl: widget.videos[index].video != null && widget.videos[index].video!.isNotEmpty
-        ? '${CS.Api}${widget.videos[index].video}'
-        : (widget.videos[index].videoUrl != null && widget.videos[index].videoUrl!.isNotEmpty
-            ? 'https://youtu.be/${widget.videos[index].videoUrl}'
-            : ''), 
-  ),
-),
-
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  child: Row(
-                    children: [
-                      if (_currentIndex > 0)
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: _previousVideo,
-                              icon: Icon(isArabic(context)
-                                  ? Iconsax.arrow_circle_right
-                                  : Iconsax.arrow_circle_left),
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .translate('previous'),
-                              style: AppStyles.styleMedium16(context),
-                            ),
-                          ],
-                        ),
-                      const Spacer(),
-                      SmoothPageIndicator(
-                        controller: _pageController,
-                        count: widget.videos.length,
-                        effect: const WormEffect(
-                          activeDotColor: primaryColor,
-                          dotHeight: 8,
-                          dotWidth: 8,
-                        ),
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .3,
+                width: double.infinity,
+                child: CustomVideoPlayer(
+                  videoUrl: widget.videos[index].video != null &&
+                          widget.videos[index].video!.isNotEmpty
+                      ? '${CS.Api}${widget.videos[index].video}'
+                      : (widget.videos[index].videoUrl != null &&
+                              widget.videos[index].videoUrl!.isNotEmpty
+                          ? 'https://youtu.be/${widget.videos[index].videoUrl}'
+                          : ''),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                child: Row(
+                  children: [
+                    if (_currentIndex > 0)
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: _previousVideo,
+                            icon: Icon(isArabic(context)
+                                ? Iconsax.arrow_circle_right
+                                : Iconsax.arrow_circle_left),
+                          ),
+                          Text(
+                            AppLocalizations.of(context)!.translate('previous'),
+                            style: AppStyles.styleMedium16(context),
+                          ),
+                        ],
                       ),
-                      const Spacer(),
-                      if (_currentIndex < widget.videos.length - 1)
-                        Row(
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.translate('next'),
-                              style: AppStyles.styleMedium16(context),
-                            ),
-                            IconButton(
-                              onPressed: _nextVideo,
-                              icon: Icon(isArabic(context)
-                                  ? Iconsax.arrow_circle_left
-                                  : Iconsax.arrow_circle_right),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SizedBox(
-                    child: Text(
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      widget.videos[_currentIndex].title!,
-                      style: AppStyles.styleMedium24(context),
+                    const Spacer(),
+                    SmoothPageIndicator(
+                      controller: _pageController,
+                      count: widget.videos.length,
+                      effect: const WormEffect(
+                        activeDotColor: primaryColor,
+                        dotHeight: 8,
+                        dotWidth: 8,
+                      ),
                     ),
-                  ),
+                    const Spacer(),
+                    if (_currentIndex < widget.videos.length - 1)
+                      Row(
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.translate('next'),
+                            style: AppStyles.styleMedium16(context),
+                          ),
+                          IconButton(
+                            onPressed: _nextVideo,
+                            icon: Icon(isArabic(context)
+                                ? Iconsax.arrow_circle_left
+                                : Iconsax.arrow_circle_right),
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            const Divider(
-              color: primaryColor,
-              thickness: 3,
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-
-            Text(widget.videos[_currentIndex].file ?? 'حبيبي علاء حط الملف هنا اذا توفر ، اذا ماكو شوفلك فد اسلوب تكول لا يوجد ملف'),
-          ],
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  widget.videos[_currentIndex].title!,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppStyles.styleMedium24(context),
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Divider(color: primaryColor, thickness: 3),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'الوصف:',
+                      style: AppStyles.styleSemiBold24(context),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ReadMoreText(
+                      '''
+اهداء للطيب علي عبد الشهيد
+لاتحزن بعد وتبچي على الراح
+وعوف ادموع عينك لا تبديهه
+ووگف على الجرح لاتصرخ وياه
+وراح اكتب قصيدة والك اهديهَ
+مدينة الم روحي لاتظــن ترتاح
+وانه ابن المدينة وتيهت بيه
+يل عندك جرح وتگلي مجروح
+''',
+                      style: AppStyles.styleMedium20(context),
+                      trimLines: 3,
+                      trimCollapsedText:
+                          AppLocalizations.of(context)!.translate('showmore'),
+                      trimExpandedText:
+                          AppLocalizations.of(context)!.translate('showless'),
+                    ),
+                    const SizedBox(height: 12),
+                    const Divider(thickness: 3),
+                    const SizedBox(height: 12),
+                    DownloadPdfPage(
+                      pdfName: 'Pdf',
+                      pdfUrl:
+                          widget.videos[_currentIndex].file ?? 'لا يوجد ملف',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

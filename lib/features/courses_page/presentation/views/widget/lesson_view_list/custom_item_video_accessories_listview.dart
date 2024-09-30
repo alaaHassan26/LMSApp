@@ -6,7 +6,7 @@ import 'package:lms/core/utils/app_localiizations.dart';
 
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/features/home/data/model/news_model.dart';
-import 'package:lms/features/home/presentation/views/widget/download_pdf_page.dart';
+import 'package:lms/core/widget/download_pdf_page.dart';
 import 'package:intl/intl.dart';
 
 import 'package:readmore/readmore.dart';

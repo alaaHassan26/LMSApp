@@ -7,7 +7,7 @@ import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/features/home/data/model/news_model.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_image_list_view.dart';
-import 'package:lms/features/home/presentation/views/widget/download_pdf_page.dart';
+import 'package:lms/core/widget/download_pdf_page.dart';
 import 'package:intl/intl.dart';
 
 import 'package:readmore/readmore.dart';
@@ -141,11 +141,11 @@ class _CustomItemListViewNewsHomeState
           ),
           InkWell(
             onTap: () {
-                            print(widget.newsModel.id);
-GoRouter.of(context).push(
-  AppRouter.kCommentsPage,
-  extra: widget.newsModel.id,
-);
+              print(widget.newsModel.id);
+              GoRouter.of(context).push(
+                AppRouter.kCommentsPage,
+                extra: widget.newsModel.id,
+              );
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -155,19 +155,20 @@ GoRouter.of(context).push(
                     children: [
                       IconButton(
                           onPressed: () {
-            GoRouter.of(context).push(
-              AppRouter.kCommentsPage,
-              extra: widget.newsModel.id,
-            );   
-                                   },
+                            GoRouter.of(context).push(
+                              AppRouter.kCommentsPage,
+                              extra: widget.newsModel.id,
+                            );
+                          },
                           icon: const Icon(Iconsax.message_search)),
                       const SizedBox(width: 12),
                       TextButton(
                         onPressed: () {
-            GoRouter.of(context).push(
-              AppRouter.kCommentsPage,
-              extra: widget.newsModel.id,
-            );                        },
+                          GoRouter.of(context).push(
+                            AppRouter.kCommentsPage,
+                            extra: widget.newsModel.id,
+                          );
+                        },
                         child: Text(
                           AppLocalizations.of(context)!.translate('comment'),
                           style: AppStyles.styleMedium20(context),
@@ -178,10 +179,11 @@ GoRouter.of(context).push(
                   const Spacer(),
                   IconButton(
                       onPressed: () {
-            GoRouter.of(context).push(
-              AppRouter.kCommentsPage,
-              extra: widget.newsModel.id,
-            );                      },
+                        GoRouter.of(context).push(
+                          AppRouter.kCommentsPage,
+                          extra: widget.newsModel.id,
+                        );
+                      },
                       icon: const Icon(
                         Icons.arrow_forward_ios,
                         size: 18,
