@@ -107,7 +107,7 @@ Widget _buildAnswerOptions(BuildContext context, bool isDarkMode) {
                 return ListTile(
                   leading: _buildLeadingIcon(
                     onPressed: () {
-                      mcqCubit.getQuestionResults(QuestionId); // Make sure `question.id` is the correct variable
+               isCorrect ?       mcqCubit.getQuestionResults(QuestionId) : print('no thing') ; // Make sure `question.id` is the correct variable
                       print(question.id);
                       _handleAnswerSelection(index);
                     },
