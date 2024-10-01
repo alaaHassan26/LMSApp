@@ -11,13 +11,13 @@ class NewsCubit extends Cubit<NewsState> {
   int skip = 0;
   final int limit = 10;
   bool isLoadingMore = false;
-  bool hasMore = true;  // Add a flag to track if there is more data
+  bool hasMore = true;  
 
   NewsCubit() : super(NewsInitial());
 
   Future<void> fetchNews({bool isLoadMore = false}) async {
     if (isLoadMore) {
-      if (isLoadingMore || !hasMore) return;  // Prevent loading more if already loading or no more data
+      if (isLoadingMore || !hasMore) return; 
       isLoadingMore = true;
     } else {
       emit(NewsLoading());
@@ -30,7 +30,7 @@ class NewsCubit extends Cubit<NewsState> {
       (newNewsList) {
         if (isLoadMore) {
           if (newNewsList.length < limit) {
-            hasMore = false;  // No more data if the list size is smaller than the limit
+            hasMore = false;  
           }
           newsList.addAll(newNewsList);
           skip += limit;
@@ -38,7 +38,7 @@ class NewsCubit extends Cubit<NewsState> {
         } else {
           newsList = newNewsList;
           skip = limit;
-          hasMore = newNewsList.length == limit;  // If new list size equals the limit, there's more data
+          hasMore = newNewsList.length == limit; 
         }
         emit(NewsLoaded(newsList));
       },

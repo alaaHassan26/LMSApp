@@ -16,6 +16,9 @@ class CustomImage extends StatelessWidget {
   final String image;
   final BorderRadiusGeometry? borderRadius;
 
+  // URL for the fallback image
+  final String fallbackImageUrl = 'https://images.pexels.com/photos/28216688/pexels-photo-28216688/free-photo-of-autumn-camping.png';
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -28,23 +31,34 @@ class CustomImage extends StatelessWidget {
             height: height,
             fit: BoxFit.cover,
             placeholder: (context, url) => SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: const ShimmerFeaturedList(),
+            ),
+            errorWidget: (context, url, error) => CachedNetworkImage(
+              imageUrl: fallbackImageUrl, // Show the fallback image on error
+              width: width,
+              height: height,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => SizedBox(
                 height: MediaQuery.of(context).size.height * 0.3,
-                child: const ShimmerFeaturedList()),
-            errorWidget: (context, url, error) => const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.warning_amber_outlined,
-                  size: 32,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Image Not Available',
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                child: const ShimmerFeaturedList(),
+              ),
+              errorWidget: (context, url, error) => const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.warning_amber_outlined,
+                    size: 32,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Fallback Image Not Available',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
