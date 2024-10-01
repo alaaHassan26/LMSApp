@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/Constatns.dart';
@@ -202,7 +203,7 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
                       height: 16,
                     ),
                     ReadMoreText(
-              widget.videos[index].content!,
+                      widget.videos[index].content!,
                       style: AppStyles.styleMedium20(context),
                       trimLines: 3,
                       trimCollapsedText:
@@ -212,14 +213,30 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
                     ),
                     const SizedBox(height: 12),
                     const Divider(thickness: 3),
-                    const SizedBox(height: 12),
-
-                        widget.videos[index].file != null ?
-                    DownloadPdfPage(
-                      pdfName: 'Pdf',
-                      pdfUrl:
-                          widget.videos[index].file!
-                    ) : Center(child: Text('No Attachment'))
+                    const SizedBox(height: 24),
+                    widget.videos[index].file != null
+                        ? DownloadPdfPage(
+                            pdfName: 'Pdf', pdfUrl: widget.videos[index].file!)
+                        : Center(
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/no-attachment-svgrepo-com.svg',
+                                  height:
+                                      MediaQuery.of(context).size.height * .12,
+                                  width:
+                                      MediaQuery.of(context).size.width * .12,
+                                ),
+                                const SizedBox(
+                                  height: 6,
+                                ),
+                                Text(
+                                  'لا توجد ملفات مرفقة',
+                                  style: AppStyles.styleMedium24(context),
+                                ),
+                              ],
+                            ),
+                          )
                   ],
                 ),
               ),

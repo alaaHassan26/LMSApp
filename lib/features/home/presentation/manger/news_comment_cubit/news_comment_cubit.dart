@@ -126,7 +126,6 @@ class CommentsCubit extends Cubit<CommentsState> {
     // 3. استدعاء API لإضافة الرد الجديد.
     final eitherResponse =
         await newsRepository.addReplay(newsId, content, parentCommentId);
-
     eitherResponse.fold(
       (failure) {
         // التعامل مع الخطأ وإعادة الحالة السابقة

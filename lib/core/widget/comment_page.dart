@@ -1,351 +1,273 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:lms/core/functions/format_data.dart';
-import 'package:lms/core/utils/Constatns.dart';
+import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
-import 'package:lms/core/utils/colors.dart';
-import 'package:lms/core/widget/custom_text_filed.dart';
-import 'package:lms/core/widget/shimmer_featured.dart';
-import 'package:lms/features/home/data/model/news_comments_model.dart';
-import 'package:lms/features/home/presentation/manger/news_comment_cubit/news_comment_cubit.dart';
-import 'package:lms/features/home/presentation/manger/news_comment_cubit/news_comment_state.dart';
+
+class Comment {
+  final String username;
+  final String content;
+  final String time;
+  final List<Comment> replies;
+  bool isExpanded;
+
+  Comment({
+    required this.username,
+    required this.content,
+    required this.time,
+    this.replies = const [],
+    this.isExpanded = false,
+  });
+}
 
 class CommentsPage extends StatefulWidget {
   final String newsId;
-
-  const CommentsPage({required this.newsId, super.key});
+  const CommentsPage({super.key, required this.newsId});
 
   @override
-  _CommentsPageState createState() => _CommentsPageState();
+  State<CommentsPage> createState() => _CommentsPageState();
 }
 
 class _CommentsPageState extends State<CommentsPage> {
-  final TextEditingController _commentController = TextEditingController();
-  final Map<String, int> _repliesLimit =
-      {}; // لتتبع عدد الردود المعروضة لكل تعليق
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<CommentsCubit>().fetchComments(widget.newsId);
-  }
+  List<Comment> comments = [
+    Comment(
+      username: 'علاء حسن',
+      content: 'علي عبد بروح امك اربط ال ui بالوجبك 😪',
+      time: '5 دقائق',
+      replies: [
+        Comment(
+          username: 'علي عبد الشهيد الديوث',
+          content: 'تدلل ابو حسين خادم الك',
+          time: '2 دقيقة',
+        ),
+        Comment(
+          username: 'علاء حسن',
+          content: 'حبيبي اخبط جيسين',
+          time: '1 دقيقة',
+        ),
+      ],
+    ),
+    Comment(
+      username: 'علي عبد الشهيد الديوث',
+      content: 'كم حمل انشال اليه ولا مهتم بس حملج كسر ظهري حبيبتي زنوبة',
+      time: '15 دقيقة',
+      replies: [],
+    ),
+    Comment(
+      username: 'ابو رقية',
+      content: 'اخوان اني اخاف من ام رقية اريد نصيحة منكم',
+      time: '25 دقيقة',
+      replies: [],
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.translate('comments'),
-          style: AppStyles.styleSemiBold24(context),
-        ),
+        title: const Text('التعليقات'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: BlocBuilder<CommentsCubit, CommentsState>(
-                builder: (context, state) {
-                  if (state is CommentsLoading) {
-                    return Center(
-                        child: ListView.builder(
-                      itemCount: 15,
-                      itemBuilder: (context, index) {
-                        return const CommentsPagevShimmer();
-                      },
-                    ));
-                  } else if (state is CommentsLoaded) {
-                    return RefreshIndicator(
-                      onRefresh: () {
-                        return refreshAllData(context, widget.newsId);
-                      },
-                      child: ListView.builder(
-                        itemCount: state.commentsList.length,
-                        itemBuilder: (context, index) {
-                          final comment = state.commentsList[index];
-                          return _buildComment(
-                            context,
-                            comment.user.name,
-                            comment.content,
-                            comment,
-                          );
-                        },
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+          ),
+          child: Column(
+            children: [
+              const Divider(),
+              Expanded(
+                child: ListView(
+                  children: List.generate(comments.length, (index) {
+                    return Card(
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 12),
+                        child: buildCommentItem(context, comments[index]),
                       ),
                     );
-                  } else {
-                    return const Center(child: Text('Failed to load comments'));
-                  }
-                },
+                  }),
+                ),
               ),
-            ),
-            _buildCommentInput(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildComment(BuildContext context, String author, String comment,
-      NewsCommentModel commentModel) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                backgroundImage: commentModel.user.image != null
-                    ? CachedNetworkImageProvider(
-                        '${CS.Api}${commentModel.user.image!}')
-                    : null,
-                radius: 20,
-                child: commentModel.user.image == null
-                    ? Text(commentModel.user.name.substring(0, 1))
-                    : null,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.07),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'اكتب تعليقًا...',
+                          hintStyle: AppStyles.styleMedium20(context),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(author, style: AppStyles.styleSemiBold20(context)),
-                        const SizedBox(height: 4),
-                        Text(
-                          comment,
-                          style: AppStyles.styleMedium18(context),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              formatDate(commentModel.createdAt, context),
-                              style: AppStyles.styleMedium16(context)
-                                  .copyWith(color: greyColor),
-                            ),
-                            const SizedBox(width: 8),
-                          ],
-                        ),
-                        _buildReplies(context, commentModel, author),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                _showReplyDialog(
-                                    context, commentModel.id, author);
-                              },
-                              child: const Text(
-                                'Reply',
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {}, icon: const Icon(Icons.edit)),
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.delete))
-                          ],
-                        )
-                      ],
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.send),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildReplies(BuildContext context, NewsCommentModel commentModel,
-      String originalAuthor) {
-    final replies = commentModel.children;
-    final limit =
-        _repliesLimit[commentModel.id] ?? 1; // عدد الردود المعروضة حالياً
-
-    return Column(
-      children: [
-        ...replies.take(limit).map((reply) {
-          return _buildReply(context, reply, originalAuthor);
-        }).toList(),
-        if (replies.length > limit)
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _repliesLimit[commentModel.id] = limit + 5; // عرض 5 ردود إضافية
-              });
-            },
-            child: Text('عرض المزيد (${replies.length - limit} ردود)'),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildReply(BuildContext context, NewsCommentModel replyModel,
-      String originalAuthor) {
+  Widget buildCommentItem(BuildContext context, Comment comment,
+      {bool isReply = false}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 16.0),
-      child: Row(
+      padding: isArabic(context)
+          ? EdgeInsets.only(
+              top: 4.0,
+              bottom: 4.0,
+              right: isReply ? 40.0 : 0.0,
+            )
+          : EdgeInsets.only(
+              top: 4.0,
+              bottom: 4.0,
+              left: isReply ? 40.0 : 0.0,
+            ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundImage: replyModel.user.image != null
-                ? CachedNetworkImageProvider(
-                    '${CS.Api}${replyModel.user.image!}')
-                : null,
-            radius: 18,
-            child: replyModel.user.image == null
-                ? Text(replyModel.user.name.substring(0, 1))
-                : null,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(12.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.07),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const CircleAvatar(
+                radius: 18,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          comment.username,
+                          style: AppStyles.styleMedium20(context),
+                        ),
+                        Text(
+                          comment.time,
+                          style: AppStyles.styleMedium16(context),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      comment.content,
+                      style: AppStyles.styleMedium18(context),
+                    ),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'رد',
+                            style: AppStyles.styleMedium16(context),
+                          ),
+                        ),
+                        if (comment.replies.isNotEmpty)
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                comment.isExpanded = !comment.isExpanded;
+                              });
+                            },
+                            child: Text(
+                              comment.isExpanded
+                                  ? 'إخفاء الردود'
+                                  : 'عرض الردود',
+                              style: AppStyles.styleMedium16(context),
+                            ),
+                          ),
+                        const Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              _showOptionsDialog(context);
+                            },
+                            icon: const Icon(Iconsax.menu))
+                      ],
+                    ),
+                  ],
                 ),
               ),
+            ],
+          ),
+
+          // هنا عرض الردود ابو حسين
+          if (comment.isExpanded)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(replyModel.user.name,
-                      style: AppStyles.styleSemiBold18(context)),
-                  const SizedBox(height: 4),
-                  Text(
-                    "@$originalAuthor ${replyModel.content}",
-                    style: AppStyles.styleMedium16(context),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    formatDate(replyModel.createdAt, context),
-                    style: AppStyles.styleMedium16(context)
-                        .copyWith(color: greyColor),
-                  ),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: const Text(
-                          'Reply',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                          onPressed: () {}, icon: const Icon(Icons.edit)),
-                      IconButton(
-                          onPressed: () {}, icon: const Icon(Icons.delete))
-                    ],
-                  )
-                ],
+                children: comment.replies
+                    .map((reply) =>
+                        buildCommentItem(context, reply, isReply: true))
+                    .toList(),
               ),
             ),
-          ),
         ],
       ),
     );
   }
 
-  void _showReplyDialog(BuildContext context, String parentCommentId,
-      [String? repliedTo]) {
-    TextEditingController replyController = TextEditingController();
-
+  void _showOptionsDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Add a reply'),
-          content: TextField(
-            controller: replyController,
-            decoration: InputDecoration(
-              hintText: 'Reply to ${repliedTo ?? 'comment'}...',
-            ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            AppLocalizations.of(context)!.translate('options'),
+            style: AppStyles.styleMedium20(context),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Iconsax.edit),
+                title: Text(
+                  'تعديل التعليق',
+                  style: AppStyles.styleMedium16(context),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: const Icon(Iconsax.trash),
+                title: Text(
+                  'حذف التعليق',
+                  style: AppStyles.styleMedium16(context),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const Divider(),
+            ],
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                final content = replyController.text;
-                if (content.isNotEmpty) {
-                  context.read<CommentsCubit>().replyToComment(
-                        widget.newsId,
-                        content,
-                        parentCommentId,
-                      );
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Reply'),
+              child: Text(
+                AppLocalizations.of(context)!.translate('cancel'),
+                style: AppStyles.styleMedium16(context).copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
             ),
           ],
         );
       },
     );
   }
-
-  Widget _buildCommentInput(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: CustomTextField(
-              sizeTextFiled: 12,
-              controller: _commentController,
-              hintText: AppLocalizations.of(context)!.translate('wac'),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () {
-              final content = _commentController.text;
-              if (content.isNotEmpty) {
-                context
-                    .read<CommentsCubit>()
-                    .addComment(widget.newsId, content);
-                _commentController.clear(); // Clear input field
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-Future<void> refreshAllData(context, String newsId) async {
-  BlocProvider.of<CommentsCubit>(context).fetchComments(newsId);
 }
