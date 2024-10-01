@@ -10,32 +10,38 @@ import '../models/courses_model.dart';
 import '../models/lessons_model.dart';
 
 class CoursesRepository {
-   ApiService apiService = ApiService();
+  final ApiService apiService = ApiService();
 
-  CoursesRepository();
-
-  Future<Either<Failure, List<Course>>> getCourses() async {
+  Future<Either<Failure, List<Course>>> getCourses({required int skip, required int limit}) async {
     try {
-      String? token = CacheHelper().getData(key: 'saveToken') as String?;
+      String? token = CacheHelper().getData(key: 'saveToken');
       if (token == null) return Left(ServerFailure('Token is null'));
 
-      final response = await apiService.get('/api/get_courses_category', token: token);
+      final response = await apiService.get('/api/get_courses_category?skip=$skip&limit=$limit', token: token);
 
       if (response.statusCode == 200) {
         final List<Course> coursesList = (response.data['result'] as List)
             .map((courseJson) => Course.fromJson(courseJson))
             .toList();
 
-        CacheHelper().saveData(
-          key: 'cachedCourses',
-          value: json.encode(coursesList.map((course) => course.toJson()).toList()),
+        await CacheHelper().saveData(
+          key: 'cached_courses',
+          value: jsonEncode(coursesList.map((course) => course.toJson()).toList()),
         );
 
         return Right(coursesList);
       } else {
-        return Left(UnexpectedError());
+        return Left(ServerFailure('Failed to fetch courses'));
       }
     } catch (e) {
+      final cachedData = CacheHelper().getData(key: 'cached_courses');
+      if (cachedData != null) {
+        final List<Course> cachedCoursesList = (jsonDecode(cachedData) as List)
+            .map((courseJson) => Course.fromJson(courseJson))
+            .toList();
+        return Right(cachedCoursesList);
+      }
+
       if (e is DioException) {
         return Left(ServerFailure.fromDioError(e));
       } else {
@@ -43,6 +49,8 @@ class CoursesRepository {
       }
     }
   }
+
+
 
 
   Future<Either<Failure, List<Lesson>>> getLessons(String categoryId) async {

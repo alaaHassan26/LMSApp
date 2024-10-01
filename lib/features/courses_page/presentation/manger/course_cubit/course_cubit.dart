@@ -9,18 +9,40 @@ import 'course_state.dart';
 
 
 class CoursesCubit extends Cubit<CoursesState> {
-   CoursesRepository coursesRepository = CoursesRepository();
+  final CoursesRepository coursesRepository = CoursesRepository();
+  List<Course> allCourses = [];
+  int skip = 0;
+  final int limit = 10;
+  bool hasMoreCourses = true;
 
   CoursesCubit() : super(CoursesInitial());
 
-
   Future<void> fetchCourses() async {
+    if (!hasMoreCourses) return;
+
     emit(CoursesLoading());
-    final Either<Failure, List<Course>> result = await coursesRepository.getCourses();
+    final Either<Failure, List<Course>> result = await coursesRepository.getCourses(skip: skip, limit: limit);
 
     result.fold(
-      (failure) => emit(CoursesError(failure.err)),
-      (courses) => emit(CoursesLoaded(courses)),
+      (failure) {
+        emit(CoursesError(failure.err));
+      },
+      (courses) {
+        if (courses.isEmpty) {
+          hasMoreCourses = false; 
+        } else {
+          allCourses.addAll(courses);
+          skip += limit; 
+        }
+        emit(CoursesLoaded(allCourses, hasMoreCourses: hasMoreCourses));
+      },
     );
+  }
+
+  void resetCourses() {
+    allCourses.clear();
+    skip = 0;
+    hasMoreCourses = true;
+    emit(CoursesInitial());
   }
 }

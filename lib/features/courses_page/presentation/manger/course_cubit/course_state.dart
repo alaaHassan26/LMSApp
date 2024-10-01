@@ -1,33 +1,19 @@
 import '../../../data/models/courses_model.dart';
+abstract class CoursesState {}
 
-abstract class CoursesState {
-  const CoursesState();
+class CoursesInitial extends CoursesState {}
 
-  List<Object> get props => [];
-}
-
-class CoursesInitial extends CoursesState {
-
-}
-
-class CoursesLoading extends CoursesState {
-
-}
+class CoursesLoading extends CoursesState {}
 
 class CoursesLoaded extends CoursesState {
   final List<Course> courses;
+  final bool hasMoreCourses;
 
-  const CoursesLoaded(this.courses);
-
-  @override
-  List<Object> get props => [courses];
+  CoursesLoaded(this.courses, {this.hasMoreCourses = true});
 }
 
 class CoursesError extends CoursesState {
-  final String message;
+  final String error;
 
-  const CoursesError(this.message);
-
-  @override
-  List<Object> get props => [message];
+  CoursesError(this.error);
 }
