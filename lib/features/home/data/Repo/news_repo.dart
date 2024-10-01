@@ -9,49 +9,47 @@ import '../model/news_model.dart';
 
 class NewsRepository {
   final ApiService apiService = ApiService();
+Future<Either<Failure, List<NewsModel>>> getNews({required int skip, required int limit}) async {
+  try {
+    String? token = CacheHelper().getData(key: 'saveToken');
+    if (token == null) return Left(ServerFailure('Token is null'));
 
-  Future<Either<Failure, List<NewsModel>>> getNews() async {
-    try {
-      String? token = CacheHelper().getData(key: 'saveToken');
-      if (token == null) return Left(ServerFailure('Token is null'));
+    // Fetch data from API with skip and limit
+    final response = await apiService.get('/api/get_news?skip=$skip&limit=$limit', token: token);
 
-      // Fetch data from API
-      final response = await apiService.get('/api/get_news', token: token);
+    if (response.statusCode == 200) {
+      final List<NewsModel> newsList = (response.data['result'] as List)
+          .map((newsJson) => NewsModel.fromJson(newsJson))
+          .toList();
 
-      if (response.statusCode == 200) {
-        final List<NewsModel> newsList = (response.data['result'] as List)
-            .map((newsJson) => NewsModel.fromJson(newsJson))
-            .toList();
+      // Cache new data
+      await CacheHelper().saveData(
+        key: 'cached_news',
+        value: jsonEncode(newsList.map((e) => e.toJson()).toList()),
+      );
 
-        // Save new data to cache
-        await CacheHelper().saveData(
-          key: 'cached_news',
-          value: jsonEncode(newsList.map((e) => e.toJson()).toList()),
-        );
-        print('News data cached successfully');
-        return Right(newsList);
-      } else {
-        return Left(ServerFailure('Failed to fetch news'));
-      }
-    } catch (e) {
-      // Handle the error and attempt to use cached data
-      print('Error occurred: $e');
-      final cachedData = CacheHelper().getData(key: 'cached_news');
-      if (cachedData != null) {
-        print('Using cached news due to error');
-        final List<NewsModel> cachedNewsList = (jsonDecode(cachedData) as List)
-            .map((newsJson) => NewsModel.fromJson(newsJson))
-            .toList();
-        return Right(cachedNewsList);
-      }
+      return Right(newsList);
+    } else {
+      return Left(ServerFailure('Failed to fetch news'));
+    }
+  } catch (e) {
+    // Handle error and use cached data
+    final cachedData = CacheHelper().getData(key: 'cached_news');
+    if (cachedData != null) {
+      final List<NewsModel> cachedNewsList = (jsonDecode(cachedData) as List)
+          .map((newsJson) => NewsModel.fromJson(newsJson))
+          .toList();
+      return Right(cachedNewsList);
+    }
 
-      if (e is DioException) {
-        return Left(ServerFailure.fromDioError(e));
-      } else {
-        return Left(ServerFailure(e.toString()));
-      }
+    if (e is DioException) {
+      return Left(ServerFailure.fromDioError(e));
+    } else {
+      return Left(ServerFailure(e.toString()));
     }
   }
+}
+
 
 Future<Either<Failure, List<NewsCommentModel>>> getComments(String newsId) async {
   try {

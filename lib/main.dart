@@ -14,6 +14,7 @@ import 'package:lms/features/auth/presentation/manger/auth_cubit/auth_cubit.dart
 import 'core/Server/Bloc_Observer.dart';
 import 'features/courses_page/presentation/manger/mcq_cubit/mcq_cubit.dart';
 import 'features/home/presentation/manger/news_comment_cubit/news_comment_cubit.dart';
+import 'features/home/presentation/manger/news_cubit/news_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ void main() async {
       BlocProvider(create: (context) => LoginCubit()),
       BlocProvider(create: (context) => CommentsCubit()),
       BlocProvider(create: (context) => McqCubit()),
+      BlocProvider(create: (context) => NewsCubit()),
 
       
 
