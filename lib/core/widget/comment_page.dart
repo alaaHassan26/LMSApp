@@ -6,9 +6,9 @@ import 'package:lms/core/utils/appstyles.dart';
 
 class Comment {
   final String username;
-  final String content;
+  String content;
   final String time;
-  final List<Comment> replies;
+  List<Comment> replies;
   bool isExpanded;
 
   Comment({
@@ -32,23 +32,30 @@ class _CommentsPageState extends State<CommentsPage> {
   List<Comment> comments = [
     Comment(
       username: 'علاء حسن',
-      content: 'علي عبد بروح امك اربط ال ui بالوجبك 😪',
+      content: 'علي عبد، بروح امك اربط ال UI بالوجبك 😪',
       time: '5 دقائق',
       replies: [
         Comment(
-          username: 'علي عبد الشهيد الديوث',
-          content: 'تدلل ابو حسين خادم الك',
+          username: 'علي عبد الشهيد',
+          content: '@علاء حسن تدلل ابو حسين خادم الك',
           time: '2 دقيقة',
         ),
         Comment(
           username: 'علاء حسن',
-          content: 'حبيبي اخبط جيسين',
+          content: '@علي عبد الشهيد حبيبي اخبط جيسين',
           time: '1 دقيقة',
+          replies: [
+            Comment(
+              username: 'علي عبد الشهيد',
+              content: '@علاء حسن جاهز انت ع الطلعة؟',
+              time: 'الآن',
+            ),
+          ],
         ),
       ],
     ),
     Comment(
-      username: 'علي عبد الشهيد الديوث',
+      username: 'علي عبد الشهيد',
       content: 'كم حمل انشال اليه ولا مهتم بس حملج كسر ظهري حبيبتي زنوبة',
       time: '15 دقيقة',
       replies: [],
@@ -57,9 +64,32 @@ class _CommentsPageState extends State<CommentsPage> {
       username: 'ابو رقية',
       content: 'اخوان اني اخاف من ام رقية اريد نصيحة منكم',
       time: '25 دقيقة',
-      replies: [],
+      replies: [
+        Comment(
+          username: 'علاء حسن',
+          content: '@ابو رقية تدلل بس لا تخاف، احنا وياك',
+          time: '20 دقيقة',
+        ),
+        Comment(
+          username: 'علي عبد الشهيد',
+          content: '@ابو رقية زين شلون ترضى تعيش وياها هههه',
+          time: '15 دقيقة',
+        ),
+      ],
     ),
   ];
+
+  final TextEditingController _commentController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  Comment? _editingComment;
+  Comment? _replyingTo;
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +99,7 @@ class _CommentsPageState extends State<CommentsPage> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Column(
             children: [
               const Divider(),
@@ -96,8 +124,12 @@ class _CommentsPageState extends State<CommentsPage> {
                   children: [
                     Expanded(
                       child: TextField(
+                        focusNode: _focusNode,
+                        controller: _commentController,
                         decoration: InputDecoration(
-                          hintText: 'اكتب تعليقًا...',
+                          hintText: _replyingTo == null
+                              ? 'اكتب تعليقًا...'
+                              : 'اكتب ردًا @${_replyingTo!.username}...',
                           hintStyle: AppStyles.styleMedium20(context),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
@@ -106,7 +138,38 @@ class _CommentsPageState extends State<CommentsPage> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_commentController.text.trim().isNotEmpty) {
+                          setState(() {
+                            if (_editingComment != null) {
+                              // تعديل التعليق الحالي
+                              _editingComment!.content =
+                                  _commentController.text.trim();
+                              _editingComment = null;
+                            } else if (_replyingTo != null) {
+                              // إضافة رد على تعليق أو رد
+                              _replyingTo!.replies =
+                                  List.from(_replyingTo!.replies)
+                                    ..add(Comment(
+                                      username: 'المستخدم الحالي',
+                                      content:
+                                          '@${_replyingTo!.username} ${_commentController.text.trim()}',
+                                      time: 'الآن',
+                                    ));
+                              _replyingTo = null;
+                            } else {
+                              // إضافة تعليق جديد
+                              comments.add(Comment(
+                                username: 'المستخدم الحالي',
+                                content: _commentController.text.trim(),
+                                time: 'الآن',
+                              ));
+                            }
+                            _commentController.clear();
+                            _focusNode.unfocus();
+                          });
+                        }
+                      },
                       icon: const Icon(Icons.send),
                     ),
                   ],
@@ -168,7 +231,12 @@ class _CommentsPageState extends State<CommentsPage> {
                     Row(
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _replyingTo = comment;
+                            });
+                            _focusNode.requestFocus();
+                          },
                           child: Text(
                             'رد',
                             style: AppStyles.styleMedium16(context),
@@ -190,10 +258,11 @@ class _CommentsPageState extends State<CommentsPage> {
                           ),
                         const Spacer(),
                         IconButton(
-                            onPressed: () {
-                              _showOptionsDialog(context);
-                            },
-                            icon: const Icon(Iconsax.menu))
+                          onPressed: () {
+                            _showOptionsDialog(context, comment);
+                          },
+                          icon: const Icon(Iconsax.menu),
+                        ),
                       ],
                     ),
                   ],
@@ -201,8 +270,6 @@ class _CommentsPageState extends State<CommentsPage> {
               ),
             ],
           ),
-
-          // هنا عرض الردود ابو حسين
           if (comment.isExpanded)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -218,7 +285,8 @@ class _CommentsPageState extends State<CommentsPage> {
     );
   }
 
-  void _showOptionsDialog(BuildContext context) {
+  void _showOptionsDialog(BuildContext context, Comment comment) {
+    FocusScope.of(context).unfocus();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -238,7 +306,10 @@ class _CommentsPageState extends State<CommentsPage> {
                   'تعديل التعليق',
                   style: AppStyles.styleMedium16(context),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  _showEditDialog(context, comment);
+                },
               ),
               ListTile(
                 leading: const Icon(Iconsax.trash),
@@ -248,6 +319,7 @@ class _CommentsPageState extends State<CommentsPage> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
+                  _showDeleteConfirmationDialog(context, comment);
                 },
               ),
               const Divider(),
@@ -260,9 +332,57 @@ class _CommentsPageState extends State<CommentsPage> {
               },
               child: Text(
                 AppLocalizations.of(context)!.translate('cancel'),
-                style: AppStyles.styleMedium16(context).copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                style: AppStyles.styleMedium18(context),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditDialog(BuildContext context, Comment comment) {
+    _commentController.text = comment.content;
+    _editingComment = comment;
+    _focusNode.requestFocus();
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, Comment comment) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'حذف التعليق',
+            style: AppStyles.styleMedium20(context),
+          ),
+          content: Text(
+            'هل أنت متأكد أنك تريد حذف هذا التعليق؟',
+            style: AppStyles.styleMedium18(context),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'إلغاء',
+                style: AppStyles.styleMedium16(context),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  comments.remove(comment);
+                });
+                Navigator.pop(context);
+              },
+              child: Text(
+                'حذف',
+                style: AppStyles.styleMedium16(context),
               ),
             ),
           ],
