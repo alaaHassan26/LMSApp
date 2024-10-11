@@ -26,10 +26,17 @@ class CustomItemSetting extends StatelessWidget {
             ),
             child: Column(
               children: [
-                CustomListTitleSetting(
-                  icon: Iconsax.profile_circle,
-                  title: AppLocalizations.of(context)!.translate('m_profile'),
-                  onPressed: () {},
+                GestureDetector(
+                  onTap: () {
+                    GoRouter.of(context).push(AppRouter.kUserUpdateView);
+                  },
+                  child: CustomListTitleSetting(
+                    icon: Iconsax.profile_circle,
+                    title: AppLocalizations.of(context)!.translate('m_profile'),
+                    onPressed: () {
+                      GoRouter.of(context).push(AppRouter.kUserUpdateView);
+                    },
+                  ),
                 ),
                 CustomListTitleSetting(
                   icon: Icons.language,
@@ -97,9 +104,7 @@ class CustomItemSetting extends StatelessWidget {
                   icon: Iconsax.logout,
                   title: AppLocalizations.of(context)!.translate('sinout'),
                   onPressed: () {
-
-context.go(AppRouter.kLogIn);
-
+                    context.go(AppRouter.kLogIn);
                   },
                 ),
                 CustomListTitleSetting(
