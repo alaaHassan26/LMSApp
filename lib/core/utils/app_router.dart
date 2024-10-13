@@ -19,6 +19,7 @@ import 'package:lms/features/home/data/model/news_model.dart';
 import 'package:lms/features/home/presentation/views/widget/comment_page.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_pdf_page.dart';
 import 'package:lms/features/home/presentation/views/widget/image_view.dart';
+import 'package:lms/features/user/presentation/views/usre_update_view.dart';
 import 'package:lms/navigation_menu.dart';
 
 abstract class AppRouter {
@@ -38,6 +39,7 @@ abstract class AppRouter {
   static const kDownloadVideoBody = '/downloadVideoBody';
   static const kCoursesPageView = '/coursesPageView';
   static const kLogIn = '/kLogIn';
+  static const kUserUpdateView = '/userUpdateView';
 
   static final router = GoRouter(routes: [
     CacheHelper().getData(key: 'token') != null
@@ -103,23 +105,20 @@ abstract class AppRouter {
         );
       },
     ),
-
-        GoRoute(
+    GoRoute(
       path: kListLessonBody,
       builder: (context, state) {
         final categoryId = state.extra as String;
-    return ListLessonBody(categoryId: categoryId); 
+        return ListLessonBody(categoryId: categoryId);
       },
     ),
-
-
     GoRoute(
       path: kVideoPlayerBody,
       builder: (context, state) {
         final data = state.extra as Map<String, dynamic>?; // توقع استقبال Map
         if (data != null) {
-          final videos = data['videos']
-              as List<Lesson>; // استلام قائمة الفيديوهات
+          final videos =
+              data['videos'] as List<Lesson>; // استلام قائمة الفيديوهات
           final initialIndex =
               data['initialIndex'] as int; // استلام الفهرس الابتدائي
           return VideoPlayerBody(videos: videos, initialIndex: initialIndex);
@@ -152,17 +151,16 @@ abstract class AppRouter {
         }
       },
     ),
-GoRoute(
-  path: AppRouter.kStartMcqPage,
-  builder: (context, state) {
-    final extraData = state.extra as Map<String, dynamic>;
-    final questions = extraData['questions'] as String;
-    final title = extraData['title'] as String;
+    GoRoute(
+      path: AppRouter.kStartMcqPage,
+      builder: (context, state) {
+        final extraData = state.extra as Map<String, dynamic>;
+        final questions = extraData['questions'] as String;
+        final title = extraData['title'] as String;
 
-    return StartMcqPage(questions: questions, title: title);
-  },
-),
-
+        return StartMcqPage(questions: questions, title: title);
+      },
+    ),
     GoRoute(
       path: kResultsPage,
       builder: (context, state) {
@@ -188,6 +186,10 @@ GoRoute(
         //   ),
         // );
       },
+    ),
+    GoRoute(
+      path: kUserUpdateView,
+      builder: (context, state) => const UserUpdateView(),
     ),
   ]);
 }
