@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/custom_item_mcq_listview.dart';
 
 import '../../../../../../core/utils/app_router.dart';
@@ -13,7 +14,8 @@ class CustomListViewSearchMcq extends StatefulWidget {
   const CustomListViewSearchMcq({super.key});
 
   @override
-  _CustomListViewSearchMcqState createState() => _CustomListViewSearchMcqState();
+  _CustomListViewSearchMcqState createState() =>
+      _CustomListViewSearchMcqState();
 }
 
 class _CustomListViewSearchMcqState extends State<CustomListViewSearchMcq> {
@@ -26,6 +28,7 @@ class _CustomListViewSearchMcqState extends State<CustomListViewSearchMcq> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<McqCubit, McqState>(
       builder: (context, state) {
         if (state is McqLoading) {
@@ -51,8 +54,9 @@ class _CustomListViewSearchMcqState extends State<CustomListViewSearchMcq> {
                 final category = categories[index];
                 return Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                   child: Card(
+                    color: isDarkMode ? null : whiteColor,
                     elevation: 2,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -61,19 +65,16 @@ class _CustomListViewSearchMcqState extends State<CustomListViewSearchMcq> {
                       courseTitle: category.title,
                       courseNumber: 'عدد الاسئلة 5',
                       onTap: () {
-
-
                         print(state.categories[index].title);
 
                         print(state.categories[index].id);
-GoRouter.of(context).push(
-  AppRouter.kStartMcqPage,
-  extra: {
-    'questions': state.categories[index].id,
-    'title': state.categories[index].title, 
-  },
-);
-
+                        GoRouter.of(context).push(
+                          AppRouter.kStartMcqPage,
+                          extra: {
+                            'questions': state.categories[index].id,
+                            'title': state.categories[index].title,
+                          },
+                        );
                       },
                     ),
                   ),

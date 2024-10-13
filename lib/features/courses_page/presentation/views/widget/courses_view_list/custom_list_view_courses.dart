@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms/core/utils/app_router.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/custom_item_list_view.dart';
 import '../../../manger/course_cubit/course_cubit.dart';
 import '../../../manger/course_cubit/course_state.dart';
@@ -28,7 +29,8 @@ class _CustomListViewCoursesState extends State<CustomListViewCourses> {
           _scrollController.position.maxScrollExtent - 200) {
         // Check if there are more courses to load
         final cubit = context.read<CoursesCubit>();
-        if (cubit.hasMoreCourses && !(cubit.state is CoursesLoading)) { // Correctly checking the state
+        if (cubit.hasMoreCourses && cubit.state is! CoursesLoading) {
+          // Correctly checking the state
           cubit.fetchCourses();
         }
       }
@@ -43,22 +45,29 @@ class _CustomListViewCoursesState extends State<CustomListViewCourses> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<CoursesCubit, CoursesState>(
       builder: (context, state) {
-        if (state is CoursesLoading && context.read<CoursesCubit>().allCourses.isEmpty) {
+        if (state is CoursesLoading &&
+            context.read<CoursesCubit>().allCourses.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CoursesError) {
           return Center(child: Text(state.error));
         } else if (state is CoursesLoaded) {
           return ListView.builder(
             controller: _scrollController,
-            itemCount: state.hasMoreCourses ? state.courses.length + 1 : state.courses.length,
+            itemCount: state.hasMoreCourses
+                ? state.courses.length + 1
+                : state.courses.length,
             itemBuilder: (context, index) {
               if (index < state.courses.length) {
                 final course = state.courses[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                  ),
                   child: Card(
+                    color: isDarkMode ? null : whiteColor,
                     elevation: 2,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -68,16 +77,16 @@ class _CustomListViewCoursesState extends State<CustomListViewCourses> {
                       courseTitle: course.title,
                       courseNumber: '${course.timeCourse} ${course.timeType}',
                       onTap: () {
-                        print(course.courseId);
-                        GoRouter.of(context).push(AppRouter.kListLessonBody, extra: course.id);
+                        GoRouter.of(context)
+                            .push(AppRouter.kListLessonBody, extra: course.id);
                       },
                     ),
                   ),
                 );
               } else {
                 // Show loading indicator at the bottom when more courses are being loaded
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),

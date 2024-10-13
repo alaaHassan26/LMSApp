@@ -17,8 +17,9 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+      backgroundColor: isDarkMode ? black38Color : greyColor,
       appBar: AppBar(
+        backgroundColor: isDarkMode ? black38Color : whiteColor,
         title: Text(
           AppLocalizations.of(context)!.translate('news'),
           style: AppStyles.styleSemiBold34(context),

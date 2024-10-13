@@ -133,8 +133,12 @@ class _LogInCodeState extends State<LogInCode> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: isDarkMode ? null : whiteColor,
+      appBar: AppBar(
+        backgroundColor: isDarkMode ? null : whiteColor,
+      ),
       body: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginLoading) {

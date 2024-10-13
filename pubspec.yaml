@@ -44,7 +44,7 @@ dependencies:
   shimmer: ^3.0.0
   short_navigation: ^1.0.0
   smooth_page_indicator: ^1.2.0+3
-  youtube_explode_dart: ^2.2.2
+  youtube_explode_dart: ^2.3.0+1
 
 dev_dependencies:
   flutter_lints: ^4.0.0

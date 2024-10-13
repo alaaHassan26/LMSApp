@@ -14,7 +14,11 @@ class CustomItemListView extends StatelessWidget {
   final Function()? onTap;
 
   const CustomItemListView(
-      {super.key, required this.courseTitle, this.courseNumber, this.onTap, this.image});
+      {super.key,
+      required this.courseTitle,
+      this.courseNumber,
+      this.onTap,
+      this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +31,7 @@ class CustomItemListView extends StatelessWidget {
                 topLeft: Radius.circular(18), topRight: Radius.circular(18)),
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.15,
-            image:
-              '${CS.Api}$image',
+            image: '${CS.Api}$image',
           ),
           const SizedBox(height: 8),
           ListTile(

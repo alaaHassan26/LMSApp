@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/data/models/search_model.dart';
 import 'package:lms/features/courses_page/presentation/manger/search_cubit/search_cubit.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/custom_listview_search_mcq.dart';
@@ -11,6 +12,7 @@ class MCQBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     //  هنا لست مال البحث الاسئلة
     List<SearchModel> allCourses = [
       const SearchModel(nameTitleCours: 'Flutter Basics'),
@@ -23,7 +25,9 @@ class MCQBody extends StatelessWidget {
       const SearchModel(nameTitleCours: 'رياضيات'),
     ];
     return Scaffold(
+      backgroundColor: isDarkMode ? black38Color : greyColor,
       appBar: AppBar(
+        backgroundColor: isDarkMode ? black38Color : greyColor,
         title: Text(
           'MCQ Quiz',
           style: AppStyles.styleSemiBold24(context),

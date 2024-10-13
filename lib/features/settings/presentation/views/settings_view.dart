@@ -11,10 +11,10 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+      backgroundColor: isDarkMode ? black38Color : greyColor2,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+        backgroundColor: isDarkMode ? black38Color : greyColor2,
         title: Text(
           AppLocalizations.of(context)!.translate('settings'),
           style: AppStyles.styleSemiBold24(context),

@@ -52,7 +52,7 @@ class _ImageViewState extends State<ImageView> {
     final dateTime = formatDateTime(widget.newsModel.createdAt);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+      backgroundColor: isDarkMode ? black38Color : greyColor,
       body: GestureDetector(
         onTap: () {
           setState(() {

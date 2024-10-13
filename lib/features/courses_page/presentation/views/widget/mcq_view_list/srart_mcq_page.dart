@@ -10,12 +10,11 @@ import 'package:lms/core/widget/custom_image.dart';
 
 import '../../../../../../core/functions/direction_arabic.dart';
 import '../../../manger/mcq_cubit/mcq_cubit.dart';
-import '../../../manger/mcq_cubit/mcq_state.dart'; 
+import '../../../manger/mcq_cubit/mcq_state.dart';
 
 class StartMcqPage extends StatefulWidget {
-
-  final String questions ;
-  final String title ;
+  final String questions;
+  final String title;
   const StartMcqPage({super.key, required this.questions, required this.title});
 
   @override
@@ -27,10 +26,7 @@ class _StartMcqPageState extends State<StartMcqPage> {
   void initState() {
     super.initState();
     final mcqCubit = context.read<McqCubit>();
-    mcqCubit.getQuestions(widget.questions); 
-
-    
-
+    mcqCubit.getQuestions(widget.questions);
   }
 
   @override
@@ -38,17 +34,16 @@ class _StartMcqPageState extends State<StartMcqPage> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? null : greyColor.shade300,
+      backgroundColor: isDarkMode ? null : greyColor,
       appBar: AppBar(
-        backgroundColor: isDarkMode ? null : greyColor.shade300,
-        title: Text( widget.title),
+        backgroundColor: isDarkMode ? null : greyColor,
+        title: Text(widget.title),
       ),
       body: BlocBuilder<McqCubit, McqState>(
         builder: (context, state) {
           if (state is McqLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is McqFailure) {
-
             return Center(child: Text('Error: ${state.errorMessage}'));
           } else if (state is McqSuccess) {
             final questions = state.questions;
@@ -60,7 +55,7 @@ class _StartMcqPageState extends State<StartMcqPage> {
                   SliverToBoxAdapter(
                     child: Center(
                       child: Text(
-                   'MCQ Question',
+                        'MCQ Question',
                         style: AppStyles.styleSemiBold24(context),
                       ),
                     ),
@@ -78,26 +73,30 @@ class _StartMcqPageState extends State<StartMcqPage> {
                           children: [
                             Text(
                               textAlign: TextAlign.center,
-                              AppLocalizations.of(context)!.translate('exam_name'),
+                              AppLocalizations.of(context)!
+                                  .translate('exam_name'),
                               style: AppStyles.styleMedium16(context),
                             ),
                             const SizedBox(height: 16),
                             Text(
                               textAlign: TextAlign.center,
                               style: AppStyles.styleMedium20(context),
-                               widget.title,
+                              widget.title,
                             ),
                             const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 42, vertical: 20),
                               child: Divider(),
                             ),
                             CustomImage(
                               width: double.infinity,
                               height: MediaQuery.of(context).size.height * .25,
-                              image: 'https://www.shutterstock.com/image-photo/training-courses-business-concept-stack-260nw-549736798.jpg',
+                              image:
+                                  'https://www.shutterstock.com/image-photo/training-courses-business-concept-stack-260nw-549736798.jpg',
                             ),
                             const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 120, vertical: 6),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 120, vertical: 6),
                               child: Divider(),
                             ),
                             const SizedBox(height: 90),
@@ -113,14 +112,16 @@ class _StartMcqPageState extends State<StartMcqPage> {
                         const Expanded(child: SizedBox()),
                         GestureDetector(
                           onTap: () {
-
-                            GoRouter.of(context)
-                                .push(AppRouter.kMcqQuestionPage, extra: questions);
+                            GoRouter.of(context).push(
+                                AppRouter.kMcqQuestionPage,
+                                extra: questions);
                           },
                           child: Card(
+                            color: isDarkMode ? null : whiteColor,
                             margin: const EdgeInsets.symmetric(vertical: 3),
                             shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)),
                             ),
                             elevation: 6,
                             child: Padding(
@@ -142,7 +143,6 @@ class _StartMcqPageState extends State<StartMcqPage> {
                                   const Spacer(),
                                   IconButton(
                                     onPressed: () {
-
                                       GoRouter.of(context).push(
                                           AppRouter.kMcqQuestionPage,
                                           extra: questions);

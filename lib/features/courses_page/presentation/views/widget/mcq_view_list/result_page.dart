@@ -17,9 +17,9 @@ class ResultsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDarkMode ? null : greyColor.shade300,
+      backgroundColor: isDarkMode ? null : greyColor,
       appBar: AppBar(
-        backgroundColor: isDarkMode ? null : greyColor.shade300,
+        backgroundColor: isDarkMode ? null : greyColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

@@ -4,11 +4,13 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/core/widget/custom_image.dart';
 import 'package:lms/features/courses_page/data/models/lessons_model.dart';
+
 class CustomItemLessonListView extends StatelessWidget {
   final List<Lesson> videos; // List of videos
-  final int index; 
+  final int index;
 
   const CustomItemLessonListView({
     super.key,
@@ -18,6 +20,7 @@ class CustomItemLessonListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
@@ -26,6 +29,7 @@ class CustomItemLessonListView extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               return Card(
+                color: isDarkMode ? null : whiteColor,
                 elevation: 6,
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -37,8 +41,8 @@ class CustomItemLessonListView extends StatelessWidget {
                         child: CustomImage(
                           width: double.infinity,
                           height: double.infinity,
-                          image: videos[index].image?.isNotEmpty == true 
-                              ? videos[index].image! 
+                          image: videos[index].image?.isNotEmpty == true
+                              ? videos[index].image!
                               : 'https://via.placeholder.com/150',
                           // Handle image loading errors (if needed)
                         ),

@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/lesson_view_list/custom_lesson_listviws.dart';
-import '../../../manger/lessons_cubit/lessons_cubit.dart'; 
-import '../../../manger/lessons_cubit/lessons_state.dart'; 
+import '../../../manger/lessons_cubit/lessons_cubit.dart';
+import '../../../manger/lessons_cubit/lessons_state.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/utils/appstyles.dart';
 
 class ListLessonBody extends StatelessWidget {
-  final String categoryId; 
+  final String categoryId;
 
-  const ListLessonBody({super.key, required this.categoryId}); 
+  const ListLessonBody({super.key, required this.categoryId});
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
-      create: (context) => LessonsCubit()..fetchLessons(categoryId), 
+      create: (context) => LessonsCubit()..fetchLessons(categoryId),
       child: Scaffold(
+        backgroundColor: isDarkMode ? black38Color : greyColor2,
         appBar: AppBar(
+          backgroundColor: isDarkMode ? black38Color : greyColor2,
           actions: [
             BlocBuilder<LessonsCubit, LessonsState>(
               builder: (context, state) {
@@ -30,7 +34,8 @@ class ListLessonBody extends StatelessWidget {
 
                 return Row(
                   children: [
-                    Text('$timeCourse $timeType', style: AppStyles.styleMedium18(context)),
+                    Text('$timeCourse $timeType',
+                        style: AppStyles.styleMedium18(context)),
                     const SizedBox(width: 3),
                     const Icon(Iconsax.video_time),
                     const SizedBox(width: 12),
@@ -41,12 +46,12 @@ class ListLessonBody extends StatelessWidget {
           ],
           title: BlocBuilder<LessonsCubit, LessonsState>(
             builder: (context, state) {
-              String nameOfCourse = "Course"; 
+              String nameOfCourse = "Course";
 
               if (state is LessonsLoaded && state.lessons.isNotEmpty) {
                 nameOfCourse = state.lessons[0].course!.title;
               }
-     if (state is NoLessons) {
+              if (state is NoLessons) {
                 nameOfCourse = 'لا توجد دروس';
               }
 
@@ -66,12 +71,16 @@ class ListLessonBody extends StatelessWidget {
             } else if (state is LessonsError) {
               return Center(child: Text(state.message));
             } else if (state is LessonsLoaded) {
-              return CustomLessonListView(videos: state.lessons); 
+              return CustomLessonListView(videos: state.lessons);
+            } else if (state is NoLessons) {
+              return Center(
+                child: Text(
+                  'لا توجد دروس',
+                  style: AppStyles.styleBold16(context),
+                ),
+              );
             }
-            else if (state is NoLessons) {
-              return Center(child: Text('لا توجد دروس' , style: AppStyles.styleBold16(context),),); 
-            }
-            return const SizedBox(); 
+            return const SizedBox();
           },
         ),
       ),

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../manger/news_cubit/news_cubit.dart';
 import '../../manger/news_cubit/news_state.dart';
 import 'custom_iteam_listview_home.dart';
+
 class ListViewHomePage extends StatefulWidget {
   const ListViewHomePage({super.key});
 
   @override
   _ListViewHomePageState createState() => _ListViewHomePageState();
 }
+
 class _ListViewHomePageState extends State<ListViewHomePage> {
   final ScrollController _scrollController = ScrollController();
 
@@ -19,7 +22,7 @@ class _ListViewHomePageState extends State<ListViewHomePage> {
     super.initState();
     final cubit = context.read<NewsCubit>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      cubit.fetchNews();  
+      cubit.fetchNews();
     });
 
     _scrollController.addListener(() {
@@ -40,9 +43,11 @@ class _ListViewHomePageState extends State<ListViewHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<NewsCubit, NewsState>(
       builder: (context, state) {
-        if (state is NewsLoading && context.read<NewsCubit>().newsList.isEmpty) {
+        if (state is NewsLoading &&
+            context.read<NewsCubit>().newsList.isEmpty) {
           return Center(
             child: LoadingAnimationWidget.discreteCircle(
               color: Theme.of(context).colorScheme.onPrimary,
@@ -59,7 +64,8 @@ class _ListViewHomePageState extends State<ListViewHomePage> {
             itemBuilder: (context, index) {
               if (index < newsList.length) {
                 return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 3),
+                  color: isDarkMode ? null : whiteColor,
+                  margin: const EdgeInsets.symmetric(vertical: 2),
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.zero,
                   ),

@@ -25,6 +25,7 @@ class VideoPlayerBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     void showCommentsSheet(BuildContext context) {
       showModalBottomSheet(
         isScrollControlled: true,
@@ -35,7 +36,9 @@ class VideoPlayerBody extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: isDarkMode ? black38Color : greyColor2,
       appBar: AppBar(
+        backgroundColor: isDarkMode ? black38Color : greyColor2,
         actions: [
           GestureDetector(
             onTap: () => showCommentsSheet(context),
@@ -102,6 +105,7 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return PageView.builder(
       controller: _pageController,
       onPageChanged: (index) {
@@ -129,52 +133,59 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                child: Row(
-                  children: [
-                    if (_currentIndex > 0)
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: _previousVideo,
-                            icon: Icon(isArabic(context)
-                                ? Iconsax.arrow_circle_right
-                                : Iconsax.arrow_circle_left),
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.translate('previous'),
-                            style: AppStyles.styleMedium16(context),
-                          ),
-                        ],
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Card(
+                  margin: const EdgeInsets.symmetric(vertical: 2),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  color: isDarkMode ? null : whiteColor,
+                  child: Row(
+                    children: [
+                      if (_currentIndex > 0)
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: _previousVideo,
+                              icon: Icon(isArabic(context)
+                                  ? Iconsax.arrow_circle_right
+                                  : Iconsax.arrow_circle_left),
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .translate('previous'),
+                              style: AppStyles.styleMedium16(context),
+                            ),
+                          ],
+                        ),
+                      const Spacer(),
+                      SmoothPageIndicator(
+                        controller: _pageController,
+                        count: widget.videos.length,
+                        effect: const WormEffect(
+                          activeDotColor: primaryColor,
+                          dotHeight: 8,
+                          dotWidth: 8,
+                        ),
                       ),
-                    const Spacer(),
-                    SmoothPageIndicator(
-                      controller: _pageController,
-                      count: widget.videos.length,
-                      effect: const WormEffect(
-                        activeDotColor: primaryColor,
-                        dotHeight: 8,
-                        dotWidth: 8,
-                      ),
-                    ),
-                    const Spacer(),
-                    if (_currentIndex < widget.videos.length - 1)
-                      Row(
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.translate('next'),
-                            style: AppStyles.styleMedium16(context),
-                          ),
-                          IconButton(
-                            onPressed: _nextVideo,
-                            icon: Icon(isArabic(context)
-                                ? Iconsax.arrow_circle_left
-                                : Iconsax.arrow_circle_right),
-                          ),
-                        ],
-                      ),
-                  ],
+                      const Spacer(),
+                      if (_currentIndex < widget.videos.length - 1)
+                        Row(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.translate('next'),
+                              style: AppStyles.styleMedium16(context),
+                            ),
+                            IconButton(
+                              onPressed: _nextVideo,
+                              icon: Icon(isArabic(context)
+                                  ? Iconsax.arrow_circle_left
+                                  : Iconsax.arrow_circle_right),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -212,7 +223,10 @@ class _VideoPlayerContentState extends State<VideoPlayerContent>
                           AppLocalizations.of(context)!.translate('showless'),
                     ),
                     const SizedBox(height: 12),
-                    const Divider(thickness: 3),
+                    Divider(
+                      thickness: 3,
+                      color: isDarkMode ? null : whiteColor,
+                    ),
                     const SizedBox(height: 24),
                     widget.videos[index].file != null
                         ? DownloadPdfPage(

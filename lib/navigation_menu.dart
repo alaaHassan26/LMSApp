@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/home/presentation/views/home_view.dart';
 import 'package:lms/features/settings/presentation/views/settings_view.dart';
@@ -71,6 +72,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Theme(
       data: Theme.of(context).copyWith(
           navigationBarTheme: NavigationBarThemeData(
@@ -78,6 +80,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
                   WidgetStateProperty.all(AppStyles.styleMedium16(context)))),
       child: Scaffold(
         bottomNavigationBar: NavigationBar(
+          backgroundColor: isDarkMode ? black38Color : greyColor2,
           height: 80,
           elevation: 0,
           selectedIndex: _selectedIndex,

@@ -28,7 +28,7 @@ class CourcsesBody extends StatelessWidget {
     ];
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-        backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+        backgroundColor: isDarkMode ? black38Color : greyColor,
         appBar: AppBar(
           elevation: 0,
           title: Text(
@@ -36,7 +36,7 @@ class CourcsesBody extends StatelessWidget {
             style: AppStyles.styleSemiBold24(context),
           ),
           centerTitle: true,
-          backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+          backgroundColor: isDarkMode ? black38Color : greyColor,
         ),
         body: BlocProvider(
           create: (context) => SearchCubit(allCourses: allCourses),

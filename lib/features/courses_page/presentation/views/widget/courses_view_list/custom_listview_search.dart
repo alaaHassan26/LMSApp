@@ -37,7 +37,7 @@ class CustomListViewSearch extends StatelessWidget {
                 final course = searchResults[index];
                 return Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 2),
                   child: Card(
                     elevation: 2,
                     shape: const RoundedRectangleBorder(

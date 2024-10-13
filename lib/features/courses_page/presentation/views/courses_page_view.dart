@@ -15,7 +15,7 @@ class CoursesPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-        backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+        backgroundColor: isDarkMode ? black38Color : greyColor,
         appBar: AppBar(
           elevation: 0,
           title: Text(
@@ -23,7 +23,7 @@ class CoursesPageView extends StatelessWidget {
             style: AppStyles.styleSemiBold24(context),
           ),
           centerTitle: true,
-          backgroundColor: isDarkMode ? black38Color : greyColor.shade300,
+          backgroundColor: isDarkMode ? black38Color : greyColor,
         ),
         body: const CoursesPageViewListVie());
   }
@@ -53,7 +53,7 @@ class CoursesPageViewListVie extends StatelessWidget {
       itemCount: 3,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
           child: Card(
               elevation: 2,
               shape: const RoundedRectangleBorder(

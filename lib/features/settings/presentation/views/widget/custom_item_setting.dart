@@ -5,6 +5,7 @@ import 'package:lms/core/functions/theme_toggle_button.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/utils/colors.dart';
 import 'package:lms/core/widget/custom_dropdown_lang.dart';
 import 'package:lms/features/settings/presentation/views/widget/custom_list_title_setting.dart';
 
@@ -15,14 +16,16 @@ class CustomItemSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 1),
           child: Card(
+            color: isDarkMode ? null : whiteColor,
             elevation: 4,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(18)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             child: Column(
               children: [
@@ -55,9 +58,10 @@ class CustomItemSetting extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 1),
           child: Card(
+            color: isDarkMode ? null : whiteColor,
             elevation: 4,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(18)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             child: CustomListTitleSetting(
               icon: Iconsax.message_question,
@@ -69,9 +73,10 @@ class CustomItemSetting extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 1),
           child: Card(
+            color: isDarkMode ? null : whiteColor,
             elevation: 4,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(18)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             child: CustomListTitleSetting(
               icon: Icons.report,
@@ -83,9 +88,10 @@ class CustomItemSetting extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 1),
           child: Card(
+            color: isDarkMode ? null : whiteColor,
             elevation: 4,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(18)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             child: Column(
               children: [

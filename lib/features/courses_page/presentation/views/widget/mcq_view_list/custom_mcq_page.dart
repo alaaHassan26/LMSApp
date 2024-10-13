@@ -29,56 +29,59 @@ class _McqQuestionPageState extends State<McqQuestionPage> {
   @override
   void initState() {
     super.initState();
-    selectedAnswers = List<List<int>>.generate(widget.questions.length, (index) => []);
+    selectedAnswers =
+        List<List<int>>.generate(widget.questions.length, (index) => []);
   }
 
-void onAnswerSelected(List<int> newSelectedAnswers) {
-  setState(() {
-    selectedAnswers[currentQuestionIndex] = newSelectedAnswers;
-
-    final correctAnswers = widget.questions[currentQuestionIndex].choices;
-    
-    bool anyCorrectSelected = newSelectedAnswers.any((index) =>
-        correctAnswers != null && correctAnswers[index].isCorrect == 1);
-
-    bool anyCorrectWithNullText = newSelectedAnswers.any((index) =>
-        correctAnswers != null && 
-        correctAnswers[index].isCorrect == 1 && 
-        correctAnswers[index].isCorrectText == null);
-
-    if (anyCorrectWithNullText) {
-      showResults = 0; 
-    } else if (anyCorrectSelected) {
-      showResults = 1;
-
-      if (correctAnswers != null && newSelectedAnswers.length == correctAnswers.where((choice) => choice.isCorrect == 1).length) {
-        correctAnswersCount++;
-      }
-    } else {
-      showResults = 0;
-    }
-  });
-}
-
-
-void onNextPressed() {
-  if (currentQuestionIndex < widget.questions.length - 1) {
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+  void onAnswerSelected(List<int> newSelectedAnswers) {
     setState(() {
-      showWarnings = 0; 
-      showResults = 0; 
-    });
-  } else {
-    GoRouter.of(context).go(AppRouter.kResultsPage, extra: {
-      'totalQuestions': widget.questions.length,
-      'correctAnswers': correctAnswersCount,
+      selectedAnswers[currentQuestionIndex] = newSelectedAnswers;
+
+      final correctAnswers = widget.questions[currentQuestionIndex].choices;
+
+      bool anyCorrectSelected = newSelectedAnswers.any((index) =>
+          correctAnswers != null && correctAnswers[index].isCorrect == 1);
+
+      bool anyCorrectWithNullText = newSelectedAnswers.any((index) =>
+          correctAnswers != null &&
+          correctAnswers[index].isCorrect == 1 &&
+          correctAnswers[index].isCorrectText == null);
+
+      if (anyCorrectWithNullText) {
+        showResults = 0;
+      } else if (anyCorrectSelected) {
+        showResults = 1;
+
+        if (correctAnswers != null &&
+            newSelectedAnswers.length ==
+                correctAnswers
+                    .where((choice) => choice.isCorrect == 1)
+                    .length) {
+          correctAnswersCount++;
+        }
+      } else {
+        showResults = 0;
+      }
     });
   }
-}
 
+  void onNextPressed() {
+    if (currentQuestionIndex < widget.questions.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      setState(() {
+        showWarnings = 0;
+        showResults = 0;
+      });
+    } else {
+      GoRouter.of(context).go(AppRouter.kResultsPage, extra: {
+        'totalQuestions': widget.questions.length,
+        'correctAnswers': correctAnswersCount,
+      });
+    }
+  }
 
   void onPreviousPressed() {
     if (currentQuestionIndex > 0) {
@@ -97,9 +100,9 @@ void onNextPressed() {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDarkMode ? null : greyColor.shade300,
+      backgroundColor: isDarkMode ? null : greyColor,
       appBar: AppBar(
-        backgroundColor: isDarkMode ? null : greyColor.shade300,
+        backgroundColor: isDarkMode ? null : greyColor,
         title: Text(
           'MCQ',
           style: AppStyles.styleSemiBold24(context),
@@ -149,12 +152,14 @@ void onNextPressed() {
               },
             ),
           ),
-          if (showWarnings==1)
+          if (showWarnings == 1)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                AppLocalizations.of(context)!.translate('select_answer_warning'),
-                style: AppStyles.styleMedium16(context).copyWith(color: Colors.red),
+                AppLocalizations.of(context)!
+                    .translate('select_answer_warning'),
+                style: AppStyles.styleMedium16(context)
+                    .copyWith(color: Colors.red),
               ),
             ),
           Row(
@@ -163,7 +168,8 @@ void onNextPressed() {
                 GestureDetector(
                   onTap: onPreviousPressed,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     child: Row(
                       children: [
                         Icon(isArabic(context)
@@ -172,7 +178,8 @@ void onNextPressed() {
                         TextButton(
                           onPressed: onPreviousPressed,
                           child: Text(
-                              AppLocalizations.of(context)!.translate('previous_question'),
+                              AppLocalizations.of(context)!
+                                  .translate('previous_question'),
                               style: AppStyles.styleMedium20(context)),
                         ),
                       ],
@@ -183,15 +190,18 @@ void onNextPressed() {
               GestureDetector(
                 onTap: onNextPressed,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 26),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 26),
                   child: Row(
                     children: [
                       TextButton(
                         onPressed: onNextPressed,
                         child: Text(
                             currentQuestionIndex == widget.questions.length - 1
-                                ? AppLocalizations.of(context)!.translate('submit_test')
-                                : AppLocalizations.of(context)!.translate('next_test'),
+                                ? AppLocalizations.of(context)!
+                                    .translate('submit_test')
+                                : AppLocalizations.of(context)!
+                                    .translate('next_test'),
                             style: AppStyles.styleMedium20(context)),
                       ),
                       Icon(isArabic(context)
