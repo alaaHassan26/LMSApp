@@ -1,29 +1,31 @@
 class NewsCommentModel {
-  final String id;
-  final String userId;
-  final String newsId;
+  final String? id;
+  final String? userId;
+  final String? newsId;
   final String? parentCommentId;
-  final int isProfessor;
-  String content;
-  final DateTime createdAt;
+  final int? isProfessor;
+  String? content;
+  final DateTime? createdAt;
   final DateTime? updatedAt;
-  final UserModel user;
+  final UserModel? user;
   late final List<NewsCommentModel> children;
+  bool isExpanded; // Keep isExpanded as it is
 
   NewsCommentModel({
-    required this.id,
-    required this.userId,
-    required this.newsId,
+    this.id,
+    this.userId,
+    this.newsId,
     this.parentCommentId,
-    required this.isProfessor,
-    required this.content,
-    required this.createdAt,
+    this.isProfessor,
+    this.content,
+    this.createdAt,
     this.updatedAt,
-    required this.user,
+    this.user,
+    this.isExpanded = false,
     List<NewsCommentModel>? children,
   }) : children = children ?? [];
 
-  // إضافة copyWith
+  // Adding copyWith method
   NewsCommentModel copyWith({
     String? id,
     String? userId,
@@ -35,6 +37,7 @@ class NewsCommentModel {
     DateTime? updatedAt,
     UserModel? user,
     List<NewsCommentModel>? children,
+    bool? isExpanded,
   }) {
     return NewsCommentModel(
       id: id ?? this.id,
@@ -47,27 +50,27 @@ class NewsCommentModel {
       updatedAt: updatedAt ?? this.updatedAt,
       user: user ?? this.user,
       children: children ?? this.children,
+      isExpanded: isExpanded ?? this.isExpanded,
     );
   }
 
   factory NewsCommentModel.fromJson(Map<String, dynamic> json) {
     return NewsCommentModel(
-      id: json['id'],
-      userId: json['user_id'],
-      newsId: json['news_id'],
-      parentCommentId: json['parent_comment_id'],
-      isProfessor: json['is_professor'],
-      content: json['content'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : null,
-      user: UserModel.fromJson(json['user']),
+      id: json['id'] as String?,
+      userId: json['user_id'] as String?,
+      newsId: json['news_id'] as String?,
+      parentCommentId: json['parent_comment_id'] as String?,
+      isProfessor: json['is_professor'] as int?,
+      content: json['content'] as String?,
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
       children: json['children'] != null
           ? (json['children'] as List<dynamic>)
               .map((child) => NewsCommentModel.fromJson(child))
               .toList()
           : [],
+      isExpanded: false,
     );
   }
 
@@ -79,38 +82,38 @@ class NewsCommentModel {
       'parent_comment_id': parentCommentId,
       'is_professor': isProfessor,
       'content': content,
-      'created_at': createdAt.toIso8601String(),
+      'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
-      'user': user.toJson(),
+      'user': user?.toJson(),
       'children': children.map((child) => child.toJson()).toList(),
     };
   }
 }
 
 class UserModel {
-  final String id;
+  final String? id;
   final String? image;
-  final String name;
-  final String email;
-  final int userType;
-  final int accountStatus;
-  final String randomCode;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? name;
+  final String? email;
+  final int? userType;
+  final int? accountStatus;
+  final String? randomCode;
+  final DateTime createdAt; // Keep this non-nullable
+  final DateTime? updatedAt;
 
   UserModel({
-    required this.id,
+    this.id,
     this.image,
-    required this.name,
-    required this.email,
-    required this.userType,
-    required this.accountStatus,
-    required this.randomCode,
+    this.name,
+    this.email,
+    this.userType,
+    this.accountStatus,
+    this.randomCode,
     required this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
   });
 
-  // إضافة copyWith
+  // Adding copyWith method
   UserModel copyWith({
     String? id,
     String? image,
@@ -137,15 +140,15 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] ?? '',
-      image: json['image'],
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      userType: json['user_type'] ?? 0,
-      accountStatus: json['account_status'] ?? 0,
-      randomCode: json['random_code'] ?? '',
+      id: json['id'] as String?,
+      image: json['image'] as String?,
+      name: json['name'] as String?,
+      email: json['email'] as String?,
+      userType: json['user_type'] as int?,
+      accountStatus: json['account_status'] as int?,
+      randomCode: json['random_code'] as String?,
       createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
     );
   }
 
@@ -159,7 +162,7 @@ class UserModel {
       'account_status': accountStatus,
       'random_code': randomCode,
       'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
     };
   }
 }
