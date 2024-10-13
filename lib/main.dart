@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 theme: lightTheme,
                 darkTheme: darkTheme,
+                
                 themeMode: themeState is AppDarkTheme
                     ? ThemeMode.dark
                     : ThemeMode.light,
