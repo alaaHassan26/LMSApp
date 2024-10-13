@@ -40,4 +40,38 @@ class ApiService {
     final response = await _dio.post(endpoint, data: data, options: options);
     return response;
   }
+
+  Future<Response> put(
+    String endpoint, {
+    String? token,
+    dynamic data,
+  }) async {
+    final options = Options(
+      headers: token != null
+          ? {
+              'Authorization': 'Bearer $token',
+            }
+          : null,
+    );
+
+    final response = await _dio.put(endpoint, data: data, options: options);
+    return response;
+  }
+
+  Future<Response> delete(
+    String endpoint, {
+    String? token,
+    dynamic data,
+  }) async {
+    final options = Options(
+      headers: token != null
+          ? {
+              'Authorization': 'Bearer $token',
+            }
+          : null,
+    );
+
+    final response = await _dio.delete(endpoint, data: data, options: options);
+    return response;
+  }
 }
