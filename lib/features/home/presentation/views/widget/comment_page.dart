@@ -54,7 +54,13 @@ class _CommentsPageState extends State<CommentsPage> {
     super.dispose();
   }
 
-
+ void _onClose() {
+    setState(() {
+      _replyToComment = null; 
+      _commentController.clear(); 
+      _focusNode.unfocus(); 
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -113,7 +119,8 @@ class _CommentsPageState extends State<CommentsPage> {
                   },
                 ),
               ),
-   CommentInputField(
+   CommentInputField(          onClose: _onClose, // Pass the onClose function
+
               commentController: _commentController,
               focusNode: _focusNode,
               replyToComment: _replyToComment,

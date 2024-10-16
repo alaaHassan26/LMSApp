@@ -1,15 +1,13 @@
-
 import 'package:flutter/material.dart';
-
 import 'package:lms/core/utils/appstyles.dart';
 import '../../../data/model/news_comments_model.dart';
-
 
 class CommentInputField extends StatefulWidget {
   final TextEditingController commentController;
   final FocusNode focusNode;
   final NewsCommentModel? replyToComment;
   final Function onSubmit;
+  final Function onClose; // Add onClose callback
 
   const CommentInputField({
     Key? key,
@@ -17,6 +15,7 @@ class CommentInputField extends StatefulWidget {
     required this.focusNode,
     required this.replyToComment,
     required this.onSubmit,
+    required this.onClose, // Accept the callback
   }) : super(key: key);
 
   @override
@@ -35,12 +34,14 @@ class _CommentInputFieldState extends State<CommentInputField> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('الرد على ${widget.replyToComment?.user?.name ?? ''}',
-                    style: AppStyles.styleMedium18(context)),
+                Text(
+                  'الرد على ${widget.replyToComment?.user?.name ?? ''}',
+                  style: AppStyles.styleMedium18(context),
+                ),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
-                    widget.onSubmit(); 
+                    widget.onClose(); // Call the onClose callback
                   },
                 ),
               ],
@@ -76,4 +77,3 @@ class _CommentInputFieldState extends State<CommentInputField> {
     );
   }
 }
-
