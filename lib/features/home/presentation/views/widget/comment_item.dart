@@ -1,5 +1,3 @@
-
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -8,7 +6,7 @@ import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
 import '../../../data/model/news_comments_model.dart';
 
-class CommentItem extends StatelessWidget {
+class CommentItem extends StatefulWidget {
   final NewsCommentModel comment;
   final Function(NewsCommentModel) onReply;
   final Function(NewsCommentModel) onOptionsSelected;
@@ -23,6 +21,19 @@ class CommentItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _CommentItemState createState() => _CommentItemState();
+}
+
+class _CommentItemState extends State<CommentItem> {
+  late bool isExpanded;
+
+  @override
+  void initState() {
+    super.initState();
+    isExpanded = widget.comment.isExpanded; // Initialize the local state
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
@@ -34,15 +45,15 @@ class CommentItem extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 18,
-                child: comment.user?.image != null
+                child: widget.comment.user?.image != null
                     ? ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl: comment.user!.image!,
+                          imageUrl: widget.comment.user!.image!,
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(),
                           errorWidget: (context, url, error) => Text(
-                            comment.user!.name != null
-                                ? comment.user!.name![0].toUpperCase()
+                            widget.comment.user!.name != null
+                                ? widget.comment.user!.name![0].toUpperCase()
                                 : '?',
                             style: const TextStyle(fontSize: 16),
                           ),
@@ -50,8 +61,8 @@ class CommentItem extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        comment.user?.name != null
-                            ? comment.user!.name![0].toUpperCase()
+                        widget.comment.user?.name != null
+                            ? widget.comment.user!.name![0].toUpperCase()
                             : '?',
                         style: const TextStyle(fontSize: 16),
                       ),
@@ -66,7 +77,7 @@ class CommentItem extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            if (comment.isProfessor == 1) ...[
+                            if (widget.comment.isProfessor == 1) ...[
                               Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
@@ -81,52 +92,53 @@ class CommentItem extends StatelessWidget {
                               const SizedBox(width: 8),
                             ],
                             Text(
-                              comment.user?.name ?? 'مستخدم',
+                              widget.comment.user?.name ?? 'مستخدم',
                               style: AppStyles.styleMedium20(context),
                             ),
                           ],
                         ),
                         Text(
-                          comment.isProfessor == 5
+                          widget.comment.isProfessor == 5
                               ? 'جار الارسال'
-                              : formatDate(comment.createdAt!, context),
+                              : formatDate(widget.comment.createdAt!, context),
                           style: AppStyles.styleMedium16(context),
                         ),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      comment.content ?? '',
+                      widget.comment.content ?? '',
                       style: AppStyles.styleMedium18(context),
                     ),
                     Row(
                       children: [
-                        if (comment.parentCommentId == null)
+                        if (widget.comment.parentCommentId == null)
                           TextButton(
-                            onPressed: () => onReply(comment),
+                            onPressed: () => widget.onReply(widget.comment),
                             child: Text(
                               'رد',
                               style: AppStyles.styleMedium16(context),
                             ),
                           ),
                         const SizedBox(width: 10),
-                        if (comment.children.isNotEmpty) ...[
+                        if (widget.comment.children.isNotEmpty) ...[
                           TextButton(
                             onPressed: () {
-                              comment.isExpanded = !comment.isExpanded;
+                              setState(() {
+                                isExpanded = !isExpanded; // Update local state
+                                widget.comment.isExpanded = isExpanded; // Update the comment model
+                              });
                             },
                             child: Text(
-                              comment.isExpanded
-                                  ? 'اخفاء الردود'
-                                  : 'عرض الردود',
+                              isExpanded ? 'اخفاء الردود' : 'عرض الردود',
                               style: AppStyles.styleMedium16(context),
                             ),
                           ),
                         ],
                         const Spacer(),
-                        if (comment.userId == userId)
+                        if (widget.comment.userId == widget.userId)
                           IconButton(
-                            onPressed: () => onOptionsSelected(comment),
+                            onPressed: () => widget.onOptionsSelected(widget.comment),
                             icon: const Icon(Iconsax.menu),
                           ),
                       ],
@@ -136,17 +148,17 @@ class CommentItem extends StatelessWidget {
               ),
             ],
           ),
-          if (comment.isExpanded && comment.children.isNotEmpty)
+          if (isExpanded && widget.comment.children.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 8.0, right: 50, bottom: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: comment.children
+                children: widget.comment.children
                     .map((reply) => CommentItem(
                           comment: reply,
-                          onReply: onReply,
-                          onOptionsSelected: onOptionsSelected,
-                          userId: userId,
+                          onReply: widget.onReply,
+                          onOptionsSelected: widget.onOptionsSelected,
+                          userId: widget.userId,
                         ))
                     .toList(),
               ),
