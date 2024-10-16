@@ -14,7 +14,10 @@ import 'package:lms/features/auth/presentation/manger/auth_cubit/auth_cubit.dart
 import 'core/Server/Bloc_Observer.dart';
 import 'features/courses_page/presentation/manger/course_cubit/course_cubit.dart';
 import 'features/courses_page/presentation/manger/mcq_cubit/mcq_cubit.dart';
-import 'features/home/presentation/manger/comment_cubit/comment_cubit.dart';
+import 'features/home/presentation/manger/CommentManger/add&replay_comment/add_comment_cubit.dart';
+import 'features/home/presentation/manger/CommentManger/edit_comment/edit_comment_cubit.dart';
+import 'features/home/presentation/manger/CommentManger/fetchcomment_cubit/comment_cubit.dart';
+import 'features/home/presentation/manger/CommentManger/delete_comment&replay/delete_comment_cubit.dart';
 import 'features/home/presentation/manger/news_cubit/news_cubit.dart';
 
 void main() async {
@@ -30,6 +33,9 @@ void main() async {
       BlocProvider(create: (context) => NewsCubit()),
       BlocProvider(create: (context) => CoursesCubit()),
       BlocProvider(create: (context) => NewsCommentCubit()),
+      BlocProvider(create: (context) => AddCommentCubit()),
+      BlocProvider(create: (context) => DeleteCommentCubit()),
+      BlocProvider(create: (context) => EditCommentCubit()),
 
       
 
