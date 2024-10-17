@@ -1,4 +1,7 @@
-class NewsModel {
+import 'package:lms/features/home/domain/enitites/news_enity.dart';
+import 'package:lms/features/home/domain/enitites/news_image.dart';
+
+class NewsModel extends NewsEnity {
   final String id;
   final String userId;
   final String? file;
@@ -17,7 +20,15 @@ class NewsModel {
     required this.updatedAt,
     this.filename,
     required this.images,
-  });
+  }) : super(
+            idN: id,
+            userIdN: userId,
+            fileN: file,
+            textN: text,
+            createdAtN: createdAt,
+            updatedAtN: updatedAt,
+            filenameN: filename,
+            imagesN: images);
 
   factory NewsModel.fromJson(Map<String, dynamic> json) {
     return NewsModel(
@@ -44,46 +55,6 @@ class NewsModel {
       'updated_at': updatedAt.toIso8601String(),
       'filename': filename,
       'images': images.map((image) => image.toJson()).toList(),
-    };
-  }
-}
-
-class NewsImage {
-  final String id;
-  final String imagePath;
-  final String imageableType;
-  final String imageableId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
-  NewsImage({
-    required this.id,
-    required this.imagePath,
-    required this.imageableType,
-    required this.imageableId,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  factory NewsImage.fromJson(Map<String, dynamic> json) {
-    return NewsImage(
-      id: json['id'],
-      imagePath: json['image_path'],
-      imageableType: json['imageable_type'],
-      imageableId: json['imageable_id'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'image_path': imagePath,
-      'imageable_type': imageableType,
-      'imageable_id': imageableId,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
     };
   }
 }

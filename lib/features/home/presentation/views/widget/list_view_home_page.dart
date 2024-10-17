@@ -21,9 +21,7 @@ class _ListViewHomePageState extends State<ListViewHomePage> {
   void initState() {
     super.initState();
     final cubit = context.read<NewsCubit>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      cubit.fetchNews();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
