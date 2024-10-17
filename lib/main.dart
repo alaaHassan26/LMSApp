@@ -25,7 +25,11 @@ import 'package:lms/features/home/presentation/manger/cubit/cubit/facth_news_cub
 import 'core/Server/Bloc_Observer.dart';
 import 'features/courses_page/presentation/manger/course_cubit/course_cubit.dart';
 import 'features/courses_page/presentation/manger/mcq_cubit/mcq_cubit.dart';
-import 'features/home/presentation/manger/comment_cubit/comment_cubit.dart';
+import 'features/home/presentation/manger/CommentManger/add&replay_comment/add_comment_cubit.dart';
+import 'features/home/presentation/manger/CommentManger/edit_comment/edit_comment_cubit.dart';
+import 'features/home/presentation/manger/CommentManger/fetchcomment_cubit/comment_cubit.dart';
+import 'features/home/presentation/manger/CommentManger/delete_comment&replay/delete_comment_cubit.dart';
+import 'features/home/presentation/manger/news_cubit/news_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +52,9 @@ void main() async {
               homeRemotDataSource:
                   HomeRemotDataSourceImpl(apiService: ApiService()),
               homelocalDataSource: HomelocalDataSourceImpl())))),
+      BlocProvider(create: (context) => AddCommentCubit()),
+      BlocProvider(create: (context) => DeleteCommentCubit()),
+      BlocProvider(create: (context) => EditCommentCubit()),
       BlocProvider(
           create: (context) =>
               AppThemeCubit()..changeTheme(ThemeState.initial)),
