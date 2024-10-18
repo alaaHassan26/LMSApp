@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lms/core/utils/Constatns.dart';
 import 'package:lms/core/widget/custom_image.dart';
-import 'package:lms/features/home/data/model/news_model.dart';
+
+import 'package:lms/features/home/domain/enitites/news_enity.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CustomImageListView extends StatefulWidget {
@@ -10,7 +11,7 @@ class CustomImageListView extends StatefulWidget {
     required this.newsModel,
   });
 
-  final NewsModel newsModel;
+  final NewsEnity newsModel;
 
   @override
   State<CustomImageListView> createState() => _CustomImageListViewState();
@@ -34,14 +35,14 @@ class _CustomImageListViewState extends State<CustomImageListView> {
             height: MediaQuery.of(context).size.width * 1,
             child: PageView.builder(
               controller: _pageController,
-              itemCount: widget.newsModel.images.length,
+              itemCount: widget.newsModel.imagesN.length,
               itemBuilder: (context, index) {
                 return SizedBox(
                   width: double.infinity,
                   child: ClipRRect(
                     child: CustomImage(
                       image:
-                          '${CS.Api}${widget.newsModel.images[index].imagePath}',
+                          '${CS.Api}${widget.newsModel.imagesN[index].imagePath}',
                       width: double.infinity,
                       height: double.infinity,
                     ),
@@ -53,7 +54,7 @@ class _CustomImageListViewState extends State<CustomImageListView> {
           const SizedBox(height: 12),
           SmoothPageIndicator(
             controller: _pageController,
-            count: widget.newsModel.images.length,
+            count: widget.newsModel.imagesN.length,
             effect: const WormEffect(
               dotHeight: 8,
               dotWidth: 8,

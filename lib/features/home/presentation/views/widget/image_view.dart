@@ -12,7 +12,7 @@ import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
 import 'package:lms/core/widget/snackbar.dart';
 
-import 'package:lms/features/home/data/model/news_model.dart';
+import 'package:lms/features/home/domain/enitites/news_enity.dart';
 import 'package:lms/features/home/presentation/manger/download_image_cubit/download_image_cubit.dart';
 import 'package:lms/features/home/presentation/manger/download_image_cubit/download_image_state.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_image_list_view.dart';
@@ -22,7 +22,7 @@ import 'package:readmore/readmore.dart';
 
 class ImageView extends StatefulWidget {
   const ImageView({super.key, required this.newsModel});
-  final NewsModel newsModel;
+  final NewsEnity newsModel;
 
   @override
   State<ImageView> createState() => _ImageViewState();
@@ -49,7 +49,7 @@ class _ImageViewState extends State<ImageView> {
 
   @override
   Widget build(BuildContext context) {
-    final dateTime = formatDateTime(widget.newsModel.createdAt);
+    final dateTime = formatDateTime(widget.newsModel.createdAtN);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDarkMode ? black38Color : greyColor,
@@ -127,7 +127,7 @@ class CustomViewImageBottom extends StatelessWidget {
                     width: double.infinity,
                     child: ReadMoreText(
                       textAlign: TextAlign.justify,
-                      widget.newsModel.text,
+                      widget.newsModel.textN,
                       style: AppStyles.styleMedium20(context)
                           .copyWith(color: Colors.white),
                       trimMode: TrimMode.Line,
@@ -160,7 +160,7 @@ class CustomViewImageHeader extends StatelessWidget {
 
   final bool showInfo;
   final Map<String, String> dateTime;
-  final NewsModel newsModel;
+  final NewsEnity newsModel;
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +251,7 @@ class CustomViewImageHeader extends StatelessWidget {
                   return IconButton(
                     onPressed: () {
                       final imageUrl =
-                          '${CS.Api}${newsModel.images[0].imagePath}';
+                          '${CS.Api}${newsModel.imagesN[0].imagePath}';
                       context.read<DownloadCubit>().downloadImage(imageUrl);
                     },
                     icon: const Icon(Iconsax.document_download,

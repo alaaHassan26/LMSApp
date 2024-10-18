@@ -1,56 +1,135 @@
-import 'package:bloc/bloc.dart';
-import 'package:flutter/widgets.dart';
-import 'package:lms/core/functions/save_data_in_hive.dart';
-import 'package:lms/core/utils/Constatns.dart';
+import 'package:flutter/material.dart';
+
+import 'package:hive_flutter/adapters.dart';
+import 'package:lms/core/utils/appstyles.dart';
+import 'package:lms/core/widget/snackbar.dart';
+
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
 import 'package:lms/features/home/domain/use_cases/news_use_case.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 part 'facth_news_state.dart';
 
-class FacthNewsCubit extends Cubit<FacthNewsState> {
+class FacthNewsCubit extends HydratedCubit<FacthNewsState>
+    with WidgetsBindingObserver {
   final FetchNewsetUseCase fetchNewsetUseCase;
   List<NewsEnity> allNews = [];
   bool hasReachedEnd = false;
   bool isLoadingMore = false;
+  DateTime? lastSnackBarTime;
 
-  FacthNewsCubit(this.fetchNewsetUseCase) : super(FacthNewsInitial());
+  FacthNewsCubit(this.fetchNewsetUseCase) : super(FacthNewsInitial()) {
+    WidgetsBinding.instance.addObserver(this);
+    _checkConnectivityAndFetch();
+  }
+
+  Future<void> refreshNews({BuildContext? context}) async {
+    allNews.clear();
+    hasReachedEnd = false;
+    isLoadingMore = false;
+    await fetchNews(skip: 0, forceRefresh: true, context: context);
+  }
 
   Future<void> fetchNews(
-      {int skip = 0, bool isBackgroundUpdate = false}) async {
-    if (!isBackgroundUpdate) {
-      if (hasReachedEnd || isLoadingMore) return;
+      {int skip = 0, bool forceRefresh = false, BuildContext? context}) async {
+    if (hasReachedEnd || isLoadingMore) return;
 
-      if (skip == 0) {
-        emit(FacthNewsLoading());
-      } else {
-        isLoadingMore = true;
+    isLoadingMore = true;
+
+    // إذا كانت هذه هي المرة الأولى لتحميل البيانات أو تم طلب التحديث
+    if (skip == 0 && !forceRefresh) {
+      emit(FacthNewsLoading());
+      var box = await Hive.openBox<NewsEnity>('newsCache');
+      if (box.isNotEmpty) {
+        allNews = box.values.toList();
         emit(FacthNewsLoaded(allNews));
       }
     }
 
     var result = await fetchNewsetUseCase.call(skip: skip);
     result.fold(
-      (failure) {
+      (failure) async {
         isLoadingMore = false;
-        emit(FacthNewsError(failure.err));
+
+        // عرض البيانات من الكاش عند حدوث خطأ
+        var box = await Hive.openBox<NewsEnity>('newsCache');
+        if (box.isNotEmpty) {
+          allNews = box.values.toList();
+          emit(FacthNewsLoaded(allNews));
+        }
+
+        final currentTime = DateTime.now();
+        if (lastSnackBarTime == null ||
+            currentTime.difference(lastSnackBarTime!).inSeconds >= 15) {
+          lastSnackBarTime = currentTime;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context != null) {
+              CustomSnackbar.showSnackBar(
+                  context,
+                  failure.err,
+                  AppStyles.styleMedium18(context)
+                      .copyWith(color: Colors.white));
+            }
+          });
+        }
       },
-      (news) {
+      (news) async {
         isLoadingMore = false;
         if (news.length < 10) {
           hasReachedEnd = true;
         }
 
-        if (!isBackgroundUpdate) {
-          allNews.addAll(news);
-          emit(FacthNewsLoaded(allNews));
-        } else {
-          saveDatainHive(news, kNewestBox);
+        if (skip == 0) {
+          var box = await Hive.openBox<NewsEnity>('newsCache');
+          await box.clear();
+          await box.addAll(news);
         }
+
+        for (var item in news) {
+          if (!allNews.any((existingNews) => existingNews.idN == item.idN)) {
+            allNews.add(item);
+          }
+        }
+
+        emit(FacthNewsLoaded(allNews));
       },
     );
   }
 
-  Future<void> updateNewsInBackground() async {
-    await fetchNews(skip: 0, isBackgroundUpdate: true);
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state,
+      {BuildContext? context}) {
+    if (state == AppLifecycleState.resumed) {
+      _checkConnectivityAndFetch(context: context);
+    }
+  }
+
+  Future<void> _checkConnectivityAndFetch({BuildContext? context}) async {
+    await refreshNews(context: context);
+  }
+
+  @override
+  FacthNewsState? fromJson(Map<String, dynamic> json) {
+    try {
+      final cachedNews =
+          (json['news'] as List).map((e) => NewsEnity.fromJson(e)).toList();
+      return FacthNewsLoaded(cachedNews);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Map<String, dynamic>? toJson(FacthNewsState state) {
+    if (state is FacthNewsLoaded) {
+      return {'news': state.news.map((e) => e.toJson()).toList()};
+    }
+    return null;
+  }
+
+  @override
+  Future<void> close() {
+    WidgetsBinding.instance.removeObserver(this);
+    return super.close();
   }
 }

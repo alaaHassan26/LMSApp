@@ -12,11 +12,13 @@ import 'package:lms/core/utils/colors.dart';
 
 import 'package:lms/core/widget/custom_image.dart';
 import 'package:lms/core/widget/download_pdf_page.dart';
+
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
 
 import 'package:lms/features/home/presentation/manger/cubit/cubit/facth_news_cubit.dart';
 
 import 'package:readmore/readmore.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class TestNews extends StatefulWidget {
@@ -34,21 +36,10 @@ class _TestNewsState extends State<TestNews> {
   @override
   void initState() {
     super.initState();
-    context.read<FacthNewsCubit>();
-    _loadLocalNews();
-    _updateNewsInBackground();
+    context.read<FacthNewsCubit>().fetchNews(skip: skip, context: context);
+
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
-  }
-
-  Future<void> _loadLocalNews() async {
-    final cubit = context.read<FacthNewsCubit>();
-    cubit.fetchNews(skip: skip);
-  }
-
-  Future<void> _updateNewsInBackground() async {
-    final cubit = context.read<FacthNewsCubit>();
-    cubit.updateNewsInBackground();
   }
 
   void _onScroll() async {
@@ -58,7 +49,8 @@ class _TestNewsState extends State<TestNews> {
       if (!isLoading) {
         isLoading = true;
         skip++;
-        await BlocProvider.of<FacthNewsCubit>(context).fetchNews(skip: skip);
+        await BlocProvider.of<FacthNewsCubit>(context)
+            .fetchNews(skip: skip, context: context);
         isLoading = false;
       }
     }
@@ -93,39 +85,92 @@ class _TestNewsState extends State<TestNews> {
         builder: (context, state) {
           final cubit = context.read<FacthNewsCubit>();
           final newsList = cubit.allNews;
-
           if (state is FacthNewsLoading && newsList.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is FacthNewsLoaded || state is FacthNewsLoading) {
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: newsList.length + (cubit.isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index < newsList.length) {
-                  return Card(
+            return SizedBox(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => Card(
                     color: isDarkMode ? null : Colors.white,
                     margin: const EdgeInsets.symmetric(vertical: 2),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.zero,
                     ),
                     elevation: 0,
-                    child: CustomItemListViewNewsHome(
-                      newsModel: newsList[index],
-                    ),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: ShimmerBestSellerItem(),
+                    )),
+                itemCount: 20,
+              ),
+            );
+          } else if (state is FacthNewsLoaded || state is FacthNewsLoading) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                skip = 0; // إعادة تعيين قيمة skip
+                await context.read<FacthNewsCubit>().refreshNews(
+                    context: context); // جلب البيانات الجديدة وتحديث الكاش
               },
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: newsList.length + (cubit.isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < newsList.length) {
+                    return Card(
+                      color: isDarkMode ? null : Colors.white,
+                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      elevation: 0,
+                      child: CustomItemListViewNewsHome(
+                        newsEnity: newsList[index],
+                      ),
+                    );
+                  } else {
+                    return SizedBox(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => Card(
+                            color: isDarkMode ? null : Colors.white,
+                            margin: const EdgeInsets.symmetric(vertical: 2),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                            elevation: 0,
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: ShimmerBestSellerItem(),
+                            )),
+                        itemCount: 20,
+                      ),
+                    );
+                  }
+                },
+              ),
             );
           } else if (state is FacthNewsError) {
             return Center(child: Text(state.error));
           } else {
-            return const Center(child: Text('No data available'));
+            return SizedBox(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => Card(
+                    color: isDarkMode ? null : Colors.white,
+                    margin: const EdgeInsets.symmetric(vertical: 2),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                    elevation: 0,
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: ShimmerBestSellerItem(),
+                    )),
+                itemCount: 20,
+              ),
+            );
           }
         },
       ),
@@ -134,8 +179,8 @@ class _TestNewsState extends State<TestNews> {
 }
 
 class CustomItemListViewNewsHome extends StatefulWidget {
-  final NewsEnity newsModel;
-  const CustomItemListViewNewsHome({super.key, required this.newsModel});
+  final NewsEnity newsEnity;
+  const CustomItemListViewNewsHome({super.key, required this.newsEnity});
 
   @override
   State<StatefulWidget> createState() => _CustomItemListViewNewsHomeState();
@@ -170,7 +215,7 @@ class _CustomItemListViewNewsHomeState
 
   @override
   Widget build(BuildContext context) {
-    final dateTime = formatDateTime(widget.newsModel.createdAtN);
+    final dateTime = formatDateTime(widget.newsEnity.createdAtN);
 
     return GestureDetector(
       onLongPress: () {
@@ -217,23 +262,23 @@ class _CustomItemListViewNewsHomeState
               ],
             ),
           ),
-          if (widget.newsModel.imagesN.isNotEmpty) ...[
+          if (widget.newsEnity.imagesN.isNotEmpty) ...[
             GestureDetector(
               onTap: () {
                 GoRouter.of(context)
-                    .push(AppRouter.kImageView, extra: widget.newsModel);
+                    .push(AppRouter.kImageView, extra: widget.newsEnity);
               },
               child: CustomImageListView(
-                newsModel: widget.newsModel,
+                newsEnity: widget.newsEnity,
               ),
             ),
             const SizedBox(height: 6),
           ],
-          if (widget.newsModel.fileN != null) ...[
+          if (widget.newsEnity.fileN != null) ...[
             const SizedBox(height: 6),
             DownloadPdfPage(
-              pdfName: widget.newsModel.filenameN!,
-              pdfUrl: widget.newsModel.fileN!,
+              pdfName: widget.newsEnity.filenameN!,
+              pdfUrl: widget.newsEnity.fileN!,
             ),
           ],
           const SizedBox(height: 6),
@@ -243,7 +288,7 @@ class _CustomItemListViewNewsHomeState
               width: double.infinity,
               child: ReadMoreText(
                 textAlign: TextAlign.justify,
-                widget.newsModel.textN,
+                widget.newsEnity.textN,
                 style: AppStyles.styleMedium20(context),
                 trimMode: TrimMode.Line,
                 trimLines: 7,
@@ -262,10 +307,10 @@ class _CustomItemListViewNewsHomeState
           ),
           InkWell(
             onTap: () {
-              print(widget.newsModel.idN);
+              print(widget.newsEnity.idN);
               GoRouter.of(context).push(
                 AppRouter.kCommentsPage,
-                extra: widget.newsModel.idN,
+                extra: widget.newsEnity.idN,
               );
             },
             child: Padding(
@@ -278,7 +323,7 @@ class _CustomItemListViewNewsHomeState
                           onPressed: () {
                             GoRouter.of(context).push(
                               AppRouter.kCommentsPage,
-                              extra: widget.newsModel.idN,
+                              extra: widget.newsEnity.idN,
                             );
                           },
                           icon: const Icon(Iconsax.message_search)),
@@ -287,7 +332,7 @@ class _CustomItemListViewNewsHomeState
                         onPressed: () {
                           GoRouter.of(context).push(
                             AppRouter.kCommentsPage,
-                            extra: widget.newsModel.idN,
+                            extra: widget.newsEnity.idN,
                           );
                         },
                         child: Text(
@@ -302,7 +347,7 @@ class _CustomItemListViewNewsHomeState
                       onPressed: () {
                         GoRouter.of(context).push(
                           AppRouter.kCommentsPage,
-                          extra: widget.newsModel.idN,
+                          extra: widget.newsEnity.idN,
                         );
                       },
                       icon: const Icon(
@@ -322,10 +367,10 @@ class _CustomItemListViewNewsHomeState
 class CustomImageListView extends StatefulWidget {
   const CustomImageListView({
     super.key,
-    required this.newsModel,
+    required this.newsEnity,
   });
 
-  final NewsEnity newsModel;
+  final NewsEnity newsEnity;
 
   @override
   State<CustomImageListView> createState() => _CustomImageListViewState();
@@ -349,14 +394,14 @@ class _CustomImageListViewState extends State<CustomImageListView> {
             height: MediaQuery.of(context).size.width * 1,
             child: PageView.builder(
               controller: _pageController,
-              itemCount: widget.newsModel.imagesN.length,
+              itemCount: widget.newsEnity.imagesN.length,
               itemBuilder: (context, index) {
                 return SizedBox(
                   width: double.infinity,
                   child: ClipRRect(
                     child: CustomImage(
                       image:
-                          '${CS.Api}${widget.newsModel.imagesN[index].imagePath}',
+                          '${CS.Api}${widget.newsEnity.imagesN[index].imagePath}',
                       width: double.infinity,
                       height: double.infinity,
                     ),
@@ -368,7 +413,7 @@ class _CustomImageListViewState extends State<CustomImageListView> {
           const SizedBox(height: 12),
           SmoothPageIndicator(
             controller: _pageController,
-            count: widget.newsModel.imagesN.length,
+            count: widget.newsEnity.imagesN.length,
             effect: const WormEffect(
               dotHeight: 8,
               dotWidth: 8,
@@ -382,6 +427,78 @@ class _CustomImageListViewState extends State<CustomImageListView> {
     );
   }
 }
+
+class ShimmerBestSellerItem extends StatelessWidget {
+  const ShimmerBestSellerItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDarkMode ? Colors.white38 : Colors.black38;
+    final highlightColor = isDarkMode ? Colors.white10 : Colors.black12;
+
+    return Shimmer.fromColors(
+      baseColor: baseColor,
+      highlightColor: highlightColor,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 125,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(
+                  width: 30,
+                ),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        height: 10,
+                        color: Colors.grey[300],
+                      ),
+                      Container(
+                        height: 10,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        color: Colors.grey[300],
+                      ),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            height: 10,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            color: Colors.grey[300],
+                          ),
+                          Container(
+                            height: 10,
+                            width: MediaQuery.of(context).size.width * 0.1,
+                            color: Colors.grey[300],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
 
 // import 'package:better_player/better_player.dart';
 // import 'package:flutter/material.dart';

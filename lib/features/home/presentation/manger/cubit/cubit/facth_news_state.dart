@@ -20,5 +20,3 @@ final class FacthNewsError extends FacthNewsState {
 
   FacthNewsError(this.error);
 }
-
-class FacthNewsRefreshed extends FacthNewsState {}

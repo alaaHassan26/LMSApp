@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms/cache/cache_helper.dart';
+import 'package:lms/features/auth/presentation/manger/auth_cubit/auth_cubit.dart';
 import 'package:lms/features/auth/presentation/views/sign_in_view.dart';
 import 'package:lms/features/auth/presentation/views/widget/forgot_password.dart';
 import 'package:lms/features/auth/presentation/views/widget/login_code.dart';
 import 'package:lms/features/courses_page/data/models/lessons_model.dart';
 import 'package:lms/features/courses_page/data/models/question_model.dart';
+import 'package:lms/features/courses_page/presentation/manger/course_cubit/course_cubit.dart';
+import 'package:lms/features/courses_page/presentation/manger/mcq_cubit/mcq_cubit.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/courses_view_list/courses_body.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/download_video/download_video_body.dart';
@@ -16,6 +20,7 @@ import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_lis
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/result_page.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/srart_mcq_page.dart';
 import 'package:lms/features/home/data/model/news_model.dart';
+import 'package:lms/features/home/presentation/manger/CommentManger/fetchcomment_cubit/comment_cubit.dart';
 import 'package:lms/features/home/presentation/views/widget/comment_page.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_pdf_page.dart';
 import 'package:lms/features/home/presentation/views/widget/image_view.dart';
@@ -49,7 +54,10 @@ abstract class AppRouter {
           )
         : GoRoute(
             path: '/',
-            builder: (context, state) => const SignInView(),
+            builder: (context, state) => BlocProvider(
+              create: (context) => LoginCubit(),
+              child: const SignInView(),
+            ),
           ),
     GoRoute(
       path: kNavigationMenu,
@@ -59,7 +67,10 @@ abstract class AppRouter {
       path: kCommentsPage,
       builder: (context, state) {
         final newsId = state.extra as String;
-        return CommentsPage(newsId: newsId);
+        return BlocProvider(
+          create: (context) => NewsCommentCubit(),
+          child: CommentsPage(newsId: newsId),
+        );
       },
     ),
     GoRoute(
@@ -74,11 +85,17 @@ abstract class AppRouter {
     ),
     GoRoute(
       path: kLogInCode,
-      builder: (context, state) => const LogInCode(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => LoginCubit(),
+        child: const LogInCode(),
+      ),
     ),
     GoRoute(
       path: kLogIn,
-      builder: (context, state) => const SignInView(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => LoginCubit(),
+        child: const SignInView(),
+      ),
     ),
     GoRoute(
       path: kCoursesPageView,
@@ -90,7 +107,10 @@ abstract class AppRouter {
     ),
     GoRoute(
       path: kCourcsesBody,
-      builder: (context, state) => const CourcsesBody(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => CoursesCubit(),
+        child: const CourcsesBody(),
+      ),
     ),
     GoRoute(
       path: kForgotPassword,
@@ -133,7 +153,10 @@ abstract class AppRouter {
     ),
     GoRoute(
       path: kMCQBody,
-      builder: (context, state) => const MCQBody(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => McqCubit(),
+        child: const MCQBody(),
+      ),
     ),
     GoRoute(
       path: kMcqQuestionPage,
@@ -141,7 +164,10 @@ abstract class AppRouter {
         final questions = state.extra as List<McqQuestion>?;
 
         if (questions != null) {
-          return McqQuestionPage(questions: questions);
+          return BlocProvider(
+            create: (context) => McqCubit(),
+            child: McqQuestionPage(questions: questions),
+          );
         } else {
           return const Scaffold(
             body: Center(
@@ -158,13 +184,19 @@ abstract class AppRouter {
         final questions = extraData['questions'] as String;
         final title = extraData['title'] as String;
 
-        return StartMcqPage(questions: questions, title: title);
+        return BlocProvider(
+          create: (context) => McqCubit(),
+          child: StartMcqPage(questions: questions, title: title),
+        );
       },
     ),
     GoRoute(
       path: kResultsPage,
       builder: (context, state) {
-        return const ResultsPage();
+        return BlocProvider(
+          create: (context) => McqCubit(),
+          child: const ResultsPage(),
+        );
         // if (state.extra != null && state.extra is Map<String, dynamic>) {
         //   final extraData = state.extra as Map<String, dynamic>;
         //   final totalQuestions = extraData['totalQuestions'] as int?;
