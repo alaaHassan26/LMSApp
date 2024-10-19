@@ -1,40 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lms/core/utils/colors.dart';
+
+import 'package:lms/core/widget/shimmer_featured.dart';
+import 'package:lms/features/home/presentation/manger/facth_news_cubit/facth_news_cubit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../manger/news_cubit/news_cubit.dart';
-import '../../manger/news_cubit/news_state.dart';
 import 'custom_iteam_listview_home.dart';
 
 class ListViewHomePage extends StatefulWidget {
   const ListViewHomePage({super.key});
 
   @override
-  _ListViewHomePageState createState() => _ListViewHomePageState();
+  State<ListViewHomePage> createState() => _ListViewHomePageState();
 }
 
 class _ListViewHomePageState extends State<ListViewHomePage> {
-  final ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController;
+  var skip = 0;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    final cubit = context.read<NewsCubit>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
+    context.read<FacthNewsCubit>().fetchNews(skip: skip, context: context);
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200) {
-        if (cubit.hasMore && !cubit.isLoadingMore) {
-          cubit.fetchNews(isLoadMore: true);
-        }
-      }
-    });
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() async {
+    if (_scrollController.position.pixels >=
+            0.7 * _scrollController.position.maxScrollExtent &&
+        !isLoading) {
+      isLoading = true;
+      skip++;
+      await BlocProvider.of<FacthNewsCubit>(context)
+          .fetchNews(skip: skip, context: context);
+      isLoading = false;
+    }
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
@@ -42,53 +50,67 @@ class _ListViewHomePageState extends State<ListViewHomePage> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return BlocBuilder<NewsCubit, NewsState>(
+    return BlocBuilder<FacthNewsCubit, FacthNewsState>(
       builder: (context, state) {
-        if (state is NewsLoading &&
-            context.read<NewsCubit>().newsList.isEmpty) {
-          return Center(
-            child: LoadingAnimationWidget.discreteCircle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              size: 46,
+        final cubit = context.read<FacthNewsCubit>();
+        final newsList = cubit.allNews;
+
+        if (cubit.isInitialLoading && newsList.isEmpty) {
+          return SizedBox(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) => Card(
+                color: isDarkMode ? null : Colors.white,
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+                elevation: 0,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: ShimmerNewsItem(),
+                ),
+              ),
+              itemCount: 4,
             ),
           );
-        } else if (state is NewsLoaded) {
-          final newsList = state.news;
-          final hasMore = context.read<NewsCubit>().hasMore;
-
-          return ListView.builder(
-            controller: _scrollController,
-            itemCount: hasMore ? newsList.length + 1 : newsList.length,
-            itemBuilder: (context, index) {
-              if (index < newsList.length) {
-                return Card(
-                  color: isDarkMode ? null : whiteColor,
-                  margin: const EdgeInsets.symmetric(vertical: 2),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero,
-                  ),
-                  elevation: 0,
-                  child: CustomItemListViewNewsHome(
-                    newsModel: newsList[index],
-                  ),
-                );
-              } else {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
+        } else {
+          return RefreshIndicator(
+            onRefresh: () async {
+              skip = 0;
+              await context
+                  .read<FacthNewsCubit>()
+                  .refreshNews(context: context);
+            },
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: newsList.length +
+                  (cubit.isLoadingMore ? 1 : 0), // التحقق من isLoadingMore
+              itemBuilder: (context, index) {
+                if (index < newsList.length) {
+                  return Card(
+                    color: isDarkMode ? null : Colors.white,
+                    margin: const EdgeInsets.symmetric(vertical: 2),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                    elevation: 0,
+                    child: CustomItemListViewNewsHome(
+                      newsEnity: newsList[index],
+                    ),
+                  );
+                } else {
+                  return Center(
                     child: LoadingAnimationWidget.discreteCircle(
                       color: Theme.of(context).colorScheme.onPrimary,
-                      size: 30,
+                      size: 56,
                     ),
-                  ),
-                );
-              }
-            },
+                  );
+                }
+              },
+            ),
           );
-        } else if (state is NewsError) {
-          return Center(child: Text(state.error));
-        } else {
-          return const Center(child: Text('No data available'));
         }
       },
     );

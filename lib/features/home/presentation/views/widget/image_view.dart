@@ -66,7 +66,7 @@ class _ImageViewState extends State<ImageView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomImageListView(
-                    newsModel: widget.newsModel,
+                    newsEnity: widget.newsModel,
                   ),
                 ],
               ),

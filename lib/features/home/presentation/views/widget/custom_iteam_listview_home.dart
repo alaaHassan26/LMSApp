@@ -5,7 +5,8 @@ import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
-import 'package:lms/features/home/data/model/news_model.dart';
+import 'package:lms/features/home/domain/enitites/news_enity.dart';
+
 import 'package:lms/features/home/presentation/views/widget/custom_image_list_view.dart';
 import 'package:lms/core/widget/download_pdf_page.dart';
 import 'package:intl/intl.dart';
@@ -13,8 +14,8 @@ import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
 class CustomItemListViewNewsHome extends StatefulWidget {
-  final NewsModel newsModel;
-  const CustomItemListViewNewsHome({super.key, required this.newsModel});
+  final NewsEnity newsEnity;
+  const CustomItemListViewNewsHome({super.key, required this.newsEnity});
 
   @override
   State<StatefulWidget> createState() => _CustomItemListViewNewsHomeState();
@@ -49,7 +50,7 @@ class _CustomItemListViewNewsHomeState
 
   @override
   Widget build(BuildContext context) {
-    final dateTime = formatDateTime(widget.newsModel.createdAt);
+    final dateTime = formatDateTime(widget.newsEnity.createdAtN);
 
     return GestureDetector(
       onLongPress: () {
@@ -58,7 +59,7 @@ class _CustomItemListViewNewsHomeState
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -96,24 +97,25 @@ class _CustomItemListViewNewsHomeState
               ],
             ),
           ),
-          if (widget.newsModel.images.isNotEmpty) ...[
+          if (widget.newsEnity.imagesN.isNotEmpty) ...[
             GestureDetector(
               onTap: () {
                 GoRouter.of(context)
-                    .push(AppRouter.kImageView, extra: widget.newsModel);
+                    .push(AppRouter.kImageView, extra: widget.newsEnity);
               },
               child: CustomImageListView(
-                newsModel: widget.newsModel,
+                newsEnity: widget.newsEnity,
               ),
             ),
             const SizedBox(height: 6),
           ],
-          if (widget.newsModel.file != null) ...[
+          if (widget.newsEnity.fileN != null) ...[
             const SizedBox(height: 6),
             DownloadPdfPage(
-              pdfName: widget.newsModel.filename!,
-              pdfUrl: widget.newsModel.file!,
+              pdfName: widget.newsEnity.filenameN!,
+              pdfUrl: widget.newsEnity.fileN!,
             ),
+            const SizedBox(height: 10),
           ],
           const SizedBox(height: 6),
           Padding(
@@ -122,7 +124,7 @@ class _CustomItemListViewNewsHomeState
               width: double.infinity,
               child: ReadMoreText(
                 textAlign: TextAlign.justify,
-                widget.newsModel.text,
+                widget.newsEnity.textN,
                 style: AppStyles.styleMedium20(context),
                 trimMode: TrimMode.Line,
                 trimLines: 7,
@@ -135,20 +137,18 @@ class _CustomItemListViewNewsHomeState
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 48),
-            child: Divider(),
+          const SizedBox(
+            height: 30,
           ),
           InkWell(
             onTap: () {
-              print(widget.newsModel.id);
               GoRouter.of(context).push(
                 AppRouter.kCommentsPage,
-                extra: widget.newsModel.id,
+                extra: widget.newsEnity.idN,
               );
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
                   Row(
@@ -157,7 +157,7 @@ class _CustomItemListViewNewsHomeState
                           onPressed: () {
                             GoRouter.of(context).push(
                               AppRouter.kCommentsPage,
-                              extra: widget.newsModel.id,
+                              extra: widget.newsEnity.idN,
                             );
                           },
                           icon: const Icon(Iconsax.message_search)),
@@ -166,7 +166,7 @@ class _CustomItemListViewNewsHomeState
                         onPressed: () {
                           GoRouter.of(context).push(
                             AppRouter.kCommentsPage,
-                            extra: widget.newsModel.id,
+                            extra: widget.newsEnity.idN,
                           );
                         },
                         child: Text(
@@ -181,7 +181,7 @@ class _CustomItemListViewNewsHomeState
                       onPressed: () {
                         GoRouter.of(context).push(
                           AppRouter.kCommentsPage,
-                          extra: widget.newsModel.id,
+                          extra: widget.newsEnity.idN,
                         );
                       },
                       icon: const Icon(

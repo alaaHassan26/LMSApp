@@ -19,7 +19,7 @@ import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_lis
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/custom_mcq_page.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/result_page.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/srart_mcq_page.dart';
-import 'package:lms/features/home/data/model/news_model.dart';
+import 'package:lms/features/home/domain/enitites/news_enity.dart';
 import 'package:lms/features/home/presentation/manger/CommentManger/fetchcomment_cubit/comment_cubit.dart';
 import 'package:lms/features/home/presentation/views/widget/comment_page.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_pdf_page.dart';
@@ -119,7 +119,7 @@ abstract class AppRouter {
     GoRoute(
       path: kImageView,
       builder: (context, state) {
-        final newsModel = state.extra as NewsModel;
+        final newsModel = state.extra as NewsEnity;
         return ImageView(
           newsModel: newsModel,
         );

@@ -19,7 +19,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       backgroundColor: isDarkMode ? black38Color : greyColor,
       appBar: AppBar(
-        backgroundColor: isDarkMode ? black38Color : whiteColor,
+        backgroundColor: isDarkMode ? null : whiteColor,
         title: Text(
           AppLocalizations.of(context)!.translate('news'),
           style: AppStyles.styleSemiBold34(context),

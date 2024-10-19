@@ -21,7 +21,7 @@ import 'package:lms/features/home/data/repos_impl/home_repo_impl.dart';
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
 import 'package:lms/features/home/domain/enitites/news_image.dart';
 import 'package:lms/features/home/domain/use_cases/news_use_case.dart';
-import 'package:lms/features/home/presentation/manger/cubit/cubit/facth_news_cubit.dart';
+import 'package:lms/features/home/presentation/manger/facth_news_cubit/facth_news_cubit.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'core/Server/Bloc_Observer.dart';

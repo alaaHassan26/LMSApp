@@ -4,7 +4,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
-import 'package:lms/core/widget/textd.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/home/presentation/views/home_view.dart';
 import 'package:lms/features/settings/presentation/views/settings_view.dart';
@@ -24,7 +23,6 @@ class _NavigationMenuState extends State<NavigationMenu> {
   final List<Widget> _screens = [
     const HomeView(),
     const CoursesPageView(),
-    const TestNews(),
     const SettingsView(),
   ];
 
@@ -94,10 +92,6 @@ class _NavigationMenuState extends State<NavigationMenu> {
             NavigationDestination(
               icon: const Icon(Iconsax.video4),
               label: AppLocalizations.of(context)!.translate('courses'),
-            ),
-            NavigationDestination(
-              icon: const Icon(Iconsax.heart),
-              label: AppLocalizations.of(context)!.translate('favorites'),
             ),
             NavigationDestination(
               icon: const Icon(Iconsax.setting),

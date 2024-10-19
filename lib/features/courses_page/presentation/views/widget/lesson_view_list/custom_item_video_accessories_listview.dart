@@ -5,14 +5,15 @@ import 'package:lms/core/functions/direction_arabic.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 
 import 'package:lms/core/utils/appstyles.dart';
-import 'package:lms/features/home/data/model/news_model.dart';
+
 import 'package:lms/core/widget/download_pdf_page.dart';
 import 'package:intl/intl.dart';
+import 'package:lms/features/home/domain/enitites/news_enity.dart';
 
 import 'package:readmore/readmore.dart';
 
 class CustomItemVideoAccessoriesListView extends StatefulWidget {
-  final NewsModel newsModel;
+  final NewsEnity newsModel;
   const CustomItemVideoAccessoriesListView(
       {super.key, required this.newsModel});
 
@@ -50,7 +51,7 @@ class _CustomItemVideoAccessoriesListViewState
 
   @override
   Widget build(BuildContext context) {
-    final dateTime = formatDateTime(widget.newsModel.createdAt);
+    final dateTime = formatDateTime(widget.newsModel.createdAtN);
 
     return GestureDetector(
       onLongPress: () {
@@ -100,11 +101,11 @@ class _CustomItemVideoAccessoriesListViewState
                   ],
                 ),
               ),
-              if (widget.newsModel.file != null) ...[
+              if (widget.newsModel.fileN != null) ...[
                 const SizedBox(height: 6),
                 DownloadPdfPage(
-                  pdfName: widget.newsModel.filename!,
-                  pdfUrl: widget.newsModel.file!,
+                  pdfName: widget.newsModel.filenameN!,
+                  pdfUrl: widget.newsModel.fileN!,
                 ),
               ],
               const SizedBox(height: 6),
@@ -114,7 +115,7 @@ class _CustomItemVideoAccessoriesListViewState
                   width: double.infinity,
                   child: ReadMoreText(
                     textAlign: TextAlign.justify,
-                    widget.newsModel.text,
+                    widget.newsModel.textN,
                     style: AppStyles.styleMedium20(context),
                     trimMode: TrimMode.Line,
                     trimLines: 7,

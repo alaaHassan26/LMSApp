@@ -8,10 +8,10 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class CustomImageListView extends StatefulWidget {
   const CustomImageListView({
     super.key,
-    required this.newsModel,
+    required this.newsEnity,
   });
 
-  final NewsEnity newsModel;
+  final NewsEnity newsEnity;
 
   @override
   State<CustomImageListView> createState() => _CustomImageListViewState();
@@ -35,14 +35,14 @@ class _CustomImageListViewState extends State<CustomImageListView> {
             height: MediaQuery.of(context).size.width * 1,
             child: PageView.builder(
               controller: _pageController,
-              itemCount: widget.newsModel.imagesN.length,
+              itemCount: widget.newsEnity.imagesN.length,
               itemBuilder: (context, index) {
                 return SizedBox(
                   width: double.infinity,
                   child: ClipRRect(
                     child: CustomImage(
                       image:
-                          '${CS.Api}${widget.newsModel.imagesN[index].imagePath}',
+                          '${CS.Api}${widget.newsEnity.imagesN[index].imagePath}',
                       width: double.infinity,
                       height: double.infinity,
                     ),
@@ -54,7 +54,7 @@ class _CustomImageListViewState extends State<CustomImageListView> {
           const SizedBox(height: 12),
           SmoothPageIndicator(
             controller: _pageController,
-            count: widget.newsModel.imagesN.length,
+            count: widget.newsEnity.imagesN.length,
             effect: const WormEffect(
               dotHeight: 8,
               dotWidth: 8,

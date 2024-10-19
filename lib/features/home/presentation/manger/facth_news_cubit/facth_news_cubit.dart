@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/adapters.dart';
@@ -16,6 +19,7 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
   List<NewsEnity> allNews = [];
   bool hasReachedEnd = false;
   bool isLoadingMore = false;
+  bool isInitialLoading = false;
   DateTime? lastSnackBarTime;
 
   FacthNewsCubit(this.fetchNewsetUseCase) : super(FacthNewsInitial()) {
@@ -34,14 +38,17 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
       {int skip = 0, bool forceRefresh = false, BuildContext? context}) async {
     if (hasReachedEnd || isLoadingMore) return;
 
-    isLoadingMore = true;
-
-    // إذا كانت هذه هي المرة الأولى لتحميل البيانات أو تم طلب التحديث
     if (skip == 0 && !forceRefresh) {
+      isInitialLoading = true;
       emit(FacthNewsLoading());
+    } else {
+      isLoadingMore = true;
+    }
+
+    if (skip == 0 && !forceRefresh) {
       var box = await Hive.openBox<NewsEnity>('newsCache');
       if (box.isNotEmpty) {
-        allNews = box.values.toList();
+        allNews = box.values.skip(skip * 10).take(10).toList();
         emit(FacthNewsLoaded(allNews));
       }
     }
@@ -49,9 +56,9 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
     var result = await fetchNewsetUseCase.call(skip: skip);
     result.fold(
       (failure) async {
+        isInitialLoading = false;
         isLoadingMore = false;
 
-        // عرض البيانات من الكاش عند حدوث خطأ
         var box = await Hive.openBox<NewsEnity>('newsCache');
         if (box.isNotEmpty) {
           allNews = box.values.toList();
@@ -60,7 +67,7 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
 
         final currentTime = DateTime.now();
         if (lastSnackBarTime == null ||
-            currentTime.difference(lastSnackBarTime!).inSeconds >= 15) {
+            currentTime.difference(lastSnackBarTime!).inSeconds >= 40) {
           lastSnackBarTime = currentTime;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (context != null) {
@@ -74,6 +81,7 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
         }
       },
       (news) async {
+        isInitialLoading = false;
         isLoadingMore = false;
         if (news.length < 10) {
           hasReachedEnd = true;
@@ -105,6 +113,14 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
   }
 
   Future<void> _checkConnectivityAndFetch({BuildContext? context}) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      if (context != null) {
+        CustomSnackbar.showSnackBar(context, 'No internet connection',
+            AppStyles.styleMedium18(context).copyWith(color: Colors.white));
+      }
+      return;
+    }
     await refreshNews(context: context);
   }
 

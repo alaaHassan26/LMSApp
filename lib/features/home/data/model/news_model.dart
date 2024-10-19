@@ -45,6 +45,7 @@ class NewsModel extends NewsEnity {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
