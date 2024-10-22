@@ -2,29 +2,34 @@
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-
 import 'package:hive_flutter/adapters.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/widget/snackbar.dart';
-
+import 'package:lms/features/home/data/data_sources/home_local_data_source.dart';
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
 import 'package:lms/features/home/domain/use_cases/news_use_case.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'facth_news_state.dart';
 
-class FacthNewsCubit extends HydratedCubit<FacthNewsState>
-    with WidgetsBindingObserver {
+class FacthNewsCubit extends Cubit<FacthNewsState> with WidgetsBindingObserver {
   final FetchNewsetUseCase fetchNewsetUseCase;
+  final HomelocalDataSource homelocalDataSource;
+
   List<NewsEnity> allNews = [];
   bool hasReachedEnd = false;
   bool isLoadingMore = false;
   bool isInitialLoading = false;
   DateTime? lastSnackBarTime;
 
-  FacthNewsCubit(this.fetchNewsetUseCase) : super(FacthNewsInitial()) {
+  FacthNewsCubit(this.fetchNewsetUseCase, this.homelocalDataSource)
+      : super(FacthNewsInitial()) {
     WidgetsBinding.instance.addObserver(this);
-    _checkConnectivityAndFetch();
+    _initHiveAndFetch();
+  }
+
+  Future<void> _initHiveAndFetch() async {
+    await _checkConnectivityAndFetch();
   }
 
   Future<void> refreshNews({BuildContext? context}) async {
@@ -36,6 +41,7 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
 
   Future<void> fetchNews(
       {int skip = 0, bool forceRefresh = false, BuildContext? context}) async {
+    final Box<NewsEnity> newsBox = await Hive.openBox<NewsEnity>('newsCache');
     if (hasReachedEnd || isLoadingMore) return;
 
     if (skip == 0 && !forceRefresh) {
@@ -45,12 +51,8 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
       isLoadingMore = true;
     }
 
-    if (skip == 0 && !forceRefresh) {
-      var box = await Hive.openBox<NewsEnity>('newsCache');
-      if (box.isNotEmpty) {
-        allNews = box.values.skip(skip * 10).take(10).toList();
-        emit(FacthNewsLoaded(allNews));
-      }
+    if (skip == 0 && !forceRefresh && newsBox.isNotEmpty) {
+      emit(FacthNewsLoaded(allNews));
     }
 
     var result = await fetchNewsetUseCase.call(skip: skip);
@@ -61,7 +63,12 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
 
         var box = await Hive.openBox<NewsEnity>('newsCache');
         if (box.isNotEmpty) {
-          allNews = box.values.toList();
+          final paginatedNews = homelocalDataSource.getNews(skip: skip);
+          if (paginatedNews.length < 10) {
+            hasReachedEnd = true;
+          }
+
+          allNews.addAll(paginatedNews);
           emit(FacthNewsLoaded(allNews));
         }
 
@@ -83,14 +90,14 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
       (news) async {
         isInitialLoading = false;
         isLoadingMore = false;
+
         if (news.length < 10) {
           hasReachedEnd = true;
         }
 
         if (skip == 0) {
-          var box = await Hive.openBox<NewsEnity>('newsCache');
-          await box.clear();
-          await box.addAll(news);
+          await newsBox.clear();
+          await newsBox.addAll(news);
         }
 
         for (var item in news) {
@@ -125,27 +132,9 @@ class FacthNewsCubit extends HydratedCubit<FacthNewsState>
   }
 
   @override
-  FacthNewsState? fromJson(Map<String, dynamic> json) {
-    try {
-      final cachedNews =
-          (json['news'] as List).map((e) => NewsEnity.fromJson(e)).toList();
-      return FacthNewsLoaded(cachedNews);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  @override
-  Map<String, dynamic>? toJson(FacthNewsState state) {
-    if (state is FacthNewsLoaded) {
-      return {'news': state.news.map((e) => e.toJson()).toList()};
-    }
-    return null;
-  }
-
-  @override
   Future<void> close() {
     WidgetsBinding.instance.removeObserver(this);
+
     return super.close();
   }
 }

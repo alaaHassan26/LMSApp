@@ -1,6 +1,7 @@
 import 'package:hive_flutter/adapters.dart';
 import 'package:lms/cache/cache_helper.dart';
 import 'package:lms/core/Server/Api_Dio.dart';
+import 'package:lms/core/functions/save_data_in_hive.dart';
 
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
 
@@ -26,17 +27,7 @@ class HomeRemotDataSourceImpl extends HomeRemotDataSource {
         .toList();
 
     // تحديث الكاش عند skip = 0 أو إضافة البيانات الجديدة فقط
-    if (skip == 0) {
-      await box.clear(); // مسح الكاش عند الرفريش
-      await box.addAll(newsList); // تخزين البيانات الجديدة في الكاش
-    } else {
-      for (var news in newsList) {
-        // التحقق من عدم وجود تكرار
-        if (!box.values.any((cachedNews) => cachedNews.idN == news.idN)) {
-          await box.add(news); // إضافة فقط الأخبار الجديدة إلى الكاش
-        }
-      }
-    }
+    await saveDatainHive(skip, box, newsList);
 
     return newsList;
   }

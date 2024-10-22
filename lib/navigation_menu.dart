@@ -1,10 +1,17 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lms/core/Server/Api_Dio.dart';
 import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
+import 'package:lms/features/home/data/data_sources/home_local_data_source.dart';
+import 'package:lms/features/home/data/data_sources/home_remot_data_source.dart';
+import 'package:lms/features/home/data/repos_impl/home_repo_impl.dart';
+import 'package:lms/features/home/domain/use_cases/news_use_case.dart';
+import 'package:lms/features/home/presentation/manger/facth_news_cubit/facth_news_cubit.dart';
 import 'package:lms/features/home/presentation/views/home_view.dart';
 import 'package:lms/features/settings/presentation/views/settings_view.dart';
 
@@ -21,7 +28,15 @@ class _NavigationMenuState extends State<NavigationMenu> {
   final bool _isAtTop = true;
 
   final List<Widget> _screens = [
-    const HomeView(),
+    BlocProvider(
+      create: (context) => FacthNewsCubit(
+          FetchNewsetUseCase(HomeRepoImpl(
+            homeRemotDataSource:
+                HomeRemotDataSourceImpl(apiService: ApiService()),
+          )),
+          HomelocalDataSourceImpl()),
+      child: const HomeView(),
+    ),
     const CoursesPageView(),
     const SettingsView(),
   ];
@@ -99,7 +114,10 @@ class _NavigationMenuState extends State<NavigationMenu> {
             ),
           ],
         ),
-        body: _screens[_selectedIndex],
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: _screens,
+        ),
       ),
     );
   }

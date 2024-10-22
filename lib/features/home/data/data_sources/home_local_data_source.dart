@@ -1,5 +1,4 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:lms/core/utils/Constatns.dart';
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
 
 abstract class HomelocalDataSource {
@@ -12,7 +11,7 @@ class HomelocalDataSourceImpl extends HomelocalDataSource {
     int startIndex = skip * 10;
     int endIndex = startIndex + 10;
 
-    var box = Hive.box<NewsEnity>(kNewestBox);
+    var box = Hive.box<NewsEnity>('newsCache');
     int length = box.values.length;
 
     if (startIndex >= length) {

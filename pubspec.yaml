@@ -47,7 +47,7 @@ dependencies:
   short_navigation: ^1.0.0
   smooth_page_indicator: ^1.2.0+3
   youtube_explode_dart: ^2.3.0+1
-  hydrated_bloc: ^9.1.5
+  liquid_pull_to_refresh: ^3.0.1
 
 dev_dependencies:
   hive_generator: ^2.0.1

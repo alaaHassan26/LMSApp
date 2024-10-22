@@ -21,8 +21,8 @@ class CustomItemListViewNewsHome extends StatefulWidget {
   State<StatefulWidget> createState() => _CustomItemListViewNewsHomeState();
 }
 
-class _CustomItemListViewNewsHomeState
-    extends State<CustomItemListViewNewsHome> {
+class _CustomItemListViewNewsHomeState extends State<CustomItemListViewNewsHome>
+    with AutomaticKeepAliveClientMixin {
   bool isSelected = false;
 
   void _toggleSelection() {
@@ -50,6 +50,7 @@ class _CustomItemListViewNewsHomeState
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Important to call super.build
     final dateTime = formatDateTime(widget.newsEnity.createdAtN);
 
     return GestureDetector(
@@ -196,4 +197,7 @@ class _CustomItemListViewNewsHomeState
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true; // This keeps the widget alive
 }

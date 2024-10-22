@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import 'package:lms/core/widget/shimmer_featured.dart';
 import 'package:lms/features/home/presentation/manger/facth_news_cubit/facth_news_cubit.dart';
@@ -76,7 +77,11 @@ class _ListViewHomePageState extends State<ListViewHomePage> {
             ),
           );
         } else {
-          return RefreshIndicator(
+          return LiquidPullToRefresh(
+            height: 150,
+            color: const Color(0xffC0B7EF),
+            animSpeedFactor: 2,
+            showChildOpacityTransition: false,
             onRefresh: () async {
               skip = 0;
               await context

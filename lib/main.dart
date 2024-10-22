@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:lms/cache/cache_helper.dart';
-import 'package:lms/core/Server/Api_Dio.dart';
+
 import 'package:lms/core/manger/app_lang_cubit/app_lang_cubit.dart';
 import 'package:lms/core/manger/app_lang_cubit/app_theme_cubit/app_theme_cubit.dart';
 
@@ -16,13 +15,8 @@ import 'package:lms/core/utils/app_localiizations.dart';
 import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/colors.dart';
 
-import 'package:lms/features/home/data/data_sources/home_remot_data_source.dart';
-import 'package:lms/features/home/data/repos_impl/home_repo_impl.dart';
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
 import 'package:lms/features/home/domain/enitites/news_image.dart';
-import 'package:lms/features/home/domain/use_cases/news_use_case.dart';
-import 'package:lms/features/home/presentation/manger/facth_news_cubit/facth_news_cubit.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'core/Server/Bloc_Observer.dart';
 
@@ -33,11 +27,7 @@ import 'features/home/presentation/manger/CommentManger/delete_comment&replay/de
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
 
-  HydratedBloc.storage = storage;
   Bloc.observer = SimpleBlocObserver();
   await Hive.initFlutter();
   Hive.registerAdapter(NewsEnityAdapter());
@@ -48,13 +38,6 @@ void main() async {
 
   runApp(MultiBlocProvider(
     providers: [
-      BlocProvider(
-          create: (context) => FacthNewsCubit(
-                FetchNewsetUseCase(HomeRepoImpl(
-                  homeRemotDataSource:
-                      HomeRemotDataSourceImpl(apiService: ApiService()),
-                )),
-              )),
       BlocProvider(create: (context) => AddCommentCubit()),
       BlocProvider(create: (context) => DeleteCommentCubit()),
       BlocProvider(create: (context) => EditCommentCubit()),
