@@ -2,7 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'package:better_player/better_player.dart';
+
+import 'package:better_player_plus/better_player_plus.dart'; // تعديل الاستيراد
 
 // الحالة الخاصة بـ Cubit
 @immutable
@@ -37,11 +38,10 @@ class CustomVideoPlayerCubit extends Cubit<VideoState> {
     try {
       // التحقق إذا كان الرابط هو رابط YouTube
       if (videoUrl.contains('youtu')) {
-
         print('is youtube');
         _youtubeExplode = YoutubeExplode();
         var videoId = VideoId(videoUrl);
-                print(videoId);
+        print(videoId);
 
         var videoStreamInfo =
             await _youtubeExplode!.videos.streamsClient.getManifest(videoId);
@@ -49,8 +49,7 @@ class CustomVideoPlayerCubit extends Cubit<VideoState> {
         // الحصول على أعلى جودة للفيديو
         videoUrl = videoStreamInfo.muxed.withHighestBitrate().url.toString();
 
-                        print(videoUrl);
-
+        print(videoUrl);
       }
 
       // إذا كان هناك مشغل قديم، قم بتفريغ موارده
@@ -85,7 +84,6 @@ class CustomVideoPlayerCubit extends Cubit<VideoState> {
 
       emit(VideoLoaded(_betterPlayerController!));
     } catch (e) {
-
       print(e);
       emit(VideoError("Error loading video: $e"));
     }
