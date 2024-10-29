@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms/cache/cache_helper.dart';
+import 'package:lms/core/Server/Api_Dio.dart';
 import 'package:lms/features/auth/presentation/manger/auth_cubit/auth_cubit.dart';
 import 'package:lms/features/auth/presentation/views/sign_in_view.dart';
 import 'package:lms/features/auth/presentation/views/widget/forgot_password.dart';
 import 'package:lms/features/auth/presentation/views/widget/login_code.dart';
+import 'package:lms/features/courses_page/data/repo_impl/courese_repo_impl.dart';
+import 'package:lms/features/courses_page/data/data_sources/courses_remot_data_source.dart';
+import 'package:lms/features/courses_page/data/data_sources/mcq_remot_data_source.dart';
 import 'package:lms/features/courses_page/data/models/lessons_model.dart';
 import 'package:lms/features/courses_page/data/models/question_model.dart';
-import 'package:lms/features/courses_page/presentation/manger/course_cubit/course_cubit.dart';
+import 'package:lms/features/courses_page/data/repo_impl/mcq_repo_impl.dart';
+import 'package:lms/features/courses_page/domain/use_case_courses/use_case_courses.dart';
+import 'package:lms/features/courses_page/domain/use_case_courses/use_case_lesson.dart';
+import 'package:lms/features/courses_page/domain/use_case_courses/use_case_mcq.dart';
+import 'package:lms/features/courses_page/presentation/manger/course_cubit/courses_cubit_cubit.dart';
+import 'package:lms/features/courses_page/presentation/manger/lessons_cubit/lessons_cubit.dart';
 import 'package:lms/features/courses_page/presentation/manger/mcq_cubit/mcq_cubit.dart';
 import 'package:lms/features/courses_page/presentation/views/courses_page_view.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/courses_view_list/courses_body.dart';
@@ -108,7 +117,10 @@ abstract class AppRouter {
     GoRoute(
       path: kCourcsesBody,
       builder: (context, state) => BlocProvider(
-        create: (context) => CoursesCubit(),
+        create: (context) => CoursesCubitCubit(FetchCoursestUseCase(
+            coursesRepo: CoursesRepoImpl(
+                coursesRemotDataSource:
+                    CoursesRemotDataSourceImpl(apiService: ApiService())))),
         child: const CourcsesBody(),
       ),
     ),
@@ -129,7 +141,14 @@ abstract class AppRouter {
       path: kListLessonBody,
       builder: (context, state) {
         final categoryId = state.extra as String;
-        return ListLessonBody(categoryId: categoryId);
+        return BlocProvider(
+          create: (context) => LessonsCubit(FetchLessonUseCase(
+              coursesRepo: CoursesRepoImpl(
+                  coursesRemotDataSource:
+                      CoursesRemotDataSourceImpl(apiService: ApiService()))))
+            ..fetchLesson(categoryId: categoryId),
+          child: ListLessonBody(categoryId: categoryId),
+        );
       },
     ),
     GoRoute(
@@ -154,7 +173,10 @@ abstract class AppRouter {
     GoRoute(
       path: kMCQBody,
       builder: (context, state) => BlocProvider(
-        create: (context) => McqCubit(),
+        create: (context) => McqCubit(FetchMcqUseCase(
+            mcqRepo: McqRepoImpl(
+                mcqRemotDataSource:
+                    McqRemotDataSourceImpl(apiService: ApiService())))),
         child: const MCQBody(),
       ),
     ),
@@ -165,7 +187,10 @@ abstract class AppRouter {
 
         if (questions != null) {
           return BlocProvider(
-            create: (context) => McqCubit(),
+            create: (context) => McqCubit(FetchMcqUseCase(
+                mcqRepo: McqRepoImpl(
+                    mcqRemotDataSource:
+                        McqRemotDataSourceImpl(apiService: ApiService())))),
             child: McqQuestionPage(questions: questions),
           );
         } else {
@@ -185,7 +210,10 @@ abstract class AppRouter {
         final title = extraData['title'] as String;
 
         return BlocProvider(
-          create: (context) => McqCubit(),
+          create: (context) => McqCubit(FetchMcqUseCase(
+              mcqRepo: McqRepoImpl(
+                  mcqRemotDataSource:
+                      McqRemotDataSourceImpl(apiService: ApiService())))),
           child: StartMcqPage(questions: questions, title: title),
         );
       },
@@ -194,7 +222,10 @@ abstract class AppRouter {
       path: kResultsPage,
       builder: (context, state) {
         return BlocProvider(
-          create: (context) => McqCubit(),
+          create: (context) => McqCubit(FetchMcqUseCase(
+              mcqRepo: McqRepoImpl(
+                  mcqRemotDataSource:
+                      McqRemotDataSourceImpl(apiService: ApiService())))),
           child: const ResultsPage(),
         );
         // if (state.extra != null && state.extra is Map<String, dynamic>) {

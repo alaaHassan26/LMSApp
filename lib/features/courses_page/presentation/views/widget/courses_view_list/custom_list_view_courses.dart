@@ -2,43 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms/core/utils/app_router.dart';
+import 'package:lms/core/utils/appstyles.dart';
+
 import 'package:lms/core/utils/colors.dart';
+import 'package:lms/core/widget/snackbar.dart';
+
+import 'package:lms/features/courses_page/presentation/manger/course_cubit/courses_cubit_cubit.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/custom_item_list_view.dart';
-import '../../../manger/course_cubit/course_cubit.dart';
-import '../../../manger/course_cubit/course_state.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class CustomListViewCourses extends StatefulWidget {
   const CustomListViewCourses({super.key});
 
   @override
-  _CustomListViewCoursesState createState() => _CustomListViewCoursesState();
+  State<StatefulWidget> createState() => _CustomListViewCoursesState();
 }
 
 class _CustomListViewCoursesState extends State<CustomListViewCourses> {
-  final ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController;
+  var skip = 0;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // Fetch initial courses when the widget is built
-    context.read<CoursesCubit>().fetchCourses();
+    context.read<CoursesCubitCubit>().fetchCourses();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
 
-    _scrollController.addListener(() {
-      // Check if we've scrolled to the bottom
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200) {
-        // Check if there are more courses to load
-        final cubit = context.read<CoursesCubit>();
-        if (cubit.hasMoreCourses && cubit.state is! CoursesLoading) {
-          // Correctly checking the state
-          cubit.fetchCourses();
-        }
-      }
-    });
+  void _onScroll() async {
+    if (_scrollController.position.pixels >=
+            0.7 * _scrollController.position.maxScrollExtent &&
+        !isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+      skip++;
+      await BlocProvider.of<CoursesCubitCubit>(context)
+          .fetchCourses(skip: skip);
+
+      // في حال وجود خطأ أثناء التمرير، إخفاء مؤشر التحميل بعد 3 ثوانٍ
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
@@ -46,26 +61,62 @@ class _CustomListViewCoursesState extends State<CustomListViewCourses> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return BlocBuilder<CoursesCubit, CoursesState>(
+    return BlocConsumer<CoursesCubitCubit, CoursesCubitState>(
+      listener: (context, state) {
+        if (state is CoursesSkipError) {
+          CustomSnackbar.showSnackBar(context, state.error,
+              AppStyles.styleMedium16(context).copyWith(color: Colors.white));
+          // إخفاء مؤشر التحميل عند حدوث خطأ أثناء التمرير
+          Future.delayed(const Duration(seconds: 3), () {
+            setState(() {
+              isLoading = false;
+            });
+          });
+        }
+      },
       builder: (context, state) {
-        if (state is CoursesLoading &&
-            context.read<CoursesCubit>().allCourses.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+        final cubit = context.read<CoursesCubitCubit>();
+        final courses = cubit.allCourses;
+
+        if (cubit.isInitialLoading) {
+          return Center(
+            child: LoadingAnimationWidget.fourRotatingDots(
+              color: isDarkMode ? Colors.white : Colors.black,
+              size: 56,
+            ),
+          );
         } else if (state is CoursesError) {
-          return Center(child: Text(state.error));
-        } else if (state is CoursesLoaded) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error, color: Colors.red, size: 56),
+                const SizedBox(height: 8),
+                Text(
+                  state.error,
+                  style: AppStyles.styleMedium16(context)
+                      .copyWith(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<CoursesCubitCubit>().fetchCourses();
+                  },
+                  child: const Text('حاول مجدداً'),
+                ),
+              ],
+            ),
+          );
+        } else {
           return ListView.builder(
             controller: _scrollController,
-            itemCount: state.hasMoreCourses
-                ? state.courses.length + 1
-                : state.courses.length,
+            itemCount: courses.length + (cubit.isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
-              if (index < state.courses.length) {
-                final course = state.courses[index];
+              if (index < courses.length) {
+                final course = courses[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Card(
                     color: isDarkMode ? null : whiteColor,
                     elevation: 2,
@@ -84,18 +135,25 @@ class _CustomListViewCoursesState extends State<CustomListViewCourses> {
                   ),
                 );
               } else {
-                // Show loading indicator at the bottom when more courses are being loaded
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),
+                // مؤشر التحميل في نهاية التمرير
+                return Padding(
+                  padding: isLoading
+                      ? const EdgeInsets.symmetric(vertical: 20)
+                      : const EdgeInsets.symmetric(vertical: 0),
                   child: Center(
-                    child: CircularProgressIndicator(),
+                    child: isLoading
+                        ? LoadingAnimationWidget.staggeredDotsWave(
+                            color: isDarkMode ? Colors.white : Colors.black,
+                            size: 36,
+                          )
+                        : const SizedBox
+                            .shrink(), // إخفاء مؤشر التحميل إذا لم يكن هناك تحميل
                   ),
                 );
               }
             },
           );
         }
-        return const SizedBox(); // Return empty widget if no state matches
       },
     );
   }

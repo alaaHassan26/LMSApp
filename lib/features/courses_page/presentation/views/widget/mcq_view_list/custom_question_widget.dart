@@ -9,11 +9,11 @@ import '../../../manger/mcq_cubit/mcq_state.dart';
 
 class QuestionWidget extends StatelessWidget {
   final McqQuestion question;
-  final String QuestionId ;
+  final String QuestionId;
   final int questionIndex;
   final List<List<int>> selectedAnswers;
-  final int showResults; 
-  final int showWarnings; 
+  final int showResults;
+  final int showWarnings;
   final Function(List<int>) onAnswerSelected;
 
   const QuestionWidget({
@@ -23,7 +23,8 @@ class QuestionWidget extends StatelessWidget {
     required this.selectedAnswers,
     required this.showResults, // This will now accept an int
     required this.showWarnings, // This will now accept an int
-    required this.onAnswerSelected, required this.QuestionId,
+    required this.onAnswerSelected,
+    required this.QuestionId,
   });
 
   bool _isAnswerCorrect(int index) {
@@ -35,7 +36,8 @@ class QuestionWidget extends StatelessWidget {
   }
 
   bool _isAnswerIncomplete() {
-    final correctAnswersCount = question.choices!.where((choice) => choice.isCorrect == 1).length;
+    final correctAnswersCount =
+        question.choices!.where((choice) => choice.isCorrect == 1).length;
     return selectedAnswers[questionIndex].length != correctAnswersCount;
   }
 
@@ -66,7 +68,8 @@ class QuestionWidget extends StatelessWidget {
                     child: Divider(),
                   ),
                   _buildAnswerOptions(context, isDarkMode),
-                  if (showWarnings == 1 && _isAnswerIncomplete()) // Updated condition to check for int value
+                  if (showWarnings == 1 &&
+                      _isAnswerIncomplete()) // Updated condition to check for int value
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
@@ -83,70 +86,75 @@ class QuestionWidget extends StatelessWidget {
       ),
     );
   }
-  
-Widget _buildAnswerOptions(BuildContext context, bool isDarkMode) {
-  final mcqCubit = BlocProvider.of<McqCubit>(context); 
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 20),
-    child: Column(
-      children: List.generate(question.choices!.length, (index) {
-        bool isCorrect = _isAnswerCorrect(index);
-        bool isSelected = _isAnswerSelected(index);
 
-        return Padding(
-          padding: const EdgeInsets.all(6),
-          child: Card(
-            margin: const EdgeInsets.symmetric(vertical: 3),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(6)),
+  Widget _buildAnswerOptions(BuildContext context, bool isDarkMode) {
+    final mcqCubit = BlocProvider.of<McqCubit>(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        children: List.generate(question.choices!.length, (index) {
+          bool isCorrect = _isAnswerCorrect(index);
+          bool isSelected = _isAnswerSelected(index);
+
+          return Padding(
+            padding: const EdgeInsets.all(6),
+            child: Card(
+              margin: const EdgeInsets.symmetric(vertical: 3),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(6)),
+              ),
+              elevation: 1,
+              color: isDarkMode ? Colors.black : Colors.white,
+              child: BlocBuilder<McqCubit, McqState>(
+                builder: (context, state) {
+                  return ListTile(
+                    leading: _buildLeadingIcon(
+                      onPressed: () {
+                        isCorrect
+                            ? mcqCubit.getQuestionResults(
+                                questionId: QuestionId)
+                            : print(
+                                'no thing'); // Make sure `question.id` is the correct variable
+                        print(question.id);
+                        _handleAnswerSelection(index);
+                      },
+                      isCorrect: isCorrect,
+                      isSelected: isSelected,
+                    ),
+                    title: Text(
+                      question.choices![index].choiceText!,
+                      style: AppStyles.styleMedium18(context),
+                    ),
+                    trailing: showResults == 1 && isCorrect
+                        ? _buildInfoIcon(
+                            context, question.choices![index].isCorrectText!)
+                        : null,
+                    onTap: () => _handleAnswerSelection(index),
+                  );
+                },
+              ),
             ),
-            elevation: 1,
-            color: isDarkMode ? Colors.black : Colors.white,
-            child: BlocBuilder<McqCubit, McqState>(
-              builder: (context, state) {
-                return ListTile(
-                  leading: _buildLeadingIcon(
-                    onPressed: () {
-               isCorrect ?       mcqCubit.getQuestionResults(QuestionId) : print('no thing') ; // Make sure `question.id` is the correct variable
-                      print(question.id);
-                      _handleAnswerSelection(index);
-                    },
-                    isCorrect: isCorrect,
-                    isSelected: isSelected,
-                  ),
-                  title: Text(
-                    question.choices![index].choiceText!,
-                    style: AppStyles.styleMedium18(context),
-                  ),
-                  trailing: showResults == 1 && isCorrect 
-                      ? _buildInfoIcon(context, question.choices![index].isCorrectText!)
-                      : null,
-                  onTap: () => _handleAnswerSelection(index),
-                );
-              },
-            ),
-          ),
-        );
-      }),
-    ),
-  );
-}
+          );
+        }),
+      ),
+    );
+  }
 
-
-Widget _buildLeadingIcon({
-  required bool isCorrect,
-  required bool isSelected,
-  required VoidCallback onPressed, 
-}) {
-  return IconButton(
-    icon: Icon(
-      isSelected ? (isCorrect ? Icons.check_circle : Icons.cancel) : Icons.radio_button_unchecked,
-      color: isSelected ? (isCorrect ? Colors.green : Colors.red) : null,
-    ),
-    onPressed: onPressed, 
-  );
-}
-
+  Widget _buildLeadingIcon({
+    required bool isCorrect,
+    required bool isSelected,
+    required VoidCallback onPressed,
+  }) {
+    return IconButton(
+      icon: Icon(
+        isSelected
+            ? (isCorrect ? Icons.check_circle : Icons.cancel)
+            : Icons.radio_button_unchecked,
+        color: isSelected ? (isCorrect ? Colors.green : Colors.red) : null,
+      ),
+      onPressed: onPressed,
+    );
+  }
 
   Widget _buildInfoIcon(BuildContext context, String explanation) {
     return IconButton(
@@ -185,7 +193,8 @@ Widget _buildLeadingIcon({
     List<int> newSelectedAnswers = List.from(selectedAnswers[questionIndex]);
 
     if (!newSelectedAnswers.contains(index)) {
-      final correctAnswersCount = question.choices!.where((choice) => choice.isCorrect == 1).length;
+      final correctAnswersCount =
+          question.choices!.where((choice) => choice.isCorrect == 1).length;
       if (newSelectedAnswers.length < correctAnswersCount) {
         newSelectedAnswers.add(index);
       }

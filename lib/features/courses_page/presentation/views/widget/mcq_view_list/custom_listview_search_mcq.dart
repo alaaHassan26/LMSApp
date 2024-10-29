@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/custom_item_mcq_listview.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../../../core/utils/app_router.dart';
 import '../../../manger/mcq_cubit/mcq_cubit.dart';
@@ -23,7 +24,7 @@ class _CustomListViewSearchMcqState extends State<CustomListViewSearchMcq> {
   void initState() {
     super.initState();
     // Fetch data after the widget is initialized
-    context.read<McqCubit>().mcqCategories();
+    context.read<McqCubit>().getCategories();
   }
 
   @override
@@ -32,12 +33,33 @@ class _CustomListViewSearchMcqState extends State<CustomListViewSearchMcq> {
     return BlocBuilder<McqCubit, McqState>(
       builder: (context, state) {
         if (state is McqLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: LoadingAnimationWidget.fourRotatingDots(
+              color: isDarkMode ? Colors.white : Colors.black,
+              size: 56,
+            ),
+          );
         } else if (state is McqFailure) {
           return Center(
-            child: Text(
-              state.errorMessage,
-              style: AppStyles.styleRegular20(context),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error, color: Colors.red, size: 56),
+                const SizedBox(height: 8),
+                Text(
+                  state.errorMessage,
+                  style: AppStyles.styleMedium16(context)
+                      .copyWith(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<McqCubit>().getCategories();
+                  },
+                  child: const Text('حاول مجدداً'),
+                ),
+              ],
             ),
           );
         } else if (state is McqSuccess) {

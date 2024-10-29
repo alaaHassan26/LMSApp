@@ -7,6 +7,7 @@ import 'package:lms/core/utils/app_router.dart';
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/utils/colors.dart';
 import 'package:lms/core/widget/custom_image.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../../../core/functions/direction_arabic.dart';
 import '../../../manger/mcq_cubit/mcq_cubit.dart';
@@ -26,7 +27,7 @@ class _StartMcqPageState extends State<StartMcqPage> {
   void initState() {
     super.initState();
     final mcqCubit = context.read<McqCubit>();
-    mcqCubit.getQuestions(widget.questions);
+    mcqCubit.getQuestions(id: widget.questions);
   }
 
   @override
@@ -42,9 +43,37 @@ class _StartMcqPageState extends State<StartMcqPage> {
       body: BlocBuilder<McqCubit, McqState>(
         builder: (context, state) {
           if (state is McqLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: LoadingAnimationWidget.fourRotatingDots(
+                color: isDarkMode ? Colors.white : Colors.black,
+                size: 56,
+              ),
+            );
           } else if (state is McqFailure) {
-            return Center(child: Text('Error: ${state.errorMessage}'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, color: Colors.red, size: 56),
+                  const SizedBox(height: 8),
+                  Text(
+                    state.errorMessage,
+                    style: AppStyles.styleMedium16(context)
+                        .copyWith(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      context
+                          .read<McqCubit>()
+                          .getQuestions(id: widget.questions);
+                    },
+                    child: const Text('حاول مجدداً'),
+                  ),
+                ],
+              ),
+            );
           } else if (state is McqSuccess) {
             final questions = state.questions;
 
