@@ -1,15 +1,17 @@
-
 // Abstract state class
 
 abstract class AddCommentState {
   List<Object?> get props => [];
 }
 
-
 class AddCommentSuccess extends AddCommentState {}
+
 class ReplayCommentSuccess extends AddCommentState {}
+
 class AddCommentInitial extends AddCommentState {}
+
 class AddCommentLoading extends AddCommentState {}
+
 class ReplayCommentLoading extends AddCommentState {}
 
 // Failure state

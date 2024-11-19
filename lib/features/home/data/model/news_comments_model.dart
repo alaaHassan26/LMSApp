@@ -1,14 +1,29 @@
+import 'package:hive_flutter/hive_flutter.dart';
+part 'news_comments_model.g.dart';
+
+@HiveType(typeId: 2)
 class NewsCommentModel {
+  @HiveField(0)
   final String? id;
+  @HiveField(1)
   final String? userId;
+  @HiveField(2)
   final String? newsId;
+  @HiveField(3)
   final String? parentCommentId;
+  @HiveField(4)
   final int? isProfessor;
+  @HiveField(5)
   String? content;
+  @HiveField(6)
   final DateTime? createdAt;
+  @HiveField(7)
   final DateTime? updatedAt;
+  @HiveField(8)
   final UserModel? user;
+  @HiveField(9)
   late final List<NewsCommentModel> children;
+  @HiveField(10)
   bool isExpanded; // Keep isExpanded as it is
 
   NewsCommentModel({
@@ -62,8 +77,12 @@ class NewsCommentModel {
       parentCommentId: json['parent_comment_id'] as String?,
       isProfessor: json['is_professor'] as int?,
       content: json['content'] as String?,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
       user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
       children: json['children'] != null
           ? (json['children'] as List<dynamic>)
@@ -90,15 +109,25 @@ class NewsCommentModel {
   }
 }
 
+@HiveType(typeId: 3)
 class UserModel {
+  @HiveField(0)
   final String? id;
+  @HiveField(1)
   final String? image;
+  @HiveField(2)
   final String? name;
+  @HiveField(3)
   final String? email;
+  @HiveField(4)
   final int? userType;
+  @HiveField(5)
   final int? accountStatus;
+  @HiveField(6)
   final String? randomCode;
+  @HiveField(7)
   final DateTime createdAt; // Keep this non-nullable
+  @HiveField(8)
   final DateTime? updatedAt;
 
   UserModel({
@@ -148,7 +177,9 @@ class UserModel {
       accountStatus: json['account_status'] as int?,
       randomCode: json['random_code'] as String?,
       createdAt: DateTime.parse(json['created_at']),
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
     );
   }
 

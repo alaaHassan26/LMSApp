@@ -6,24 +6,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:lms/core/utils/appstyles.dart';
 import 'package:lms/core/widget/snackbar.dart';
+import 'package:lms/features/courses_page/data/data_sources/comments/comments_video_local_data_source.dart';
+import 'package:lms/features/courses_page/domain/use_case_courses/comments_video_use_case.dart';
 
-import 'package:lms/features/home/data/data_sources/comments/comments_local_data_source.dart';
 import 'package:lms/features/home/data/model/news_comments_model.dart';
-import 'package:lms/features/home/domain/use_cases/comments_use_case.dart';
 
-import 'comment_state.dart';
+import 'comment_video_state.dart';
 
-class NewsCommentCubit extends Cubit<NewsCommentState>
+class CommentVideoCubit extends Cubit<VideoCommentState>
     with WidgetsBindingObserver {
-  final FetchCommentstUseCase fetchCommentstUseCase;
-  final CommentslocalDataSource commentslocalDataSource;
+  final FetchCommentsVideoUseCase fetchCommentstUseCase;
+  final CommentsVideolocalDataSource commentslocalDataSource;
   List<NewsCommentModel> allComments = [];
   bool hasReachedEnd = false;
   bool isLoadingMore = false;
   bool isInitialLoading = false;
   DateTime? lastSnackBarTime;
-  NewsCommentCubit(this.fetchCommentstUseCase, this.commentslocalDataSource)
-      : super(NewsCommentInitial()) {
+  CommentVideoCubit(this.fetchCommentstUseCase, this.commentslocalDataSource)
+      : super(VideoCommentInitial()) {
     WidgetsBinding.instance.addObserver(this);
     _initHiveAndFetch();
   }
@@ -32,33 +32,33 @@ class NewsCommentCubit extends Cubit<NewsCommentState>
   }
 
   Future<void> refreshNews(
-      {BuildContext? context, required String newsId}) async {
+      {BuildContext? context, required String videoId}) async {
     allComments.clear();
     hasReachedEnd = false;
     isLoadingMore = false;
-    await getComments(
-        skip: 0, forceRefresh: true, context: context, newsId: newsId);
+    await getCommentsVideo(
+        skip: 0, forceRefresh: true, context: context, videoId: videoId);
   }
 
-  Future<void> getComments(
+  Future<void> getCommentsVideo(
       {int skip = 0,
-      required String newsId,
+      required String videoId,
       bool forceRefresh = false,
       BuildContext? context}) async {
     if (hasReachedEnd || isLoadingMore) return;
 
     if (skip == 0 && !forceRefresh) {
       isInitialLoading = true;
-      emit(NewsCommentLoading());
+      emit(VideoCommentLoading());
     } else {
       isLoadingMore = true;
     }
 
     if (skip == 0 && !forceRefresh) {
-      emit(NewsCommentFetchSuccess(allComments));
+      emit(VideoCommentFetchSuccess(allComments));
     }
 
-    var result = await fetchCommentstUseCase.call(skip: skip, newsId: newsId);
+    var result = await fetchCommentstUseCase.call(skip: skip, videoId: videoId);
 
     result.fold(
       (failure) async {
@@ -93,7 +93,7 @@ class NewsCommentCubit extends Cubit<NewsCommentState>
           }
         }
 
-        emit(NewsCommentFetchSuccess(allComments));
+        emit(VideoCommentFetchSuccess(allComments));
       },
     );
   }

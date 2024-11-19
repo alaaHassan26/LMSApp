@@ -1,4 +1,3 @@
-
 // Abstract state class
 import '../../../../data/model/news_comments_model.dart';
 
@@ -9,11 +8,12 @@ abstract class NewsCommentState {
 class NewsCommentInitial extends NewsCommentState {}
 
 class NewsCommentLoading extends NewsCommentState {}
+
 class NewsCommentEmpty extends NewsCommentState {}
 
 class NewsCommentFetchSuccess extends NewsCommentState {
   final List<NewsCommentModel> comments;
-  
+
   NewsCommentFetchSuccess(this.comments);
 
   @override
@@ -22,7 +22,7 @@ class NewsCommentFetchSuccess extends NewsCommentState {
 
 class NewsCommentActionSuccess extends NewsCommentState {
   final String message;
-  
+
   NewsCommentActionSuccess(this.message);
 
   @override

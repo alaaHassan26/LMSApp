@@ -13,15 +13,15 @@ class CommentItem extends StatefulWidget {
   final String userId;
 
   const CommentItem({
-    Key? key,
+    super.key,
     required this.comment,
     required this.onReply,
     required this.onOptionsSelected,
     required this.userId,
-  }) : super(key: key);
+  });
 
   @override
-  _CommentItemState createState() => _CommentItemState();
+  State<StatefulWidget> createState() => _CommentItemState();
 }
 
 class _CommentItemState extends State<CommentItem> {
@@ -126,7 +126,8 @@ class _CommentItemState extends State<CommentItem> {
                             onPressed: () {
                               setState(() {
                                 isExpanded = !isExpanded; // Update local state
-                                widget.comment.isExpanded = isExpanded; // Update the comment model
+                                widget.comment.isExpanded =
+                                    isExpanded; // Update the comment model
                               });
                             },
                             child: Text(
@@ -138,7 +139,8 @@ class _CommentItemState extends State<CommentItem> {
                         const Spacer(),
                         if (widget.comment.userId == widget.userId)
                           IconButton(
-                            onPressed: () => widget.onOptionsSelected(widget.comment),
+                            onPressed: () =>
+                                widget.onOptionsSelected(widget.comment),
                             icon: const Icon(Iconsax.menu),
                           ),
                       ],

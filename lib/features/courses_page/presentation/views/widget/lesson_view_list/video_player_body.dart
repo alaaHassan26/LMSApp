@@ -31,7 +31,8 @@ class VideoPlayerBody extends StatelessWidget {
         isScrollControlled: true,
         useSafeArea: true,
         context: context,
-        builder: (context) => const CommentsVideoLesson(),
+        builder: (context) => const SizedBox(),
+        // builder: (context) => const CommentsVideoLesson(),
       );
     }
 

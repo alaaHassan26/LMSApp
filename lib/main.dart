@@ -32,7 +32,8 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(NewsEnityAdapter());
   Hive.registerAdapter(NewsImageAdapter());
-  await Hive.openBox<NewsEnity>('newsCache');
+  // await Hive.openBox<NewsEnity>('newsCache');
+  // await Hive.openBox<NewsCommentModel>('commentsCache');
   await Hive.openBox('settings');
   await CacheHelper().init();
 

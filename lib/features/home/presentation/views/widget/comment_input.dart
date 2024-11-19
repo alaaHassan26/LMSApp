@@ -10,16 +10,16 @@ class CommentInputField extends StatefulWidget {
   final Function onClose; // Add onClose callback
 
   const CommentInputField({
-    Key? key,
+    super.key,
     required this.commentController,
     required this.focusNode,
     required this.replyToComment,
     required this.onSubmit,
     required this.onClose, // Accept the callback
-  }) : super(key: key);
+  });
 
   @override
-  _CommentInputFieldState createState() => _CommentInputFieldState();
+  State<StatefulWidget> createState() => _CommentInputFieldState();
 }
 
 class _CommentInputFieldState extends State<CommentInputField> {

@@ -28,7 +28,11 @@ import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_lis
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/custom_mcq_page.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/result_page.dart';
 import 'package:lms/features/courses_page/presentation/views/widget/mcq_view_list/srart_mcq_page.dart';
+import 'package:lms/features/home/data/data_sources/comments/comments_local_data_source.dart';
+import 'package:lms/features/home/data/data_sources/comments/comments_remot_data_source.dart';
+import 'package:lms/features/home/data/repos_impl/comments_repo.dart';
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
+import 'package:lms/features/home/domain/use_cases/comments_use_case.dart';
 import 'package:lms/features/home/presentation/manger/CommentManger/fetchcomment_cubit/comment_cubit.dart';
 import 'package:lms/features/home/presentation/views/widget/comment_page.dart';
 import 'package:lms/features/home/presentation/views/widget/custom_pdf_page.dart';
@@ -77,7 +81,11 @@ abstract class AppRouter {
       builder: (context, state) {
         final newsId = state.extra as String;
         return BlocProvider(
-          create: (context) => NewsCommentCubit(),
+          create: (context) => NewsCommentCubit(
+              FetchCommentstUseCase(CommentsRepoImpl(
+                  commentsRemotDataSource:
+                      CommentsRemotDataSourceImpl(apiService: ApiService()))),
+              CommentslocalDataSourceImpl()),
           child: CommentsPage(newsId: newsId),
         );
       },

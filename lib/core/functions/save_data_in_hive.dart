@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:lms/features/home/data/model/news_comments_model.dart';
 import 'package:lms/features/home/domain/enitites/news_enity.dart';
 
 Future<void> saveDatainHive(
@@ -22,8 +23,26 @@ Future<void> saveDatainHive(
   }
 }
 
+Future<void> saveDataCommentsinHive(int skip, Box<NewsCommentModel> box,
+    List<NewsCommentModel> commentsList) async {
+  // تحديث الكاش عند skip = 0 أو إضافة البيانات الجديدة فقط
+  if (skip == 0) {
+    await box.clear(); // مسح الكاش عند الرفريش
+    await box.addAll(commentsList); // تخزين البيانات الجديدة في الكاش
+  } else {
+    // إنشاء Set يحتوي على معرفات الأخبار المخزنة بالفعل
+    Set<String?> cachedIds =
+        box.values.map((cachedNews) => cachedNews.id).toSet();
 
-
+    for (var comments in commentsList) {
+      // التحقق من عدم وجود تكرار باستخدام Set
+      if (!cachedIds.contains(comments.id)) {
+        await box.add(comments); // إضافة فقط الأخبار الجديدة إلى الكاش
+        cachedIds.add(comments.id); // إضافة المعرف إلى الـ Set
+      }
+    }
+  }
+}
 
 
 
